@@ -1,7 +1,7 @@
 import { PrimaryColumn } from "typeorm";
 
 export class AccountId {
-  @PrimaryColumn('int', { name: 'id' })
+  @PrimaryColumn('int', { name: 'AccountId' })
   protected readonly value: number;
 
   protected constructor(value: number) {

@@ -1,7 +1,7 @@
 import { PrimaryColumn } from "typeorm";
 
 export class Period {
-  @PrimaryColumn('int', { name: 'SubscriptionId' })
+  @PrimaryColumn('int', { name: 'Period' })
   protected readonly startDate: Date;
   protected readonly endDate: Date;
 

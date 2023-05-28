@@ -5,6 +5,7 @@ import { RentingManagementModule } from './renting-management/renting-management
 import { BillingManagementModule } from './billing-management/billing-management.module';
 import { SubscriptionManagementModule } from './subscription-management/subscription-management.module';
 import { WorkshopServiceManagementModule } from './workshop-service-management/workshop-service-management.module';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { WorkshopServiceManagementModule } from './workshop-service-management/w
     BillingManagementModule,
     SubscriptionManagementModule,
     WorkshopServiceManagementModule,
+    SharedModule,
   ],
   controllers: [AppController],
   providers: [AppService],

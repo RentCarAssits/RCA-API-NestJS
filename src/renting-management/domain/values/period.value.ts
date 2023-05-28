@@ -1,9 +1,9 @@
 import { Column } from 'typeorm';
 
 export class Period {
-  @Column('datetime', { name: 'start-time' })
+  @Column('datetime', { name: 'start_time' })
   private readonly startDate: Date;
-  @Column('datetime', { name: 'currency' })
+  @Column('datetime', { name: 'end_time' })
   private readonly endDate: Date;
 
   private constructor(startDate: Date, endDate: Date) {
@@ -11,8 +11,15 @@ export class Period {
     this.endDate = endDate;
   }
 
-  private newPeriod(startDate: Date, endDate: Date): Period {
+  public static newPeriod(startDate: Date, endDate: Date): Period {
     return new Period(startDate, endDate);
+  }
+
+  public getStartDate() {
+    return this.startDate;
+  }
+  public getEndDate() {
+    return this.endDate;
   }
 
   public getPeriodTimeDays(): number {

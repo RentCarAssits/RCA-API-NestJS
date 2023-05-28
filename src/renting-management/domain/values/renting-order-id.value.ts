@@ -1,7 +1,7 @@
 import { Column, PrimaryColumn } from 'typeorm';
 import { Result } from 'typescript-result';
 
-export class RentingOrderId {
+export class RentingOrderItemId {
   @PrimaryColumn('int', { name: 'id' })
   protected readonly value: number;
 
@@ -9,8 +9,8 @@ export class RentingOrderId {
     this.value = Number(value);
   }
 
-  public static of(value: number): RentingOrderId {
-    return new RentingOrderId(value);
+  public static of(value: number): RentingOrderItemId {
+    return new RentingOrderItemId(value);
   }
 
   public getValue(): number {

@@ -8,7 +8,6 @@ export class TotalPrice {
         this.value = value
     }
 
-
     public static create(value: number): TotalPrice {
         return new TotalPrice(value)
     }

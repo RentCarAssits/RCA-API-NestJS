@@ -1,11 +1,8 @@
-import { PrimaryColumn } from 'typeorm';
-
 export class VehicleId {
-  @PrimaryColumn('bigint', { name: 'id' })
   protected readonly value: number;
 
-  protected constructor(value: number) {
-    this.value = Number(value);
+  private constructor(value: number) {
+    this.value = value;
   }
 
   public static of(value: number): VehicleId {

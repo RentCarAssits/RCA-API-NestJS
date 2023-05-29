@@ -2,8 +2,8 @@ import { Column } from 'typeorm';
 import { Result } from 'typescript-result';
 import { AppNotification } from '../../../shared/application/app.notification';
 
-export class VehicleIntegrity {
-  @Column('varchar', { name: 'integrity' })
+export class VehicleName {
+  @Column('varchar', { name: 'name' })
   private readonly value: string;
   private static MAX_LENGTH = 250;
 
@@ -15,15 +15,13 @@ export class VehicleIntegrity {
     return this.value;
   }
 
-  public static create(
-    integrity: string,
-  ): Result<AppNotification, VehicleIntegrity> {
+  public static create(name: string): Result<AppNotification, VehicleName> {
     const notification: AppNotification = new AppNotification();
-    integrity = (integrity ?? '').trim();
-    if (integrity === '') {
-      notification.addError('integrity field is required', null);
+    name = (name ?? '').trim();
+    if (name === '') {
+      notification.addError('name is required', null);
     }
-    if (integrity.length > this.MAX_LENGTH) {
+    if (name.length > this.MAX_LENGTH) {
       notification.addError(
         'The maximum length of an name is ' +
           this.MAX_LENGTH +
@@ -34,6 +32,6 @@ export class VehicleIntegrity {
     if (notification.hasErrors()) {
       return Result.error(notification);
     }
-    return Result.ok(new VehicleIntegrity(integrity));
+    return Result.ok(new VehicleName(name));
   }
 }

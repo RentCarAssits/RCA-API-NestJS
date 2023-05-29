@@ -55,7 +55,7 @@ export class GetVehicleByIdHandler
   ) {}
 
   async execute(query: GetVehicleByIdQuery) {
-    const manager = this.connection.manager; // get an instance of EntityManager
+    const manager = this.connection.manager;
     const sql = `
     SELECT vehicles.*, GROUP_CONCAT(categories.category) as categories
     FROM vehicles

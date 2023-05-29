@@ -6,13 +6,17 @@ import { Result } from 'typescript-result';
 import { RegisterVehicle } from '../commands/register-vehicle.command';
 import { RegisterVehicleRequest } from '../requests/register-vehicle.request';
 import { RegisterVehicleResponse } from '../responses/register-vehicle.response';
+import { Connection } from 'typeorm';
 
 @Injectable()
 export class VehiclesApplicationService {
   constructor(
+    private connection: Connection,
     private commandBus: CommandBus,
     private registerVehicleValidator: RegisterVehicleValidator,
-  ) {}
+  ) {
+    console.log('this.connection.isConnected: ', this.connection.isConnected);
+  }
 
   async register(
     registerVehicleRequest: RegisterVehicleRequest,

@@ -6,9 +6,14 @@ import { BillingManagementModule } from './billing-management/billing-management
 import { SubscriptionManagementModule } from './subscription-management/subscription-management.module';
 import { WorkshopServiceManagementModule } from './workshop-service-management/workshop-service-management.module';
 import { SharedModule } from './shared/shared.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import * as ormconfig from './../../RCA-API-NestJS/ormconfig.js';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
+    TypeOrmModule.forRoot(ormconfig),
     RentingManagementModule,
     BillingManagementModule,
     SubscriptionManagementModule,

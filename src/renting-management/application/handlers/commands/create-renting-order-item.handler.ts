@@ -10,6 +10,8 @@ import { Period } from '../../../domain/values/period.value';
 import { VehicleIdFk } from '../../../domain/values/vehicle-id-fk.value';
 import { RentingOrderItemFactory } from '../../../domain/factories/renting-order-item.factory';
 import { TimeUnit } from '../../../domain/enums/TimeUnit';
+import { VehicleId } from '../../../domain/values/vehicle-id.value';
+import { RentingOrderItemId } from '../../../domain/values/renting-order-id.value';
 
 @CommandHandler(CreateRentingOrderItem)
 export class CreateRentingOrderItemHandler
@@ -17,12 +19,12 @@ export class CreateRentingOrderItemHandler
 {
   constructor(
     @InjectRepository(RentingOrderItem)
-    private productRepository: Repository<RentingOrderItem>,
+    private rentingOrderItemRepository: Repository<RentingOrderItem>,
     private publisher: EventPublisher,
   ) {}
 
   async execute(command: CreateRentingOrderItem) {
-    let rentingOrderId = 0;
+    let rentingOrderItemId = 0;
     const rentingPrice = Money.create(command.rentingPrice, command.currency);
     const rentingUnit = TimeUnit.DAYS;
     const rentingPeriod: Period = Period.newPeriod(
@@ -38,19 +40,19 @@ export class CreateRentingOrderItemHandler
         vehicleId,
         rentingUnit,
       );
-    let rentingOrderItem = await this.productRepository.save(
+    let rentingOrderItem = await this.rentingOrderItemRepository.save(
       rentingOrderEntity,
     );
     if (rentingOrderItem == null) {
-      return rentingOrderId;
+      return rentingOrderItemId;
     }
     console.log(rentingOrderItem);
-    rentingOrderId = Number(
-      rentingOrderItem.obtainRentingOrderItemId().getValue(),
-    );
+    rentingOrderItemId = Number(rentingOrderItem.getId());
+    console.log('rentingOrderId:', vehicleId);
+    rentingOrderItem.changeId(RentingOrderItemId.of(rentingOrderItemId));
     rentingOrderItem = this.publisher.mergeObjectContext(rentingOrderItem);
     rentingOrderItem.create();
     rentingOrderItem.commit();
-    return rentingOrderId;
+    return rentingOrderItemId;
   }
 }

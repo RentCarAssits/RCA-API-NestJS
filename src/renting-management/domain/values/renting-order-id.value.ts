@@ -2,7 +2,6 @@ import { Column, PrimaryColumn } from 'typeorm';
 import { Result } from 'typescript-result';
 
 export class RentingOrderItemId {
-  @PrimaryColumn('int', { name: 'id' })
   protected readonly value: number;
 
   protected constructor(value: number) {

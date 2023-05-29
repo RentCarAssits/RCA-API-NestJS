@@ -27,7 +27,6 @@ export class RentingOrderItemService {
     }
     const createRentingOrderItem: CreateRentingOrderItem =
       new CreateRentingOrderItem(
-        createRentingOrderItemRequest.id,
         createRentingOrderItemRequest.rentingPrice,
         createRentingOrderItemRequest.currency,
         createRentingOrderItemRequest.startDate,

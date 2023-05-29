@@ -1,6 +1,5 @@
 export class CreateRentingOrderItem {
   constructor(
-    public readonly id: number,
     public readonly rentingPrice: number,
     public readonly currency: string,
     public readonly startDate: Date,

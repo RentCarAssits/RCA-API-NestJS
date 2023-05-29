@@ -1,33 +1,36 @@
 import { AggregateRoot } from '@nestjs/cqrs';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { RentingOrderItemId } from '../values/renting-order-id.value';
 import { Money } from '../values/money.value';
 import { Period } from '../values/period.value';
 import { TimeUnit } from '../enums/TimeUnit';
 import { RentingOrderItemCreated } from '../events/renting-order-item-created.event';
 import { VehicleIdFk } from '../values/vehicle-id-fk.value';
+import { ApiProperty } from '@nestjs/swagger';
+import { VehicleId } from '../values/vehicle-id.value';
 
 @Entity('RentingOrderItem')
 export class RentingOrderItem extends AggregateRoot {
-  @PrimaryColumn('bigint', { name: 'id' })
-  private id: RentingOrderItemId;
-
+  @ApiProperty()
+  @PrimaryGeneratedColumn('increment', { name: 'id' })
+  public id: RentingOrderItemId;
+  @ApiProperty()
   @Column((type) => VehicleIdFk, { prefix: false })
-  private readonly vehicleId: VehicleIdFk;
-
+  public vehicleId: VehicleIdFk;
+  @ApiProperty()
   @Column((type) => Money, { prefix: false })
-  private readonly rentingPrice: Money;
-
+  public rentingPrice: Money;
+  @ApiProperty()
   @Column((type) => Period, { prefix: false })
-  private readonly rentingPeriod: Period;
-
+  public rentingPeriod: Period;
+  @ApiProperty()
   @Column({
     type: 'enum',
     enum: TimeUnit,
     default: TimeUnit.DAYS,
     nullable: false,
   })
-  private readonly rentingUnit: TimeUnit;
+  public rentingUnit: TimeUnit;
 
   public constructor(
     rentingPrice: Money,
@@ -58,13 +61,17 @@ export class RentingOrderItem extends AggregateRoot {
   public obtainRentingPrice(): Money {
     return this.rentingPrice;
   }
-
+  public changeId(id: RentingOrderItemId) {
+    this.id = id;
+  }
   public obtainRentingPeriod(): Period {
     return this.rentingPeriod;
   }
-  public obtainRentingOrderItemId(): RentingOrderItemId {
+
+  public getId(): RentingOrderItemId {
     return this.id;
   }
+
   public obtainRentingUnit(): TimeUnit {
     return this.rentingUnit;
   }

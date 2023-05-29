@@ -1,44 +1,47 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { RentingOrderItemDto } from '../../dtos/renting-order-item.dto';
 import { GetAllRentingOrderItemsQuery } from '../../queries/get-all-renting-order-items.query';
-import { getManager } from 'typeorm';
+import { getManager, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Vehicle } from '../../../domain/entities/vehicle.entity';
+import { RentingOrderItem } from '../../../domain/entities/renting-order-item.entity';
+import { VehicleDto } from '../../dtos/vehicle.dto';
 
 @QueryHandler(GetAllRentingOrderItemsQuery)
 export class GetAllRentingOrderItemsHandler
   implements IQueryHandler<GetAllRentingOrderItemsQuery>
 {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor() {}
+  constructor(
+    @InjectRepository(RentingOrderItem)
+    private readonly rentingOrderItemRepository: Repository<RentingOrderItem>,
+  ) {}
 
-  async execute(query: GetAllRentingOrderItemsQuery) {
-    const manager = getManager();
-    const sql = `
-    SELECT
-      p.id,
-      p.rentingUnit,
-      p.vehicle_id,
-      p.price,
-      p.currency,
-      p.start_time,
-      p.end_time,
-    FROM 
-      rentingorderitem p
-    ORDER BY
-      p.id DESC;`;
-    const ormRentingOrderItems = await manager.query(sql);
-    if (ormRentingOrderItems.length <= 0) {
-      return [];
-    }
+  async execute(
+    query: GetAllRentingOrderItemsQuery,
+  ): Promise<RentingOrderItemDto[]> {
+    const ormRentingOrderItems = await this.rentingOrderItemRepository.find({
+      relations: {},
+    });
+    console.log(
+      '🚀 ~ file: vehicles-queries.handler.ts:18 ~ GetAllVehiclesHandler ~ execute ~ vehicles:',
+      ormRentingOrderItems['result'],
+    );
     const rentingOrderItems: RentingOrderItemDto[] = ormRentingOrderItems.map(
       function (ormRentingOrderItems) {
         const rentingOrderItemDto = new RentingOrderItemDto();
-        rentingOrderItemDto.id = Number(ormRentingOrderItems.id);
-        rentingOrderItemDto.rentingPrice = ormRentingOrderItems.price;
+        rentingOrderItemDto.id = Number(ormRentingOrderItems.getId());
+        rentingOrderItemDto.rentingPrice =
+          ormRentingOrderItems.rentingPrice.getAmount();
         rentingOrderItemDto.rentingUnit = ormRentingOrderItems.rentingUnit;
-        rentingOrderItemDto.currency = ormRentingOrderItems.currency;
-        rentingOrderItemDto.startDate = ormRentingOrderItems.startDate;
-        rentingOrderItemDto.endDate = ormRentingOrderItems.endDate;
-        rentingOrderItemDto.vehicleId = ormRentingOrderItems.vehicleId;
+        rentingOrderItemDto.currency =
+          ormRentingOrderItems.rentingPrice.getCurrency();
+        rentingOrderItemDto.startDate =
+          ormRentingOrderItems.rentingPeriod.getStartDate();
+        rentingOrderItemDto.endDate =
+          ormRentingOrderItems.rentingPeriod.getEndDate();
+        rentingOrderItemDto.vehicleId =
+          ormRentingOrderItems.vehicleId.getValue();
         return rentingOrderItemDto;
       },
     );

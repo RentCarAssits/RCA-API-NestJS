@@ -1,7 +1,4 @@
-import { PrimaryColumn } from "typeorm";
-
 export class SubscriptionId {
-  @PrimaryColumn('int', { name: 'SubscriptionId' })
   protected readonly value: number;
 
   protected constructor(value: number) {

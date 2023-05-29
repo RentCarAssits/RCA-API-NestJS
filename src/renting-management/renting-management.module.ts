@@ -1,24 +1,30 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RentingOrderItem } from './domain/entities/renting-order-item.entity';
-import { RentingOrderItemsController } from './api/renting-order-items.controller';
-import { CreateRentingOrderItemHandler } from './application/handlers/commands/create-renting-order-item.handler';
-import { RentingOrderItemCreatedHandler } from './application/handlers/events/renting-order-item-created.handler';
+import { Vehicle } from './domain/entities/vehicle.entity';
+import { Category } from './domain/entities/category.entity';
+import { VehiclesController } from './api/vehicles/vehicles.controller';
+import { CqrsModule } from '@nestjs/cqrs';
+import { VehiclesApplicationService } from './application/services/vehicles-application.service';
+import {
+  GetAllVehiclesHandler,
+  GetVehicleByIdHandler,
+} from './application/handlers/queries/vehicles-queries.handler';
+import { RegisterVehicleValidator } from './application/validators/register-vehicle.validator';
+import { RegisterVehicleHandler } from './application/handlers/commands/register-vehicle.handler';
+import { ProductRegisteredHandler } from './application/handlers/events/vehicle-registered.handler';
 
-import { GetAllRentingOrderItemsHandler } from './application/handlers/queries/get-all-renting-order-items.handler';
-import { RentingOrderItemService } from './application/services/renting-order-item.service';
-import { CreateRentingOrderItemValidator } from './application/validators/create-renting-order-item.validator';
-
-export const CommandHandlers = [CreateRentingOrderItemHandler];
-export const EventHandlers = [RentingOrderItemCreatedHandler];
-export const QueryHandlers = [GetAllRentingOrderItemsHandler];
+export const CommandHandlers = [RegisterVehicleHandler];
+export const EventHandlers = [ProductRegisteredHandler];
+export const QueryHandlers = [GetAllVehiclesHandler, GetVehicleByIdHandler];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([RentingOrderItem])],
-  controllers: [RentingOrderItemsController],
+  imports: [TypeOrmModule.forFeature([Category, Vehicle]), CqrsModule],
+  controllers: [VehiclesController],
   providers: [
-    RentingOrderItemService,
-    CreateRentingOrderItemValidator,
+    VehiclesApplicationService,
+    GetAllVehiclesHandler,
+    GetVehicleByIdHandler,
+    RegisterVehicleValidator,
     ...CommandHandlers,
     ...EventHandlers,
     ...QueryHandlers,

@@ -14,20 +14,15 @@ export class Plan extends AggregateRoot {
   @ApiProperty()
   @Column(() => PlanName, { prefix: false })
   private readonly PlanName: PlanName;
-
-  /*
+ 
   @ApiProperty()
-  @OneToMany(()=> Benefits, (Benefits)=> Benefits.getValue,{
-    cascade:true,
-    eager:true,
-  })  
-  benefits?: Benefits[];
-*/ 
-  // aun no tengo claro como relacionarlo
+  @Column(() => PlanName, { prefix: false })
+  private readonly Benefits: string;
 
-  public constructor(PlanName: PlanName) {
+  public constructor(PlanName: PlanName, benefits:string) {
     super();
     this.PlanName = PlanName;
+    this.Benefits=benefits;
   }
 
   public getId(): PlanId {

@@ -1,30 +1,30 @@
-//import * as moment from 'moment-timezone';
+import { AppNotification } from "src/shared/application/app.notification";
+import { Column } from "typeorm";
+import { Result } from "typescript-result";
 export class Period {
-  protected readonly startDate: Date;
-  protected readonly endDate: Date;
+  @Column('varchar', { name: 'Period' })
+  protected readonly value:string;
+  private static MAX_LENGTH: number = 100;
 
-  protected constructor(startDate: Date, endDate: Date) {
-    this.startDate = startDate;
-    this.endDate = endDate;
+  protected constructor(value:string) {
+    this.value = value;
   }
 
-  public static of(startDate: Date, endDate: Date): Period {
-    return new Period(startDate, endDate);
+  public getValues():string{
+    return this.value;
   }
 
-  /*
-  public static createPeriod(startDate: string, endDate: string): Period {
-    const startDateTime: Date = moment(startDate, 'YYYY-MM-DD HH:mm:ss').toDate();
-    const endDateTime: Date = moment(endDate, 'YYYY-MM-DD HH:mm:ss').toDate();
-    return new Period(startDateTime, endDateTime);
-  }
-  */
+  public static create(period:string): Result<AppNotification,Period>{
+    const notification: AppNotification = new AppNotification;
+    period=(period??'').trim();
+    if (period === '') {notification.addError('Period is required', null);}
+    
+    if (period.length > this.MAX_LENGTH) {notification.addError('The maximum length of an Period is '+this.MAX_LENGTH +' characters including spaces',null,);}
+    
+    if (notification.hasErrors()) {return Result.error(notification);}
 
-  public getStartDate(): Date {
-    return this.startDate;
+    return Result.ok(new Period(period));
   }
 
-  public getEndDate(): Date {
-    return this.endDate;
-  }
 }
+   

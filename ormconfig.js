@@ -10,8 +10,8 @@ module.exports = {
   synchronize: true,
   ssl: true,
   migrationsRun: true,
-  logging: true,
-  timezone: '+0',
+ // logging: true,
+  //timezone: '+0',
   bigNumberStrings: false,
   extra: {
     ssl: {

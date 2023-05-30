@@ -15,6 +15,7 @@ import * as ormconfig from './../../RCA-API-NestJS/ormconfig.js';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+
     TypeOrmModule.forRoot(ormconfig),
     RentingManagementModule,
     BillingManagementModule,

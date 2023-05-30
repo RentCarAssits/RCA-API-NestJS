@@ -1,1 +1,3 @@
-export class getAllAccountQuery{}
+export class getAllAccountQuery{
+    
+}

@@ -1,4 +1,4 @@
-export class RegisterSubscriptionResponse {
+export class RegisterAccountResponse {
     constructor(
         public readonly AccountId: number,
         public readonly AccountEmail: number,

@@ -2,28 +2,44 @@ import { AppNotification } from "src/shared/application/app.notification";
 import { Column } from "typeorm";
 import { Result } from "typescript-result";
 export class Period {
-  @Column('varchar', { name: 'Period' })
-  protected readonly value:string;
-  private static MAX_LENGTH: number = 100;
+  @Column('date',{name:'PeriodStart'})
+  protected readonly startDate: Date;
+  protected readonly endDate: Date;
+  private static CURRENT_TIME = new Date();
 
-  protected constructor(value:string) {
-    this.value = value;
+  protected constructor(startDate: Date, endDate: Date) {
+    this.startDate = startDate;
+    this.endDate = endDate;
+  }
+  
+
+  public static of(startDate: Date, endDate: Date): Period {
+    return new Period(startDate, endDate);
   }
 
-  public getValues():string{
-    return this.value;
+  public static create(startDate: Date, endDate: Date): Result<AppNotification,Period>{
+    const notification: AppNotification = new AppNotification();
+    if(startDate==null){startDate = new Date();}
+    if(endDate==null){endDate = new Date();}
+    if (startDate === null) {notification.addError('startDate is required', null);}
+    if (endDate === null) {notification.addError('endDate is required', null);}
+    
+    if (startDate > endDate) {
+      notification.addError('The start date should be other one',null,);
+    }
+    if (notification.hasErrors()) {
+      return Result.error(notification);
+    }
+    return Result.ok(new Period(startDate,endDate));
+    
   }
 
-  public static create(period:string): Result<AppNotification,Period>{
-    const notification: AppNotification = new AppNotification;
-    period=(period??'').trim();
-    if (period === '') {notification.addError('Period is required', null);}
-    
-    if (period.length > this.MAX_LENGTH) {notification.addError('The maximum length of an Period is '+this.MAX_LENGTH +' characters including spaces',null,);}
-    
-    if (notification.hasErrors()) {return Result.error(notification);}
+  public getStartDate(): Date {
+    return this.startDate;
+  }
 
-    return Result.ok(new Period(period));
+  public getEndDate(): Date {
+    return this.endDate;
   }
 
 }

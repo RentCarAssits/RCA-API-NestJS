@@ -14,7 +14,7 @@ export class AccountApplicationService{
                 private commandBus: CommandBus,
                 private RegisterSubscriptionValidator: RegisterSubscriptionValidator,)
     {console.log('this.connection.isConnected: ', this.connection.isConnected);}
-
+/*
     async register(
         RegisterSubscriptionRequest: RegisterSubscriptionRequest,
     ): Promise<Result<AppNotification,RegisterSubscriptionResponse>>{
@@ -40,8 +40,8 @@ export class AccountApplicationService{
                 registerSubscription.Period,
             );
         return Result.ok(registerSubscriptionResponse);
-
     }
+    */
 
 }
 

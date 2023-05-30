@@ -35,6 +35,10 @@ export class Account extends AggregateRoot {
     this.AccountNickname=AccountName;
   }
 
+  public getAccountId():AccountId{
+    return this.id;
+  }
+
   public getAccountEmail():AccountEmail{
     return this.AccountEmail;
   }

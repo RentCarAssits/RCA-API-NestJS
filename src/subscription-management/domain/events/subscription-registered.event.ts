@@ -5,6 +5,6 @@ export class SubscriptionRegistered {
     public readonly PlanId: number,
     public readonly UnitPrice: number,
     public readonly Frequency: string,
-    public readonly Period: number,
+    public readonly Period: Date,
     ) {}
 }

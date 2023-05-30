@@ -1,13 +1,13 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 import { Column, Entity, PrimaryColumn, ValueTransformer } from 'typeorm';
-import { PaymentId } from '../values/Payment-id.value';
+import { PaymentIdFk } from '../values/payment-id-fk.value';
 import { AccountPayableId } from '../values/account-payable-id.value';
 import { Amount } from '../values/amount.value';
 
 @Entity()
 export class PaymentPayableAggregate extends AggregateRoot {
   @PrimaryColumn('bigint', { name: 'id' })
-  private paymentId: PaymentId;
+  private paymentId: PaymentIdFk;
 
   @Column({
     type: 'bigint',
@@ -28,12 +28,12 @@ export class PaymentPayableAggregate extends AggregateRoot {
     amountValue: number
   ) {
     super();
-    this.paymentId = PaymentId.create(idValue);
+    this.paymentId = PaymentIdFk.create(idValue);
     this.accountPayableId = AccountPayableId.create(accountPayableIdValue);
     this.amount = Amount.create(amountValue);
   }
 
-  public getPaymentId(): PaymentId {
+  public getPaymentId(): PaymentIdFk {
     return this.paymentId;
   }
 

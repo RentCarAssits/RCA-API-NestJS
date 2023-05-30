@@ -1,12 +1,12 @@
 import { AggregateRoot } from '@nestjs/cqrs';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn,PrimaryGeneratedColumn } from 'typeorm';
 import { PaymentId } from '../values/Payment-id.value';
 import { PaymentMethod } from '../enums/payment-method.enum';
 import { PayerId } from '../values/payer-id-fk.value';
 
 @Entity()
 export class PaymentAggregate extends AggregateRoot {
-  @PrimaryColumn('bigint', { name: 'id' })
+  @PrimaryGeneratedColumn({ name: 'id' })
   private paymentId: PaymentId;
 
   @Column((type) => PayerId, { prefix: false })
@@ -24,13 +24,11 @@ export class PaymentAggregate extends AggregateRoot {
   private paymentDay: Date;
 
   constructor(
-    idValue: number, 
     payerIdValue: number, 
     paymentMethod: PaymentMethod, 
     paymentDay: Date) 
     {
     super();
-    this.paymentId = PaymentId.create(idValue);
     this.payerId = PayerId.create(payerIdValue);
     this.paymentMethod = paymentMethod;
     this.paymentDay = paymentDay;

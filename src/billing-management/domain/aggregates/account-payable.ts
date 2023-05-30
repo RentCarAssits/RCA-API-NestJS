@@ -1,5 +1,5 @@
 import { AggregateRoot } from '@nestjs/cqrs';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn,PrimaryGeneratedColumn } from 'typeorm';
 import { AccountPayableId } from '../values/account-payable-id.value';
 import { PayerId } from '../values/payer-id-fk.value';
 import { PayeeId } from '../values/payee-id-fk.value';
@@ -9,7 +9,7 @@ import { ParcialPrice } from '../values/parcial_price.value';
 @Entity()
 export class AccountPayableAggregate extends AggregateRoot {
 
-    @PrimaryColumn('bigint', { name: 'id' })
+  @PrimaryGeneratedColumn({ name: 'id' })
     private id: AccountPayableId;
   
 
@@ -29,18 +29,16 @@ export class AccountPayableAggregate extends AggregateRoot {
     private expirationDay: Date;
   
     constructor(
-        idValue: number, 
-        payerIdValue: number, 
-        payeeIdValue: number, 
-        totalPriceValue: number, 
-        parcialPriceValue: number, 
-        expirationDay: Date) {
+      payerIdValue: number,
+      payeeIdValue: number,
+      totalPriceValue: number,
+      expirationDay: Date
+    ) {
       super();
-      this.id = AccountPayableId.create(idValue);
       this.payerId = PayerId.create(payerIdValue);
       this.payeeId = PayeeId.create(payeeIdValue);
       this.totalPrice = TotalPrice.create(totalPriceValue);
-      this.parcialPrice = ParcialPrice.create(parcialPriceValue);
+      this.parcialPrice = ParcialPrice.create(totalPriceValue); // parcialPrice igual a totalPrice
       this.expirationDay = expirationDay;
     }
 
@@ -66,5 +64,9 @@ export class AccountPayableAggregate extends AggregateRoot {
     
       public getExpirationDay(): Date {
         return this.expirationDay;
+      }
+
+      public updateParcialPrice(parcialPriceValue: number): void {
+        this.parcialPrice = ParcialPrice.create(parcialPriceValue);
       }
   }

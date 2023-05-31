@@ -4,7 +4,6 @@ import { AccountDto } from "../../dtos/AccountDto";
 import { Connection, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Account } from "src/subscription-management/domain/entity/account.entity";
-import { Subscription } from "src/subscription-management/domain/entity/Subscription.entity";
 import { getAccountByIdQuery } from "../../queries/get-acount-id.query";
 
 @QueryHandler(getAllAccountQuery)

@@ -61,7 +61,28 @@ export class Subscription extends AggregateRoot{
         this.apply(event);
     }
 
-    public getId(): SubscriptionId{
+    public getId(): SubscriptionId {
         return this.id;
     }
+    
+    public getAccount(): Account {
+        return this.Account;
+    }
+    
+    public getPlan(): Plan {
+        return this.Plan;
+    }
+    
+    public getUnitPrice(): number {
+        return this.UnitPrice;
+    }
+    
+    public getFrequency(): SubscriptionFrequency {
+        return this.Frequency;
+    }
+    
+    public getPeriod(): Period {
+        return this.Period;
+    }
+
 }

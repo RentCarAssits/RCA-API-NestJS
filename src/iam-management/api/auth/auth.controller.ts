@@ -16,10 +16,11 @@ import { LoginAccountDto } from 'src/iam-management/application/dtos/login-accou
 import { AuthService } from 'src/iam-management/application/services/auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Account } from 'src/iam-management/domain/entities/account.entity';
-import { RawHeaders } from 'src/iam-management/application/decorators/raw-headers.decorator';
-import { IncomingHttpHeaders } from 'http';
 import { ValidRoles } from 'src/iam-management/domain/interfaces/valid-roles';
-import { UserRoleGuard } from 'src/iam-management/infrastructure/strategies/guards/user-role-guard';
+import { UserRoleGuard } from 'src/iam-management/infrastructure/guards/user-role-guard';
+import { User } from 'src/iam-management/domain/entities/user.entity';
+import { GetAccount } from 'src/iam-management/application/decorators/get-account.decorator';
+import { GetFullUser } from 'src/iam-management/application/decorators/get-fullUser.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -44,19 +45,20 @@ export class AuthController {
   @UseGuards(AuthGuard())
   testingPrivateRoute(
     @Req() request: Express.Request,
-    @GetUser() user: Account,
-    @GetUser('email') userEmail: string,
-
-    @RawHeaders() rawHeaders: string[],
-    @Headers() headers: IncomingHttpHeaders,
+    @GetAccount() account: Account,
+    @GetUser() user: User,
+    @GetFullUser() fullUser: any,
+    // @RawHeaders() rawHeaders: string[],
+    // @Headers() headers: IncomingHttpHeaders,
   ) {
     return {
       ok: true,
       message: 'Hola Mundo Private',
+      account,
       user,
-      userEmail,
-      rawHeaders,
-      headers,
+      fullUser,
+      // rawHeaders,
+      // headers,
     };
   }
 
@@ -65,7 +67,7 @@ export class AuthController {
   @Get('private2')
   @RoleProtected(ValidRoles.admin, ValidRoles.owner)
   @UseGuards(AuthGuard(), UserRoleGuard)
-  privateRoute2(@GetUser() user: Account) {
+  privateRoute2(@GetUser() user: User) {
     return {
       ok: true,
       user,

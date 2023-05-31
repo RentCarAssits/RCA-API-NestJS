@@ -9,15 +9,16 @@ import { getAllSubscriptionQuery } from './application/queries/get-all-subscript
 import { getSubscriptionByIdQuery } from './application/queries/get-subscription-id.query';
 import { RegisterSubscriptionValidator } from './application/validators/register-subscription.validator';
 import { RegisterSubscriptionHandler } from './application/handlers/commands/register-subscription.handler';
+import { IamManagementModule } from 'src/iam-management/iam-management.module';
 
 export const CommandHandlers = [RegisterSubscriptionHandler];
-//export const EventHanlders = []
+export const EventHanlders = [RegisterSubscriptionHandler];
 
 @Module({
     imports:[
-        TypeOrmModule.forFeature([Subscription, Account]),
+        TypeOrmModule.forFeature([Subscription]),
         CqrsModule,
-        //IamManagementModule,
+        IamManagementModule,
     ],
     controllers:[SubscriptionController],
     providers:[

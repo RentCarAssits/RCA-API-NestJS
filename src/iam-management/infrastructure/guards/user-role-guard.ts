@@ -10,6 +10,12 @@ import { Observable } from 'rxjs';
 
 import { Account } from 'src/iam-management/domain/entities/account.entity';
 import { META_ROLES } from 'src/iam-management/application/decorators/role-protected.decorator';
+import { User } from 'src/iam-management/domain/entities/user.entity';
+
+export interface userFullInfo {
+  account: Account;
+  user: User;
+}
 
 @Injectable()
 export class UserRoleGuard implements CanActivate {
@@ -27,18 +33,18 @@ export class UserRoleGuard implements CanActivate {
     if (validRoles.length === 0) return true;
 
     const req = context.switchToHttp().getRequest();
-    const user = req.user as Account;
+    const { account } = req.user as userFullInfo;
 
-    if (!user) throw new BadRequestException('User not found');
+    if (!account) throw new BadRequestException('User not found');
 
-    for (const role of user.roles) {
+    for (const role of account.roles) {
       if (validRoles.includes(role)) {
         return true;
       }
     }
 
     throw new ForbiddenException(
-      `User ${user.username} need a valid role: [${validRoles}]`,
+      `User ${account.username} need a valid role: [${validRoles}]`,
     );
   }
 }

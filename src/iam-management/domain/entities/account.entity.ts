@@ -17,14 +17,13 @@ export class Account {
   })
   password: string;
 
-  @OneToOne(() => User, (usuario) => usuario.account)
-  usuario: User;
+  @OneToOne(() => User, (user) => user.account)
+  user: User;
 
   @Column('simple-array')
   roles: string[];
 
   //
-
 }
 
 //AÑADIR REALACIONES PARA LOS DEMÁS BOUNDED CONTEXT

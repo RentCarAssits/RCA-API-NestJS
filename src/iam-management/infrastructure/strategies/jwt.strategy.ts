@@ -6,14 +6,13 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Account } from 'src/iam-management/domain/entities/account.entity';
 import { User } from 'src/iam-management/domain/entities/user.entity';
 import { JwtPayload } from 'src/iam-management/domain/interfaces/jwt-payload.interface';
-
-import { AcceptedFields, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectRepository(User)
-    private readonly yuserRepository: Repository<User>,
+    private readonly userRepository: Repository<User>,
 
     @InjectRepository(Account)
     private readonly accountRepository: Repository<Account>,
@@ -26,14 +25,31 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload): Promise<Account> {
+  async validate(payload: JwtPayload): Promise<any> {
     const { id } = payload;
 
-    const user = await this.accountRepository.findOneBy({ id });
-    if (!user) throw new UnauthorizedException('Token not valid');
+    const account = await this.accountRepository
+      .createQueryBuilder('account')
+      .leftJoinAndSelect('account.user', 'user')
+      .where('account.id = :id', { id })
+      .getOne();
+
+    const { user } = account;
+
+    const userFullInfo = {
+      user: user?? '',
+      account: {
+        id: account.id,
+        username: account.username,
+        email: account.email,
+        roles: account.roles,
+      },
+    };
+
+    if (!account) throw new UnauthorizedException('Token not valid');
 
     /* if ( !user.isActive ) 
             throw new UnauthorizedException('User is inactive, talk with an admin');*/
-    return user;
+    return userFullInfo;
   }
 }

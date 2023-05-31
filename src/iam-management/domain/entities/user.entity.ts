@@ -35,7 +35,7 @@ export class User {
   })
   isActive: boolean;
 
-  @OneToOne(() => Account, (cuenta) => cuenta.username, {
+  @OneToOne(() => Account, (cuenta) => cuenta.user, {
     cascade: true,
     eager: true,
   })

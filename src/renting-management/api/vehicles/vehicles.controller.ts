@@ -10,6 +10,7 @@ import { GetAllVehiclesQuery } from 'src/renting-management/application/queries/
 import { GetVehicleByIdQuery } from 'src/renting-management/application/queries/get-vehicle-by-id.query';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
+import { Auth } from 'src/iam-management/application/decorators/auth.decorator';
 
 @ApiTags('Products')
 @Controller('vehicles')
@@ -20,17 +21,15 @@ export class VehiclesController {
   ) {}
 
   @Post()
+  @Auth()
   @ApiResponse({
     status: 201,
     description: 'OK',
     type: Vehicle,
   })
-  @ApiResponse({ status: 400, description: 'Bad request' })
-  @ApiResponse({ status: 403, description: 'Forbiden. Token Related' })
-  @ApiResponse({ status: 500, description: 'Ups! Something Bad Happende' })
   async register(
     @Body() registerVehicleRequest: RegisterVehicleRequest,
-    @Res({ passthrough: true }) response,
+    @Res({ passthrough: true }) response: any,
   ) {
     try {
       const result: Result<AppNotification, RegisterCategoryResponse> =
@@ -49,11 +48,8 @@ export class VehiclesController {
   }
 
   @Get()
-  @ApiResponse({ status: 200, description: 'OK' })
-  @ApiResponse({ status: 400, description: 'Bad request' })
-  @ApiResponse({ status: 403, description: 'Forbiden. Token Related' })
-  @ApiResponse({ status: 500, description: 'Ups! Something Bad Happende' })
-  async getAll(@Res({ passthrough: true }) response) {
+  @Auth()
+  async getAll(@Res({ passthrough: true }) response: any) {
     try {
       const vehicles = await this.queryBus.execute(new GetAllVehiclesQuery());
       return ApiController.ok(response, vehicles);
@@ -67,13 +63,10 @@ export class VehiclesController {
   }
 
   @Get('/:id')
-  @ApiResponse({ status: 200, description: 'OK' })
-  @ApiResponse({ status: 400, description: 'Bad request' })
-  @ApiResponse({ status: 403, description: 'Forbiden. Token Related' })
-  @ApiResponse({ status: 500, description: 'Ups! Something Bad Happende' })
+  @Auth()
   async getById(
     @Param('id') vehicleId: number,
-    @Res({ passthrough: true }) response,
+    @Res({ passthrough: true }) response: any,
   ) {
     try {
       const vehicle = await this.queryBus.execute(

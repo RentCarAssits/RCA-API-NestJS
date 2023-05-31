@@ -7,6 +7,8 @@ import {
   Req,
   Headers,
   SetMetadata,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { Auth } from 'src/iam-management/application/decorators/auth.decorator';
 import { GetUser } from 'src/iam-management/application/decorators/get-user.decorator';
@@ -22,6 +24,12 @@ import { User } from 'src/iam-management/domain/entities/user.entity';
 import { GetAccount } from 'src/iam-management/application/decorators/get-account.decorator';
 import { GetFullUser } from 'src/iam-management/application/decorators/get-fullUser.decorator';
 
+@UsePipes(
+  new ValidationPipe({
+    whitelist: true,
+    forbidNonWhitelisted: true,
+  }),
+)
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

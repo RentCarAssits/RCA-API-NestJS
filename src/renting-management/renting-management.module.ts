@@ -12,13 +12,18 @@ import {
 import { RegisterVehicleValidator } from './application/validators/register-vehicle.validator';
 import { RegisterVehicleHandler } from './application/handlers/commands/register-vehicle.handler';
 import { ProductRegisteredHandler } from './application/handlers/events/vehicle-registered.handler';
+import { IamManagementModule } from 'src/iam-management/iam-management.module';
 
 export const CommandHandlers = [RegisterVehicleHandler];
 export const EventHandlers = [ProductRegisteredHandler];
 export const QueryHandlers = [GetAllVehiclesHandler, GetVehicleByIdHandler];
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Category, Vehicle]), CqrsModule],
+  imports: [
+    TypeOrmModule.forFeature([Category, Vehicle]),
+    CqrsModule,
+    IamManagementModule,
+  ],
   controllers: [VehiclesController],
   providers: [
     VehiclesApplicationService,

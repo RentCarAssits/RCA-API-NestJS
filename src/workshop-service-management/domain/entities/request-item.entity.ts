@@ -10,7 +10,7 @@ import { Price } from '../value-objects/price.value';
 import { InventoryTransaction } from './inventory-transaction.entity';
 import { Product } from './product.entity';
 import { RequestItemId } from '../value-objects/request-item-id.value';
-import { ServiceItem } from './service-item.value';
+import { ServiceItem } from './service-item';
 
 @Entity('RequestItem')
 export class RequestItem {

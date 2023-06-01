@@ -27,8 +27,8 @@ export class InventoryTransaction {
   @JoinColumn({ name: 'serviceITemOrder_id' })
   private serviceITemOrder: ServiceItemOrder;
 
-  public constructor(inventoryOperation: InventoryOperation[]) {
-    this.inventoryOperations = this.inventoryOperations;
+  public constructor(inventoryOperations: InventoryOperation[]) {
+    this.inventoryOperations = inventoryOperations;
   }
 
   public getId(): InventoryTransactionId {

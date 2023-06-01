@@ -1,12 +1,14 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn, OneToMany } from 'typeorm';
 import { WorkshopId } from '../value-objects/workshop-id.value';
 import { type } from 'os';
 import { Address } from '../value-objects/address.value';
+import { WarehouseId } from '../value-objects/warehouse-id.value';
+import { Inventory } from './inventory.entity';
 
-@Entity('Workshop')
-export class Workshop {
+@Entity('Warehouse')
+export class Warehouse {
   @PrimaryColumn('bigint', { name: 'id' })
-  private id: WorkshopId;
+  private id: WarehouseId;
 
   @Column('varchar', { name: 'name' })
   private name: string;
@@ -14,12 +16,15 @@ export class Workshop {
   @Column((type) => Address, { prefix: false })
   private address: Address;
 
+  @OneToMany(() => Inventory, (Inventory) => Inventory.getWarehouse())
+  private inventories: Inventory[];
+
   public constructor(name: string, address: Address) {
     this.name = name;
     this.address = address;
   }
 
-  public getId(): WorkshopId {
+  public getId(): WarehouseId {
     return this.id;
   }
 
@@ -27,7 +32,11 @@ export class Workshop {
     return this.name;
   }
 
-  public getDescription(): Address {
+  public getAdress(): Address {
     return this.address;
+  }
+
+  public getInventories(): Inventory[] {
+    return this.inventories;
   }
 }

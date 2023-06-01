@@ -1,8 +1,9 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, PrimaryColumn, ManyToOne } from 'typeorm';
 import { ProductId } from '../value-objects/product-id.value';
 import { Price } from '../value-objects/price.value';
 import { InventoryId } from '../value-objects/inventory-id.value';
 import { type } from 'os';
+import { Inventory } from './inventory.entity';
 
 @Entity('Product')
 export class Product {
@@ -18,8 +19,9 @@ export class Product {
   @Column((type) => Price, { prefix: false })
   private price: Price;
 
-  @Column((type) => InventoryId, { prefix: false })
-  private inventoryId: InventoryId;
+  @ManyToOne(() => Inventory, (inventory) => inventory.getProducts())
+  @JoinColumn({ name: 'inventory_id' })
+  private inventory: Inventory;
 
   public constructor(productName: string, quantity: number, price: Price) {
     this.productName = productName;
@@ -39,8 +41,8 @@ export class Product {
     return this.quantity;
   }
 
-  public getInventoryId(): InventoryId {
-    return this.inventoryId;
+  public getInventory(): Inventory {
+    return this.inventory;
   }
 
   public getPrice(): Price {

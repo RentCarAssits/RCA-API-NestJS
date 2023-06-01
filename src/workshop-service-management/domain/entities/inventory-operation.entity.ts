@@ -1,18 +1,29 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryColumn,
+  JoinColumn,
+  OneToOne,
+} from 'typeorm';
 import { InventoryOperationId } from '../value-objects/inventory-operation-id.value';
 import { ProductId } from '../value-objects/product-id.value';
 import { Price } from '../value-objects/price.value';
 import { InventoryId } from '../value-objects/inventory-id.value';
+import { InventoryTransactionId } from '../value-objects/inventory-transaction-id.value';
+import { InventoryTransaction } from './inventory-transaction.entity';
+import { Product } from './product.entity';
 
 @Entity('InventoryOperation')
 export class InventoryOperation {
   @PrimaryColumn('bigint', { name: 'id' })
   private id: InventoryOperationId;
 
-  @Column((type) => ProductId, { prefix: false })
-  private productId: ProductId;
+  @OneToOne(() => Product)
+  @JoinColumn({ name: 'product_id' })
+  private product: Product;
 
-  @Column('bigint', { name: 'name' })
+  @Column('bigint', { name: 'quantity' })
   private quantity: number;
 
   @Column((type) => Price, { prefix: false })
@@ -21,16 +32,25 @@ export class InventoryOperation {
   @Column((type) => InventoryId, { prefix: false })
   private inventoryId: InventoryId;
 
+  @ManyToOne(
+    () => InventoryTransaction,
+    (InventoryTransaction) => InventoryTransaction.getInventoryOperations(),
+  )
+  @JoinColumn({ name: 'inventoryTransaction_id' })
+  private inventoryTransaction: InventoryTransaction;
+
   public constructor(
-    productId: ProductId,
+    product: Product,
     quantity: number,
     price: Price,
     inventoryId: InventoryId,
+    inventoryTransaction: InventoryTransaction,
   ) {
-    this.productId = productId;
+    this.product = product;
     this.quantity = quantity;
     this.price = price;
     this.inventoryId = inventoryId;
+    this.inventoryTransaction = inventoryTransaction;
   }
 
   public getId(): InventoryOperationId {
@@ -47,5 +67,9 @@ export class InventoryOperation {
 
   public getInventoryId(): InventoryId {
     return this.inventoryId;
+  }
+
+  public getInventoryTransaction(): InventoryTransaction {
+    return this.inventoryTransaction;
   }
 }

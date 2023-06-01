@@ -1,6 +1,15 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+  JoinColumn,
+  ManyToOne,
+} from 'typeorm';
 import { InventoryId } from '../value-objects/inventory-id.value';
 import { Address } from '../value-objects/address.value';
+import { Product } from './product.entity';
+import { Warehouse } from './warehouse.entity';
 
 @Entity('Inventory')
 export class Inventory {
@@ -12,6 +21,13 @@ export class Inventory {
 
   @Column((type) => Address, { prefix: false })
   private address: Address;
+
+  @OneToMany(() => Product, (product) => product.getInventory())
+  private products: Product[];
+
+  @ManyToOne(() => Warehouse, (Warehouse) => Warehouse.getInventories())
+  @JoinColumn({ name: 'warehouse_id' })
+  private warehouse: Warehouse;
 
   public constructor(description: string, address: Address) {
     this.description = description;
@@ -28,5 +44,13 @@ export class Inventory {
 
   public getAddress(): Address {
     return this.address;
+  }
+
+  public getProducts(): Product[] {
+    return this.products;
+  }
+
+  public getWarehouse(): Warehouse {
+    return this.warehouse;
   }
 }

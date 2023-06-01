@@ -1,6 +1,6 @@
 import { Account } from "src/iam-management/domain/entities/account.entity";
 import { Column } from "typeorm";
-export class PayeeId{
+export class PayeeIdFk{
     @Column('bigint',{name:'payee_id'})
     protected readonly value: Account["id"];
 
@@ -8,8 +8,8 @@ export class PayeeId{
         this.value=value;
     }
 
-    public static create(value: Account["id"]):PayeeId{
-        return new PayeeId(value);
+    public static create(value: Account["id"]):PayeeIdFk{
+        return new PayeeIdFk(value);
     }
 
     public getValue(): Account["id"]{

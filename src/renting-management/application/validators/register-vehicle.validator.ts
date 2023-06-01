@@ -23,13 +23,6 @@ export class RegisterVehicleValidator {
     if (notification.hasErrors()) {
       return notification;
     }
-    const vehicle: Vehicle = await this.vehicleRepository
-      .createQueryBuilder()
-      .where('name = :name', { name })
-      .getOne();
-    if (vehicle != null) {
-      notification.addError('Vehicle name is taken', null);
-    }
     return notification;
   }
 }

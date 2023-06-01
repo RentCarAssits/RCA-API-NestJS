@@ -8,6 +8,7 @@ import { RentingOrderItemCreated } from '../events/renting-order-item-created.ev
 import { VehicleIdFk } from '../values/vehicle-id-fk.value';
 import { ApiProperty } from '@nestjs/swagger';
 import { VehicleId } from '../values/vehicle-id.value';
+import { VehicleIntegrity } from '../values/vehicle-integrity.value';
 
 @Entity('RentingOrderItem')
 export class RentingOrderItem extends AggregateRoot {
@@ -24,6 +25,10 @@ export class RentingOrderItem extends AggregateRoot {
   @Column((type) => Period, { prefix: false })
   public rentingPeriod: Period;
   @ApiProperty()
+  @Column({ default: false })
+  accepted: boolean;
+
+  @ApiProperty()
   @Column({
     type: 'enum',
     enum: TimeUnit,
@@ -37,12 +42,14 @@ export class RentingOrderItem extends AggregateRoot {
     rentingPeriod: Period,
     vehicleId: VehicleIdFk,
     rentingUnit: TimeUnit,
+    accepted: boolean,
   ) {
     super();
     this.rentingPrice = rentingPrice;
     this.vehicleId = vehicleId;
     this.rentingPeriod = rentingPeriod;
     this.rentingUnit = rentingUnit;
+    this.accepted = accepted;
   }
 
   public create() {
@@ -54,6 +61,7 @@ export class RentingOrderItem extends AggregateRoot {
       this.rentingPeriod.getEndDate(),
       this.vehicleId.getValue(),
       this.rentingUnit,
+      this.accepted,
     );
     this.apply(event);
   }
@@ -61,9 +69,11 @@ export class RentingOrderItem extends AggregateRoot {
   public obtainRentingPrice(): Money {
     return this.rentingPrice;
   }
+
   public changeId(id: RentingOrderItemId) {
     this.id = id;
   }
+
   public obtainRentingPeriod(): Period {
     return this.rentingPeriod;
   }

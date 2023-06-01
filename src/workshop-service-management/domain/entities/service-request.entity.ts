@@ -54,3 +54,4 @@ export class ServiceRequest extends AggregateRoot {
     return this.ownerId;
   }
 }
+

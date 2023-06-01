@@ -16,7 +16,7 @@ export class Plan extends AggregateRoot {
   private readonly PlanName: PlanName;
  
   @ApiProperty()
-  @Column(() => PlanName, { prefix: false })
+  @Column(() => Benefits, { prefix: false })
   private readonly Benefits: string;
 
   public constructor(PlanName: PlanName, benefits:string) {
@@ -32,5 +32,10 @@ export class Plan extends AggregateRoot {
   public getPlanName(): PlanName {
     return this.PlanName;
   }
-
+  public getBenefits(){
+    return this.Benefits;
+  }
+  public changeId(id: PlanId) {
+    this.id = id;
+  }
 }

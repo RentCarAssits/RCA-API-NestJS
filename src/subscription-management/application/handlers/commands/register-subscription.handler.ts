@@ -3,12 +3,11 @@ import { RegisterSubscription } from "../../commands/register-subscription";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Subscription } from "src/subscription-management/domain/entity/Subscription.entity";
 import { Repository } from "typeorm";
-import { Plan } from "../../dtos/PlanDto";
 import { Result } from "typescript-result";
 import { SubscriptionFrequency } from "src/subscription-management/domain/values/subscription-frequency.value";
 import { AppNotification } from "src/shared/application/app.notification";
 import { SubscriptionFactory } from "src/subscription-management/domain/factories/subscriptio.factory";
-import { Account } from "src/subscription-management/domain/entity/account.entity";
+
 import { Period } from "src/subscription-management/domain/values/period.value";
 
 @CommandHandler(RegisterSubscription)
@@ -45,10 +44,6 @@ export class RegisterSubscriptionHandler implements ICommandHandler<RegisterSubs
         )
     }
 
-
-
 }
-
-
 
 //factory handler

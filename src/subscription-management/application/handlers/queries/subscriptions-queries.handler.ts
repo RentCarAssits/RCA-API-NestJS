@@ -20,7 +20,7 @@ export class GetAllSubscriptionHandler implements IQueryHandler<getAllSubscripti
             '🚀 ~ file: vehicles-queries.handler.ts:18 ~ GetAllVehiclesHandler ~ execute ~ vehicles:',
             subscriptions['result'],
           );
-            
+          /*  
           const subscriptionDtos: SubscriptionDto[] = subscriptions.map((subscription) => {
             const subscriptionDto = new SubscriptionDto();
             subscriptionDto.PlanId = subscription.getPlan().getId().getValue();
@@ -31,6 +31,7 @@ export class GetAllSubscriptionHandler implements IQueryHandler<getAllSubscripti
             return subscriptionDto;
           });
         return subscriptionDtos;
+        */
     }
 }
 

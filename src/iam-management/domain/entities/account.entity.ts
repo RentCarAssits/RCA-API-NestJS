@@ -1,5 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany } from 'typeorm';
 import { User } from './user.entity';
+import { ApiProperty } from '@nestjs/swagger';
+import { Subscription } from 'src/subscription-management/domain/entity/Subscription.entity';
 
 @Entity('accounts')
 export class Account {
@@ -23,7 +25,15 @@ export class Account {
   @Column('simple-array')
   roles: string[];
 
-  //
+  // subscription Bondex
+
+  @ApiProperty()
+  @OneToMany(()=> Subscription,(Subscription) => Subscription.Account,{
+    onDelete:'CASCADE',
+    eager:true,
+  })
+  Subscriptions: Subscription[];
+
 }
 
 //AÑADIR REALACIONES PARA LOS DEMÁS BOUNDED CONTEXT

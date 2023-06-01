@@ -4,22 +4,22 @@ import { Column, Entity, OneToOne, JoinColumn, PrimaryGeneratedColumn,ManyToOne 
 import { SubscriptionId } from "../values/subscription-id.value";
 import { Period } from "../values/period.value";
 import { Plan } from "./plan.entity";
-import { Account } from "./account.entity";
 import { SubscriptionFrequency } from "../values/subscription-frequency.value";
-import { RegisterVehicleHandler } from "src/subscription-management/application/handlers/commands/register-account.handler";
 import { SubscriptionRegistered } from "../events/subscription-registered.event";
+import { Account } from "src/iam-management/domain/entities/account.entity";
 
 @Entity('Subscriptions')
 export class Subscription extends AggregateRoot{
     @ApiProperty()
     @PrimaryGeneratedColumn()
     private id: SubscriptionId;
-    
+
     @ApiProperty()
     @ManyToOne(()=> Account, (Account)=> Account.Subscriptions,{
         onDelete:'CASCADE',
     })
     Account: Account;
+
 
     @OneToOne(()=>Plan)
     @JoinColumn()
@@ -52,7 +52,7 @@ export class Subscription extends AggregateRoot{
     public register(){
         const event = new SubscriptionRegistered(
             this.id.getValue(),
-            this.Account.getAccountId().getValue(),
+            this.Account.id,
             this.Plan.getId().getValue(),
             this.UnitPrice,
             this.Frequency.getValue(),

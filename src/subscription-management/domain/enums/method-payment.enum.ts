@@ -1,0 +1,5 @@
+export enum MethodPayment{
+    CARD_METHOD=1,
+    MONEY_METHOD=2,
+}
+// I'M NOT SURE ABOUT IT, NOT IS NECESARY? IS AN EXTERNAL SERVICE?

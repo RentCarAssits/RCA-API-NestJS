@@ -1,8 +1,8 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 import { AccountPayableId } from '../values/account-payable-id.value';
-import { PayerId } from '../values/payer-id-fk.value';
-import { PayeeId } from '../values/payee-id-fk.value';
+import { PayerIdFk } from '../values/payer-id-fk.value';
+import { PayeeIdFk } from '../values/payee-id-fk.value';
 import { TotalPrice } from '../values/total-price.value';
 import { ParcialPrice } from '../values/parcial_price.value';
 
@@ -13,11 +13,11 @@ export class AccountPayableAggregate extends AggregateRoot {
     private id: AccountPayableId;
   
 
-    @Column((type) => PayerId, { prefix: false })
-    private payerId: PayerId;
+    @Column((type) => PayerIdFk, { prefix: false })
+    private payerId: PayerIdFk;
   
-    @Column((type) => PayeeId, { prefix: false })
-    private payeeId: PayeeId;
+    @Column((type) => PayeeIdFk, { prefix: false })
+    private payeeId: PayeeIdFk;
   
     @Column((type) => TotalPrice, { prefix: false })
     private totalPrice: TotalPrice;
@@ -37,8 +37,8 @@ export class AccountPayableAggregate extends AggregateRoot {
         expirationDay: Date) {
       super();
       this.id = AccountPayableId.create(idValue);
-      this.payerId = PayerId.create(payerIdValue);
-      this.payeeId = PayeeId.create(payeeIdValue);
+      this.payerId = PayerIdFk.create(payerIdValue);
+      this.payeeId = PayeeIdFk.create(payeeIdValue);
       this.totalPrice = TotalPrice.create(totalPriceValue);
       this.parcialPrice = ParcialPrice.create(parcialPriceValue);
       this.expirationDay = expirationDay;
@@ -48,11 +48,11 @@ export class AccountPayableAggregate extends AggregateRoot {
         return this.id;
       }
     
-      public getPayerId(): PayerId {
+      public getPayerId(): PayerIdFk {
         return this.payerId;
       }
     
-      public getPayeeId(): PayeeId {
+      public getPayeeId(): PayeeIdFk {
         return this.payeeId;
       }
     

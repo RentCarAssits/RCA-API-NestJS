@@ -2,15 +2,15 @@ import { AggregateRoot } from '@nestjs/cqrs';
 import { Column, Entity, PrimaryColumn } from 'typeorm';
 import { PaymentId } from '../values/Payment-id.value';
 import { PaymentMethod } from '../enums/payment-method.enum';
-import { PayerId } from '../values/payer-id-fk.value';
+import { PayerIdFk } from '../values/payer-id-fk.value';
 
 @Entity()
 export class PaymentAggregate extends AggregateRoot {
   @PrimaryColumn('bigint', { name: 'id' })
   private paymentId: PaymentId;
 
-  @Column((type) => PayerId, { prefix: false })
-  private payerId: PayerId;
+  @Column((type) => PayerIdFk, { prefix: false })
+  private payerId: PayerIdFk;
 
   @Column({
     type: 'enum',
@@ -31,7 +31,7 @@ export class PaymentAggregate extends AggregateRoot {
     {
     super();
     this.paymentId = PaymentId.create(idValue);
-    this.payerId = PayerId.create(payerIdValue);
+    this.payerId = PayerIdFk.create(payerIdValue);
     this.paymentMethod = paymentMethod;
     this.paymentDay = paymentDay;
   }
@@ -40,7 +40,7 @@ export class PaymentAggregate extends AggregateRoot {
     return this.paymentId;
   }
 
-  public getPayerId(): PayerId {
+  public getPayerId(): PayerIdFk {
     return this.payerId;
   }
 

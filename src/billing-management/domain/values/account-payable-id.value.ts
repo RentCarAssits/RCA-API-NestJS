@@ -1,6 +1,4 @@
-import { PrimaryColumn } from "typeorm";
 export class AccountPayableId{
-    @PrimaryColumn('bigint',{name:'id'})
     protected readonly value: number;
 
     protected constructor(value: number) {

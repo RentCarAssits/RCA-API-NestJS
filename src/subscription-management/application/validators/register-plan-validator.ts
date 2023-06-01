@@ -26,8 +26,7 @@ export class RegisterPlanValidator{
         if (notification.hasErrors()) {
             return notification;
         }
-        
-        
+
         return notification;
     }
 }

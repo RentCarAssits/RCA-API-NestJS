@@ -32,7 +32,7 @@ export class RegisterVehicleHandler
   async execute(command: RegisterVehicle) {
     const categories = command.categories;
     let vehicleId = 0;
-
+    console.log('commit', command);
     const vehicleNameResult: Result<AppNotification, VehicleName> =
       VehicleName.create(command.name);
     if (vehicleNameResult.isFailure()) return vehicleId;

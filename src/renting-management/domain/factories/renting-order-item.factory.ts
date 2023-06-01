@@ -11,12 +11,14 @@ export class RentingOrderItemFactory {
     rentingPeriod: Period,
     vehicleId: VehicleIdFk,
     rentingUnit: TimeUnit,
+    state: boolean,
   ): RentingOrderItem {
     return new RentingOrderItem(
       rentingPrice,
       rentingPeriod,
       vehicleId,
       rentingUnit,
+      state,
     );
   }
 }

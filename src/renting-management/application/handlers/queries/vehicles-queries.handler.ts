@@ -5,6 +5,7 @@ import { GetAllVehiclesQuery } from '../../queries/get-all-vehicles.query';
 import { GetVehicleByIdQuery } from '../../queries/get-vehicle-by-id.query';
 import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Category } from '../../../domain/entities/category.entity';
 
 @QueryHandler(GetAllVehiclesQuery)
 export class GetAllVehiclesHandler
@@ -16,14 +17,18 @@ export class GetAllVehiclesHandler
   ) {}
 
   async execute(query: GetAllVehiclesQuery): Promise<VehicleDto[]> {
-    const vehicles = await this.vehicleRepository.find({
-      relations: {
-        categories: true,
-      },
-    });
+    const vehicles = await this.vehicleRepository
+      .createQueryBuilder()
+      .where('state = :state', { state: 0 })
+      .leftJoinAndSelect(
+        'categories',
+        'categories',
+        'categories.vehicleId = vehicle.id',
+      )
+      .getMany();
     console.log(
       '🚀 ~ file: vehicles-queries.handler.ts:18 ~ GetAllVehiclesHandler ~ execute ~ vehicles:',
-      vehicles['result'],
+      vehicles,
     );
 
     const vehicleDtos: VehicleDto[] = vehicles.map((vehicle) => {
@@ -34,9 +39,7 @@ export class GetAllVehiclesHandler
       vehicleDto.integrity = vehicle.getIntegrity().getValue();
       vehicleDto.state = vehicle.getState();
       vehicleDto.year = vehicle.year;
-      vehicleDto.categories = vehicle.categories.map((category) =>
-        category.getName().getValue(),
-      );
+      vehicleDto.categories = [''];
       return vehicleDto;
     });
 

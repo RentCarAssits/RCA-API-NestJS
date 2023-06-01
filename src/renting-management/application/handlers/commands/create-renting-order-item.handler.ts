@@ -1,9 +1,15 @@
-import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
+import {
+  CommandHandler,
+  EventPublisher,
+  ICommandHandler,
+  IQueryHandler,
+  QueryHandler,
+} from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AppNotification } from '../../../../shared/application/app.notification';
 import { CreateRentingOrderItem } from '../../commands/create-renting-order-item.command';
 import { RentingOrderItem } from '../../../domain/entities/renting-order-item.entity';
-import { Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { Result } from 'typescript-result';
 import { Money } from '../../../domain/values/money.value';
 import { Period } from '../../../domain/values/period.value';
@@ -12,6 +18,10 @@ import { RentingOrderItemFactory } from '../../../domain/factories/renting-order
 import { TimeUnit } from '../../../domain/enums/TimeUnit';
 import { VehicleId } from '../../../domain/values/vehicle-id.value';
 import { RentingOrderItemId } from '../../../domain/values/renting-order-id.value';
+import { GetVehicleByIdQuery } from '../../queries/get-vehicle-by-id.query';
+import { VehicleDto } from '../../dtos/vehicle.dto';
+import { GetRentingOrderItemByIdQuery } from '../../queries/get-renting-order-item-by-id.query';
+import { Vehicle } from '../../../domain/entities/vehicle.entity';
 
 @CommandHandler(CreateRentingOrderItem)
 export class CreateRentingOrderItemHandler
@@ -26,7 +36,10 @@ export class CreateRentingOrderItemHandler
   async execute(command: CreateRentingOrderItem) {
     let rentingOrderItemId = 0;
     const rentingPrice = Money.create(command.rentingPrice, command.currency);
+
     const rentingUnit = TimeUnit.DAYS;
+
+    const accepted = false;
     const rentingPeriod: Period = Period.newPeriod(
       command.startDate,
       command.endDate,
@@ -39,6 +52,7 @@ export class CreateRentingOrderItemHandler
         rentingPeriod,
         vehicleId,
         rentingUnit,
+        accepted,
       );
     let rentingOrderItem = await this.rentingOrderItemRepository.save(
       rentingOrderEntity,

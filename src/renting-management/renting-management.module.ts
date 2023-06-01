@@ -14,11 +14,15 @@ import { RegisterVehicleHandler } from './application/handlers/commands/register
 import { ProductRegisteredHandler } from './application/handlers/events/vehicle-registered.handler';
 import { CreateRentingOrderItemHandler } from './application/handlers/commands/create-renting-order-item.handler';
 import { RentingOrderItemCreatedHandler } from './application/handlers/events/renting-order-item-created.handler';
-import { GetAllRentingOrderItemsHandler } from './application/handlers/queries/get-all-renting-order-items.handler';
+import {
+  GetAllRentingOrderItemsHandler,
+  GetRentingOrderItemByIdHandler,
+} from './application/handlers/queries/get-all-renting-order-items.handler';
 import { RentingOrderItemsController } from './api/rentingOrderItem/renting-order-items.controller';
 import { RentingOrderItem } from './domain/entities/renting-order-item.entity';
 import { RentingOrderItemService } from './application/services/renting-order-item.service';
 import { CreateRentingOrderItemValidator } from './application/validators/create-renting-order-item.validator';
+import { IamManagementModule } from 'src/iam-management/iam-management.module';
 
 export const CommandHandlers = [
   RegisterVehicleHandler,
@@ -32,21 +36,20 @@ export const QueryHandlers = [
   GetAllVehiclesHandler,
   GetVehicleByIdHandler,
   GetAllRentingOrderItemsHandler,
+  GetRentingOrderItemByIdHandler,
 ];
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Category, Vehicle, RentingOrderItem]),
     CqrsModule,
+    IamManagementModule,
   ],
   controllers: [VehiclesController, RentingOrderItemsController],
   providers: [
     VehiclesApplicationService,
-    GetAllVehiclesHandler,
-    GetVehicleByIdHandler,
     RegisterVehicleValidator,
     RentingOrderItemService,
-    GetAllRentingOrderItemsHandler,
     CreateRentingOrderItemValidator,
     ...CommandHandlers,
     ...EventHandlers,

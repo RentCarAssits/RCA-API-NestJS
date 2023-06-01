@@ -4,21 +4,21 @@ export class Address {
   private readonly country: string;
   @Column('varchar', { name: 'district' })
   private readonly district: string;
-  @Column('varchar', { name: 'description' })
-  private readonly description: string;
+  @Column('varchar', { name: 'address_detail' })
+  private readonly addressDetail: string;
 
-  private constructor(country: string, district: string, description: string) {
+  private constructor(country: string, district: string, addressDetail: string) {
     this.country = country;
     this.district = district;
-    this.description = description;
+    this.addressDetail = addressDetail;
   }
 
   public static create(
     country: string,
     district: string,
-    description: string,
+    addressDetail: string,
   ): Address {
-    return new Address(country, district, description);
+    return new Address(country, district, addressDetail);
   }
 
   public getCountry(): string {
@@ -27,7 +27,7 @@ export class Address {
   public getDitrict(): string {
     return this.district;
   }
-  public getDescription(): string {
-    return this.description;
+  public getAddressDetail(): string {
+    return this.addressDetail;
   }
 }

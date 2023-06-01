@@ -1,20 +1,18 @@
+import { Account } from "src/iam-management/domain/entities/account.entity";
 import { Column } from "typeorm";
-export class PayeeId{
+export class PayeeIdFk{
     @Column('bigint',{name:'payee_id'})
-    protected readonly value: number;
+    protected readonly value: Account["id"];
 
-    protected constructor(value: number) {
-        this.value=Number(value);
+    protected constructor(value: Account["id"]) {
+        this.value=value;
     }
 
-    public static create(value: number): PayeeId {
-        return new PayeeId(value);
+    public static create(value: Account["id"]):PayeeIdFk{
+        return new PayeeIdFk(value);
     }
 
-    public getValue():number{
+    public getValue(): Account["id"]{
         return this.value;
     }
-
-
-
 }

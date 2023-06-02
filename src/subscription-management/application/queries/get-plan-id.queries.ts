@@ -1,3 +1,3 @@
 export class getPlanByIdQuery{
-    public constructor(public readonly PlanId: number) {}
+    public constructor(public readonly PlanId: Number) {}
 }

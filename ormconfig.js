@@ -4,7 +4,7 @@ module.exports = {
   host: 'localhost',
   port: 3306,
   username: 'root',
-  password: '12345678',
+  password: '123456789',
   database: 'rca_db',
   autoLoadEntities: true,
   synchronize: true,

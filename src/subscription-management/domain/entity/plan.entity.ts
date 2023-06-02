@@ -4,6 +4,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { PlanId } from "../values/plan-id.value";
 import { PlanName } from "../values/plan-name.value";
 import { Benefits } from "../values/benefits.value";
+import { PlanRegistered } from "../events/plan-registered.event";
 
 @Entity('Plans')
 export class Plan extends AggregateRoot {
@@ -23,6 +24,13 @@ export class Plan extends AggregateRoot {
     super();
     this.PlanName = PlanName;
     this.Benefits=benefits;
+  }
+  public register(){
+    const event = new PlanRegistered(
+      this.id.getValue(),
+      this.PlanName.getValue(),
+      this.Benefits
+    )
   }
 
   public getId(): PlanId {

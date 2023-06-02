@@ -20,7 +20,6 @@ export class Subscription extends AggregateRoot{
     })
     Account: Account;
 
-
     @OneToOne(()=>Plan)
     @JoinColumn()
     private readonly Plan:Plan;

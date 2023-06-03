@@ -1,26 +1,26 @@
 import { Column } from 'typeorm';
 
 export class Period {
-  @Column('decimal', { name: 'start_date' })
-  protected readonly startDate: Date;
+  @Column('date', { name: 'start' })
+  private start: Date;
 
-  @Column('varchar', { name: 'end_date' })
-  protected readonly endDate: Date;
+  @Column('date', { name: 'end' })
+  private end: Date;
 
-  protected constructor(startDate: Date, endDate: Date) {
-    this.startDate = startDate;
-    this.endDate = endDate;
+  public constructor(start: Date, end: Date) {
+    this.start = start;
+    this.end = end;
   }
 
-  public static create(startDate: Date, endDate: Date): Period {
-    return new Period(startDate, endDate);
+  public static create(start: Date, end: Date): Period {
+    return new Period(start, end);
   }
 
-  public getStartDate(): Date {
-    return this.startDate;
+  public getStart() {
+    return this.start;
   }
 
-  public getCurrency(): Date {
-    return this.endDate;
+  public getEnd() {
+    return this.end;
   }
 }

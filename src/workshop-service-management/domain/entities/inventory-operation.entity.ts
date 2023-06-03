@@ -13,6 +13,7 @@ import { InventoryId } from '../value-objects/inventory-id.value';
 import { InventoryTransactionId } from '../value-objects/inventory-transaction-id.value';
 import { InventoryTransaction } from './inventory-transaction.entity';
 import { Product } from './product.entity';
+import { Inventory } from './inventory.entity';
 
 @Entity('InventoryOperation')
 export class InventoryOperation {
@@ -23,18 +24,22 @@ export class InventoryOperation {
   @JoinColumn({ name: 'product_id' })
   private product: Product;
 
-  @Column('bigint', { name: 'quantity' })
+  @Column('bigint', { name: 'quantityInventoryOperation' })
   private quantity: number;
 
   @Column((type) => Price, { prefix: false })
   private price: Price;
 
-  @Column((type) => InventoryId, { prefix: false })
-  private inventoryId: InventoryId;
+  @ManyToOne(
+    (type) => Inventory,
+    (Inventory) => Inventory.getInventoryOperation,
+  )
+  @JoinColumn()
+  private inventory: Inventory;
 
   @ManyToOne(
     () => InventoryTransaction,
-    (InventoryTransaction) => InventoryTransaction.getInventoryOperations(),
+    (InventoryTransaction) => InventoryTransaction.getInventoryOperations,
   )
   @JoinColumn({ name: 'inventoryTransaction_id' })
   private inventoryTransaction: InventoryTransaction;
@@ -43,13 +48,13 @@ export class InventoryOperation {
     product: Product,
     quantity: number,
     price: Price,
-    inventoryId: InventoryId,
+    inventory: Inventory,
     inventoryTransaction: InventoryTransaction,
   ) {
     this.product = product;
     this.quantity = quantity;
     this.price = price;
-    this.inventoryId = inventoryId;
+    this.inventory = inventory;
     this.inventoryTransaction = inventoryTransaction;
   }
 
@@ -65,8 +70,8 @@ export class InventoryOperation {
     return this.price;
   }
 
-  public getInventoryId(): InventoryId {
-    return this.inventoryId;
+  public getInventory(): Inventory {
+    return this.inventory;
   }
 
   public getInventoryTransaction(): InventoryTransaction {

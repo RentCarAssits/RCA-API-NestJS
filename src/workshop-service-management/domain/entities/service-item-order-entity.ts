@@ -16,7 +16,7 @@ export class ServiceItemOrder {
 
   @OneToMany(
     () => InventoryTransaction,
-    (inventoryTransaction) => inventoryTransaction.getServiceItemOrder(),
+    (inventoryTransaction) => inventoryTransaction.getServiceItemOrder,
   )
   private inventoryTransactions: InventoryTransaction[];
 

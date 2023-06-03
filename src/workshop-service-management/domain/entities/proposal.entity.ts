@@ -12,7 +12,7 @@ export class Proposal extends AggregateRoot {
   @PrimaryColumn('bigint', { name: 'id' })
   private id: ProposalId;
 
-  @Column('number', { name: 'humanResources' })
+  @Column('int', { name: 'humanResources' })
   private humanResources: number;
 
   @Column((type) => Price, { prefix: false })
@@ -21,7 +21,7 @@ export class Proposal extends AggregateRoot {
   @Column((type) => Period, { prefix: false })
   private period: Period;
 
-  @OneToMany(() => ServiceItem, (ServiceItem) => ServiceItem.getProposal())
+  @OneToMany(() => ServiceItem, (ServiceItem) => ServiceItem.getProposal)
   private serviceItems: ServiceItem[];
 
   public constructor(

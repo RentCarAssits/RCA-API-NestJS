@@ -15,20 +15,24 @@ export class InventoryTransaction {
   private id: InventoryTransactionId;
 
   @OneToMany(
-    () => InventoryOperation,
-    (invetoryOperation) => invetoryOperation.getInventoryTransaction(),
+    (type) => InventoryOperation,
+    (invetoryOperation) => invetoryOperation.getInventoryTransaction,
   )
   private inventoryOperations: InventoryOperation[];
 
   @ManyToOne(
     () => ServiceItemOrder,
-    (ServiceItemOrder) => ServiceItemOrder.getInventoryTransactions(),
+    (ServiceItemOrder) => ServiceItemOrder.getInventoryTransactions,
   )
-  @JoinColumn({ name: 'serviceITemOrder_id' })
+  @JoinColumn({ name: 'serviceItemOrder_id' })
   private serviceITemOrder: ServiceItemOrder;
 
-  public constructor(inventoryOperations: InventoryOperation[]) {
+  public constructor(
+    inventoryOperations: InventoryOperation[],
+    serviceITemOrder: ServiceItemOrder,
+  ) {
     this.inventoryOperations = inventoryOperations;
+    this.serviceITemOrder = serviceITemOrder;
   }
 
   public getId(): InventoryTransactionId {

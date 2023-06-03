@@ -22,7 +22,6 @@ export const QueryHandlers = [];
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
     TypeOrmModule.forFeature([
       InventoryOperation,
       InventoryTransaction,

@@ -21,13 +21,13 @@ export class RequestItem {
   @JoinColumn({ name: 'product_id' })
   private product: Product;
 
-  @Column('bigint', { name: 'quantity' })
+  @Column('bigint', { name: 'quantityRequestItem' })
   private quantity: number;
 
   @Column((type) => Price, { prefix: false })
   private price: Price;
 
-  @ManyToOne(() => ServiceItem, (ServiceItem) => ServiceItem.getRequestItems())
+  @ManyToOne(() => ServiceItem, (ServiceItem) => ServiceItem.getRequestItems)
   @JoinColumn({ name: 'serviceItem_id' })
   private serviceItem: ServiceItem;
 

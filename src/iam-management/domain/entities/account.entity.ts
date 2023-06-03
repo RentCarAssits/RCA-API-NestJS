@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 
 @Entity('accounts')
@@ -7,23 +13,9 @@ export class Account {
   id: number;
 
   @Column('text')
-  username: string;
-
-  @Column('text')
-  email: string;
-
-  @Column('text', {
-    select: false,
-  })
-  password: string;
+  name: string;
 
   @OneToOne(() => User, (user) => user.account)
+  @JoinColumn()
   user: User;
-
-  @Column('simple-array')
-  roles: string[];
-
-  //
 }
-
-//AÑADIR REALACIONES PARA LOS DEMÁS BOUNDED CONTEXT

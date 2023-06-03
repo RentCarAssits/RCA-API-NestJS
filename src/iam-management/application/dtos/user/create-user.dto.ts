@@ -1,21 +1,23 @@
 import {
+  IsArray,
   IsEmail,
-  IsOptional,
+  IsNotEmpty,
   IsString,
   Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { CreateProfileDto } from '../profile/create-profile.dto';
 
-export class LoginAccountDto {
+export class CreateUserDto {
+  @IsNotEmpty()
   @IsString()
+  userName: string;
+
+  @IsNotEmpty()
   @IsEmail()
-  @IsOptional()
-  email: string;
-
   @IsString()
-  @IsOptional()
-  username: string;
+  email: string;
 
   @IsString()
   @MinLength(6)
@@ -25,4 +27,11 @@ export class LoginAccountDto {
       'The password must have a Uppercase, lowercase letter and a number',
   })
   password: string;
+
+  @IsArray()
+  @IsString({ each: true })
+  roles: string[];
+
+  @IsNotEmpty()
+  profile: CreateProfileDto;
 }

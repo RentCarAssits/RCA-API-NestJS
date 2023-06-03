@@ -7,6 +7,7 @@ import { AppNotification } from "src/shared/application/app.notification";
 import { GetAllPlanQuerys } from "src/subscription-management/application/queries/get-all-plan.query";
 import { getPlanByIdQuery } from "src/subscription-management/application/queries/get-plan-id.queries";
 import { RegisterPlanRequest } from "src/subscription-management/application/request/register-plan.request";
+
 import { RegisterPlanResponse } from "src/subscription-management/application/response/register-plan.response";
 import { PlanApplicationService } from "src/subscription-management/application/service/plan-application.service";
 import { Plan } from "src/subscription-management/domain/entity/plan.entity";
@@ -15,7 +16,7 @@ import { Result } from "typescript-result";
 
 @ApiTags('Plans')
 @Controller('Plans')
-export class VehiclesController{
+export class PlanController{
     constructor(
         private readonly planApplicationService:PlanApplicationService,
         private readonly queryBus: QueryBus,
@@ -32,12 +33,13 @@ export class VehiclesController{
         try{
             const result: Result<AppNotification, RegisterPlanResponse>= await this.planApplicationService.register(registerPlanRequest);
             if(result.isSuccess()){
+                console.log('sucess AQUIIIIIIIIIIIIIIII');
                 return ApiController.created(response,result.value);
             }
             return ApiController.error(response,result.error.getErrors());
         } catch(error){
             console.log(
-                '🚀 ~ file: vehicles.controller.ts:44 ~ VehiclesController ~ error:',
+                'ERRRRORRRRRRRRRRRR no entro en el try 🚀 ~ file: vehicles.controller.ts:44 ~ VehiclesController ~ error:',
                 error,    
             );
             return ApiController.serverError(response,error);

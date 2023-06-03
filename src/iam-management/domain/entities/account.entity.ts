@@ -26,14 +26,14 @@ export class Account {
   roles: string[];
 
   // subscription Bondex
-
+  /*
   @ApiProperty()
-  @OneToMany(()=> Subscription,(Subscription) => Subscription.Account,{
+  @OneToMany(()=> Subscription,(Subscription) => Subscription.account,{
     onDelete:'CASCADE',
     eager:true,
   })
-  Subscriptions: Subscription[];
-
+  subscriptions: Subscription[];
+  */
 }
 
 //AÑADIR REALACIONES PARA LOS DEMÁS BOUNDED CONTEXT

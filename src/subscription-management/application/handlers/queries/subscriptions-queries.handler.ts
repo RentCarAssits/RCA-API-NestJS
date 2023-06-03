@@ -9,11 +9,14 @@ import { getSubscriptionByIdQuery } from "../../queries/get-subscription-id.quer
 @QueryHandler(getAllSubscriptionQuery)
 export class GetAllSubscriptionHandler implements IQueryHandler<getAllSubscriptionQuery>{
     constructor(@InjectRepository(Subscription) private readonly vehicleRepository: Repository<Subscription>,) {}
-
+  async execute(query: getAllSubscriptionQuery): Promise<any> {
+    
+  }
+    /*
     async execute(query: getAllSubscriptionQuery): Promise<any> {
         const subscriptions = await this.vehicleRepository.find({
             relations: {
-              Account: true,
+              account: true,
             },
           });
           console.log(
@@ -31,8 +34,9 @@ export class GetAllSubscriptionHandler implements IQueryHandler<getAllSubscripti
             return subscriptionDto;
           });
         return subscriptionDtos;
-        */
-    }
+      }
+      */
+      
 }
 
 @QueryHandler(getSubscriptionByIdQuery)
@@ -66,5 +70,4 @@ export class GetSubscriptionByIdHanlder implements IQueryHandler<getSubscription
         return subscriptionDto;
     }
     
-
 }

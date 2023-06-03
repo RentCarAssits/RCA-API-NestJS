@@ -14,11 +14,13 @@ export class Subscription extends AggregateRoot{
     @PrimaryGeneratedColumn()
     private id: SubscriptionId;
 
+    /*
     @ApiProperty()
-    @ManyToOne(()=> Account, (Account)=> Account.Subscriptions,{
+    @ManyToOne(()=> Account, (account)=> account.subscriptions,{
         onDelete:'CASCADE',
     })
-    Account: Account;
+    account: Account;
+    */
 
     @OneToOne(()=>Plan)
     @JoinColumn()
@@ -47,11 +49,11 @@ export class Subscription extends AggregateRoot{
         this.Frequency=Frequency;
         this.Period=Period;
     }
-
+    /*
     public register(){
         const event = new SubscriptionRegistered(
             this.id.getValue(),
-            this.Account.id,
+            //this.account.id,
             this.Plan.getId().getValue(),
             this.UnitPrice,
             this.Frequency.getValue(),
@@ -59,15 +61,15 @@ export class Subscription extends AggregateRoot{
         ); 
         this.apply(event);
     }
-
+    */
     public getId(): SubscriptionId {
         return this.id;
     }
-    
+    /*
     public getAccount(): Account {
-        return this.Account;
+        return this.account;
     }
-    
+    */
     public getPlan(): Plan {
         return this.Plan;
     }

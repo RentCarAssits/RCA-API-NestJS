@@ -1,6 +1,7 @@
+
 export class RegisterPlanRequest {
     constructor(
-        public readonly PlanId: number,
+        public readonly PlanId: Number,
         public readonly PlanName: string,
         public readonly Benefits: string) {
 

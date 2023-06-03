@@ -1,3 +1,4 @@
+
 export class RegisterVehicleRequest {
   constructor(
     public readonly name: string,

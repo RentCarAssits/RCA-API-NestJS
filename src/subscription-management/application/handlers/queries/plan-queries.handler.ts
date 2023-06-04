@@ -41,14 +41,13 @@ export class GetPlanByIdHandler implements IQueryHandler<getPlanByIdQuery>{
       async execute(query: getPlanByIdQuery){
           const manager = this.connection.manager;
           const sql = `
-          SELECT vehicles.*, GROUP_CONCAT(categories.category) as categories
-          FROM vehicles
-          LEFT JOIN categories ON vehicles.id = categories.vehicleId
-          WHERE vehicles.id = ?
-          GROUP BY vehicles.id
-      `;
+          SELECT *
+          FROM plans as P
+          WHERE P.id = ?`;
       
       const result = await manager.query(sql,[query.PlanId]);
+
+      console.log("result: ", result);  // result si almacena las variables
 
       if(result==0){
         return null;
@@ -56,9 +55,11 @@ export class GetPlanByIdHandler implements IQueryHandler<getPlanByIdQuery>{
       }
 
       const plan = result[0];
+      
+      console.log("PLAN: ",plan); // plan si almacena las variables 
 
       const planDto = new PlanDto();
-      planDto.PlanName = plan.PlanName;
+      planDto.PlanName = plan.name;
       planDto.Benefits = plan.Benefits;
 
       return planDto;

@@ -31,7 +31,7 @@ export class PlanController {
   ): Promise<object> {
     try {
       console.log('request: ', registerPlanRequest);
-      const result: Result<AppNotification, RegisterPlanResponse> =
+      const result: Result<AppNotification, RegisterPlanRequest> =
         await this.planApplicationService.register(registerPlanRequest);
       if (result.isSuccess()) {
         console.log('sucess ');

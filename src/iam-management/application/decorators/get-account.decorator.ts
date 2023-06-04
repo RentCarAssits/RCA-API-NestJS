@@ -7,7 +7,7 @@ import {
 export const GetAccount = createParamDecorator(
   (data: string, ctx: ExecutionContext) => {
     const req = ctx.switchToHttp().getRequest();
-    const {account} = req.user;
+    const { account } = req.user;
 
     if (!account)
       throw new InternalServerErrorException('Account not found (request)');

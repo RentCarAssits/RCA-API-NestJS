@@ -63,6 +63,8 @@ export class RegisterVehicleHandler
       vehicleState,
     );
 
+    ///
+
     let categoryEntities = categories.map((category) => {
       const categoryNameResult = CategoryName.create(category);
       if (!categoryNameResult.isSuccess()) {

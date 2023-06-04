@@ -1,9 +1,9 @@
-import { AggregateRoot } from "@nestjs/cqrs";
-import { ApiProperty } from "@nestjs/swagger";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { PlanId } from "../values/plan-id.value";
-import { PlanName } from "../values/plan-name.value";
-import { Benefits } from "../values/benefits.value";
+import { AggregateRoot } from '@nestjs/cqrs';
+import { ApiProperty } from '@nestjs/swagger';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { PlanId } from '../values/plan-id.value';
+import { PlanName } from '../values/plan-name.value';
+import { PlanRegistered } from '../events/plan-registered.event';
 
 @Entity('Plans')
 export class Plan extends AggregateRoot {
@@ -14,15 +14,23 @@ export class Plan extends AggregateRoot {
   @ApiProperty()
   @Column(() => PlanName, { prefix: false })
   private readonly PlanName: PlanName;
- 
+
   @ApiProperty()
-  @Column(() => Benefits, { prefix: false })
+  @Column()
   private readonly Benefits: string;
 
-  public constructor(PlanName: PlanName, benefits:string) {
+  public constructor(PlanName: PlanName, benefits: string) {
     super();
     this.PlanName = PlanName;
-    this.Benefits=benefits;
+    this.Benefits = benefits;
+  }
+
+  public register() {
+    const event = new PlanRegistered(
+      this.id.getValue(),
+      this.PlanName.getValue(),
+      this.Benefits,
+    );
   }
 
   public getId(): PlanId {
@@ -32,9 +40,11 @@ export class Plan extends AggregateRoot {
   public getPlanName(): PlanName {
     return this.PlanName;
   }
-  public getBenefits(){
+
+  public getBenefits() {
     return this.Benefits;
   }
+
   public changeId(id: PlanId) {
     this.id = id;
   }

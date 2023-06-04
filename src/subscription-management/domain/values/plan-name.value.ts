@@ -1,12 +1,14 @@
-import { AppNotification } from "src/shared/application/app.notification";
-import { Result } from "typescript-result";
+import { AppNotification } from 'src/shared/application/app.notification';
+import { Result } from 'typescript-result';
 
 export class PlanName {
   private readonly value: string;
-  private static MAX_LENGTH: number = 250;
+  private static MAX_LENGTH = 250;
+
   private constructor(value: string) {
     this.value = value;
   }
+
   public getValue(): string {
     return this.value;
   }
@@ -30,5 +32,4 @@ export class PlanName {
     }
     return Result.ok(new PlanName(planname));
   }
-
 }

@@ -15,7 +15,8 @@ export class PaymentPayableAggregate extends AggregateRoot {
   @Column((type) => Amount)
   private amount: Amount;
 
-  public constructor(paymentId: PaymentIdFk,
+  public constructor(
+    paymentId: PaymentIdFk,
     accountPayableId: AccountPaybleIdFk,
     amountValue: Amount) { //Cuando creas el paymentPayable, le pasas la id del pago, la id de la deuda que esta pagando y el monto que esta pagando
     super();

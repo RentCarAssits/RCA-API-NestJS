@@ -2,10 +2,10 @@ import { Column } from 'typeorm';
 import { Result } from 'typescript-result';
 import { AppNotification } from '../../../shared/application/app.notification';
 
-export class UserName {
-  @Column('varchar', { name: 'name' })
+export class VehicleIntegrity {
+  @Column('varchar', { name: 'integrity' })
   private readonly value: string;
-  private static MAX_LENGTH = 150;
+  private static MAX_LENGTH = 250;
 
   private constructor(value: string) {
     this.value = value;
@@ -15,15 +15,17 @@ export class UserName {
     return this.value;
   }
 
-  public static create(name: string): Result<AppNotification, UserName> {
+  public static create(
+    integrity: string,
+  ): Result<AppNotification, VehicleIntegrity> {
     const notification: AppNotification = new AppNotification();
-    name = (name ?? '').trim();
-    if (name === '') {
-      notification.addError('User name is required', null);
+    integrity = (integrity ?? '').trim();
+    if (integrity === '') {
+      notification.addError('integrity field is required', null);
     }
-    if (name.length > this.MAX_LENGTH) {
+    if (integrity.length > this.MAX_LENGTH) {
       notification.addError(
-        'The maximum length of a user name is ' +
+        'The maximum length of an name is ' +
           this.MAX_LENGTH +
           ' characters including spaces',
         null,
@@ -32,6 +34,6 @@ export class UserName {
     if (notification.hasErrors()) {
       return Result.error(notification);
     }
-    return Result.ok(new UserName(name));
+    return Result.ok(new VehicleIntegrity(integrity));
   }
 }

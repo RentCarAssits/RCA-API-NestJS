@@ -3,21 +3,19 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { Account } from 'src/iam-management/domain/entities/account.entity';
-import { User } from 'src/iam-management/domain/entities/user.entity';
-import { JwtPayload } from 'src/iam-management/domain/interfaces/jwt-payload.interface';
 
-import { AcceptedFields, Repository } from 'typeorm';
+import { JwtPayload } from 'src/iam-management/domain/interfaces/jwt-payload.interface';
+import { Repository } from 'typeorm';
+import { User } from '../../domain/entities/user.entity';
+import { Account } from '../../domain/entities/account.entity';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     @InjectRepository(User)
-    private readonly yuserRepository: Repository<User>,
-
+    private readonly userRepository: Repository<User>,
     @InjectRepository(Account)
     private readonly accountRepository: Repository<Account>,
-
     configService: ConfigService,
   ) {
     super({
@@ -26,14 +24,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload): Promise<Account> {
+  async validate(payload: JwtPayload): Promise<any> {
     const { id } = payload;
 
-    const user = await this.accountRepository.findOneBy({ id });
-    if (!user) throw new UnauthorizedException('Token not valid');
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.profile', 'profile')
+      .leftJoinAndSelect('user.account', 'account')
+      .where('user.id = :id', { id: id })
+      .getOne();
 
-    /* if ( !user.isActive ) 
-            throw new UnauthorizedException('User is inactive, talk with an admin');*/
+    if (!user) throw new UnauthorizedException('Token not valid');
+    /*if (!user.isActive)
+      throw new UnauthorizedException('User is inactive, talk with an admin');*/
     return user;
   }
 }

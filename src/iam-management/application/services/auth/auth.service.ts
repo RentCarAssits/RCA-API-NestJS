@@ -1,8 +1,5 @@
-import { CreateUserDto } from '../../dtos/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from 'src/iam-management/domain/entities/user.entity';
-import { Account } from 'src/iam-management/domain/entities/account.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import {
@@ -11,40 +8,41 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { LoginAccountDto } from '../../dtos/login-account.dto';
+import { LoginDto } from '../../dtos/user/login.dto';
 import { JwtPayload } from 'src/iam-management/domain/interfaces/jwt-payload.interface';
+import { User } from '../../../domain/entities/user.entity';
+import { CreateUserDto } from '../../dtos/user/create-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(Account)
-    private readonly accountRepository: Repository<Account>,
-
     private readonly jwtService: JwtService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
     try {
-      const { account, fullName, address, email, phone, dni } = createUserDto;
-      const { username, password } = account;
-      const roles = ['renter'];
+      const { profile, password, userName, roles, email } = createUserDto;
+
+      //  console.log(profile);
       const passwordBcrypt = bcrypt.hashSync(password, 10);
+      const accountName = `account_${Math.random().toString(36).substring(7)}`;
+
       const auxUser = {
-        fullName,
-        address,
+        profile: profile,
         email,
-        phone,
-        dni,
-        account: { roles, email, username, password: passwordBcrypt },
+        userName,
+        roles,
+        account: { name: accountName },
+        password: passwordBcrypt,
       };
 
       const existUserByEmail = await this.userRepository.findOne({
         where: { email: email },
       });
-      const existUserByUserName = await this.accountRepository.findOne({
-        where: { username: username },
+      const existUserByUserName = await this.userRepository.findOne({
+        where: { userName: userName },
       });
 
       if (existUserByEmail) {
@@ -60,8 +58,11 @@ export class AuthService {
       }
       const user = this.userRepository.create(auxUser);
       await this.userRepository.save(user);
-      delete account.password;
+      delete user.password;
+      delete user.profile;
+      delete user.account;
 
+      console.log(user);
       return {
         ...user,
         token: this.getJwtToken({ id: user.id }),
@@ -71,30 +72,25 @@ export class AuthService {
     }
   }
 
-  async login(loginDto: LoginAccountDto) {
-    const { email, username, password } = loginDto;
-    let user = {
-      id: 0,
-      username: email,
-      email: email,
-      password: password,
-    };
+  async login(loginDto: LoginDto) {
+    const { email, userName, password } = loginDto;
+    let user: { password: string; id: number; userName: string; email: string };
     email
-      ? (user = await this.accountRepository.findOne({
+      ? (user = await this.userRepository.findOne({
           where: { email },
           select: {
             email: true,
             password: true,
             roles: true,
             id: true,
-            username: true,
+            userName: true,
           },
         }))
-      : (user = await this.accountRepository.findOne({
-          where: { username },
+      : (user = await this.userRepository.findOne({
+          where: { userName },
           select: {
             password: true,
-            username: true,
+            userName: true,
             roles: true,
             id: true,
             email: true,
@@ -111,9 +107,12 @@ export class AuthService {
     };
   }
 
-  async checkAuthStatus(user: Account) {
+  async checkAuthStatus(user) {
+    const { id, userName, email } = user;
     return {
-      ...user,
+      id,
+      userName,
+      email,
       token: this.getJwtToken({ id: user.id }),
     };
   }
@@ -124,7 +123,8 @@ export class AuthService {
   }
 
   private handleDBErrors(error: any): never {
-    if (error.code === '23505') throw new BadRequestException(error.detail);
+    if (error.response.statusCode === 400)
+      throw new BadRequestException(`${error.response.message}`);
     console.log(error.response.message);
     throw new InternalServerErrorException(
       `${error.response.message}` || 'check logs',

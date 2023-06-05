@@ -7,6 +7,8 @@ import { AccountPayableApplicationService } from './application/services/account
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PaymentPayableAggregate } from './domain/aggregates/payment-payable';
 import { AccountPayableAggregate } from './domain/aggregates/account-payable';
+import { PaymentPayableController } from './api/payment-payable.controller';
+import { PaymentPayableApplicationService } from './application/services/paymentPayable-application.service';
 
 export const CommandHandlers=[CreateAccountPayableHandler];
 
@@ -17,10 +19,10 @@ export const CommandHandlers=[CreateAccountPayableHandler];
         BillingManagementModule
     ],
     controllers:[
-        AccountPayableController
+        AccountPayableController, PaymentPayableController
     ],
     providers:[
-        AccountPayableApplicationService, 
+        AccountPayableApplicationService,PaymentPayableApplicationService,
         ...CommandHandlers
     ]
 })

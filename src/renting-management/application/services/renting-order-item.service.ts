@@ -7,12 +7,17 @@ import { CreateRentingOrderItemRequest } from '../requests/create-renting-order-
 import { CreateRentingOrderItemResponse } from '../responses/create-renting-order-item.response';
 import { TimeUnit } from '../../domain/enums/TimeUnit';
 import { CreateRentingOrderItemValidator } from '../validators/create-renting-order-item.validator';
+import { UpdateRentingOrderItemValidator } from '../validators/update-renting-order-item.validator';
+import { UpdateRentingOrderItemRequest } from '../requests/update-renting-order-item.request';
+import { UpdateRentingOrderItemCommand } from '../commands/update-renting-order-item.command';
+import { UpdateRentingOrderItemResponse } from '../responses/update-renting-order-item.response';
 
 @Injectable()
 export class RentingOrderItemService {
   constructor(
     private commandBus: CommandBus,
     private createRentingOrderItemValidator: CreateRentingOrderItemValidator,
+    private updateRentingOrderItemValidator: UpdateRentingOrderItemValidator,
   ) {}
 
   async register(
@@ -48,5 +53,31 @@ export class RentingOrderItemService {
         createRentingOrderItem.rentingUnit,
       );
     return Result.ok(createRentingOrderItemResponse);
+  }
+
+  async update(
+    updateRentingOrderItemRequest: UpdateRentingOrderItemRequest,
+  ): Promise<Result<AppNotification, UpdateRentingOrderItemResponse>> {
+    const notification: AppNotification =
+      await this.updateRentingOrderItemValidator.validate(
+        updateRentingOrderItemRequest,
+      );
+    if (notification.hasErrors()) {
+      return Result.error(notification);
+    }
+    const updateRentingOrderItemCommand: UpdateRentingOrderItemCommand =
+      new UpdateRentingOrderItemCommand(
+        updateRentingOrderItemRequest.id,
+        updateRentingOrderItemRequest.state,
+      );
+    const rentingOrderItemId: number = await this.commandBus.execute(
+      updateRentingOrderItemCommand,
+    );
+    const updateRentingOrderItemResponse: UpdateRentingOrderItemResponse =
+      new UpdateRentingOrderItemResponse(
+        rentingOrderItemId,
+        updateRentingOrderItemCommand.state,
+      );
+    return Result.ok(updateRentingOrderItemResponse);
   }
 }

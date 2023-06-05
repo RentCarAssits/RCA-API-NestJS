@@ -43,6 +43,7 @@ export class GetAllRentingOrderItemsHandler
           ormRentingOrderItems.rentingPeriod.getEndDate();
         rentingOrderItemDto.vehicleId =
           ormRentingOrderItems.vehicleId.getValue();
+        rentingOrderItemDto.state = ormRentingOrderItems.state;
         return rentingOrderItemDto;
       },
     );

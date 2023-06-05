@@ -2,8 +2,8 @@ import { Money } from '../values/money.value';
 import { Period } from '../values/period.value';
 import { VehicleIdFk } from '../values/vehicle-id-fk.value';
 import { TimeUnit } from '../enums/TimeUnit';
-import { CreateRentingOrderItem } from '../../application/commands/create-renting-order-item.command';
 import { RentingOrderItem } from '../entities/renting-order-item.entity';
+import { RentingOrderItemState } from '../enums/renting-order-item-state.enum';
 
 export class RentingOrderItemFactory {
   public static createFrom(
@@ -11,7 +11,7 @@ export class RentingOrderItemFactory {
     rentingPeriod: Period,
     vehicleId: VehicleIdFk,
     rentingUnit: TimeUnit,
-    state: boolean,
+    state: RentingOrderItemState,
   ): RentingOrderItem {
     return new RentingOrderItem(
       rentingPrice,

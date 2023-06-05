@@ -1,5 +1,12 @@
 import { AggregateRoot } from '@nestjs/cqrs';
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { RentingOrderItemId } from '../values/renting-order-id.value';
 import { Money } from '../values/money.value';
 import { Period } from '../values/period.value';
@@ -9,6 +16,8 @@ import { VehicleIdFk } from '../values/vehicle-id-fk.value';
 import { ApiProperty } from '@nestjs/swagger';
 import { VehicleId } from '../values/vehicle-id.value';
 import { VehicleIntegrity } from '../values/vehicle-integrity.value';
+import { RentingOrderItemState } from '../enums/renting-order-item-state.enum';
+import { User } from '../../../iam-management/domain/entities/user.entity';
 
 @Entity('RentingOrderItem')
 export class RentingOrderItem extends AggregateRoot {
@@ -25,8 +34,13 @@ export class RentingOrderItem extends AggregateRoot {
   @Column((type) => Period, { prefix: false })
   public rentingPeriod: Period;
   @ApiProperty()
-  @Column({ default: false })
-  accepted: boolean;
+  @Column({
+    type: 'enum',
+    enum: RentingOrderItemState,
+    default: RentingOrderItemState.OnRequest,
+    nullable: false,
+  })
+  state: RentingOrderItemState;
 
   @ApiProperty()
   @Column({
@@ -42,14 +56,14 @@ export class RentingOrderItem extends AggregateRoot {
     rentingPeriod: Period,
     vehicleId: VehicleIdFk,
     rentingUnit: TimeUnit,
-    accepted: boolean,
+    state: RentingOrderItemState,
   ) {
     super();
     this.rentingPrice = rentingPrice;
     this.vehicleId = vehicleId;
     this.rentingPeriod = rentingPeriod;
     this.rentingUnit = rentingUnit;
-    this.accepted = accepted;
+    this.state = state;
   }
 
   public create() {
@@ -61,7 +75,21 @@ export class RentingOrderItem extends AggregateRoot {
       this.rentingPeriod.getEndDate(),
       this.vehicleId.getValue(),
       this.rentingUnit,
-      this.accepted,
+      this.state,
+    );
+    this.apply(event);
+  }
+
+  public updated() {
+    const event = new RentingOrderItemCreated(
+      this.id.getValue(),
+      this.rentingPrice.getAmount(),
+      this.rentingPrice.getCurrency(),
+      this.rentingPeriod.getStartDate(),
+      this.rentingPeriod.getEndDate(),
+      this.vehicleId.getValue(),
+      this.rentingUnit,
+      this.state,
     );
     this.apply(event);
   }

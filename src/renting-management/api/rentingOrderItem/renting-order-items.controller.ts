@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Res, Get, Param, Put } from '@nestjs/common';
 import { Result } from 'typescript-result';
 import { QueryBus } from '@nestjs/cqrs';
 import { RentingOrderItemService } from '../../application/services/renting-order-item.service';
@@ -11,6 +11,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../../iam-management/application/decorators/auth.decorator';
 import { GetVehicleByIdQuery } from '../../application/queries/get-vehicle-by-id.query';
 import { GetRentingOrderItemByIdQuery } from '../../application/queries/get-renting-order-item-by-id.query';
+import { UpdateRentingOrderItemRequest } from '../../application/requests/update-renting-order-item.request';
 
 @ApiTags('Renting-Order-Items')
 @Controller('Renting-Order-Items')
@@ -72,6 +73,25 @@ export class RentingOrderItemsController {
         '🚀 ~ file: vehicles.controller.ts:77 ~ VehiclesController ~ error:',
         error,
       );
+      return ApiController.serverError(response, error);
+    }
+  }
+
+  @Put('/:id')
+  async Update(
+    @Body() updateRentingOrderItemRequest: UpdateRentingOrderItemRequest,
+    @Res({ passthrough: true }) response,
+  ): Promise<object> {
+    try {
+      const result: Result<AppNotification, UpdateRentingOrderItemRequest> =
+        await this.rentingOrderItemService.update(
+          updateRentingOrderItemRequest,
+        );
+      if (result.isSuccess()) {
+        return ApiController.created(response, result.value);
+      }
+      return ApiController.error(response, result.error.getErrors());
+    } catch (error) {
       return ApiController.serverError(response, error);
     }
   }

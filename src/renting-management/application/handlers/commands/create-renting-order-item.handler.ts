@@ -22,6 +22,7 @@ import { GetVehicleByIdQuery } from '../../queries/get-vehicle-by-id.query';
 import { VehicleDto } from '../../dtos/vehicle.dto';
 import { GetRentingOrderItemByIdQuery } from '../../queries/get-renting-order-item-by-id.query';
 import { Vehicle } from '../../../domain/entities/vehicle.entity';
+import { RentingOrderItemState } from '../../../domain/enums/renting-order-item-state.enum';
 
 @CommandHandler(CreateRentingOrderItem)
 export class CreateRentingOrderItemHandler
@@ -39,7 +40,7 @@ export class CreateRentingOrderItemHandler
 
     const rentingUnit = TimeUnit.DAYS;
 
-    const accepted = false;
+    const accepted = RentingOrderItemState.OnRequest;
     const rentingPeriod: Period = Period.newPeriod(
       command.startDate,
       command.endDate,

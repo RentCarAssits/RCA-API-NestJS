@@ -7,6 +7,6 @@ export class RentingOrderItemCreated {
     public readonly endDate: Date,
     public readonly vehicleId: number,
     public readonly rentingUnit: string,
-    public readonly accepted: boolean,
+    public readonly accepted: string,
   ) {}
 }

@@ -23,14 +23,19 @@ import { RentingOrderItem } from './domain/entities/renting-order-item.entity';
 import { RentingOrderItemService } from './application/services/renting-order-item.service';
 import { CreateRentingOrderItemValidator } from './application/validators/create-renting-order-item.validator';
 import { IamManagementModule } from 'src/iam-management/iam-management.module';
+import { UpdateRentingOrderItemValidator } from './application/validators/update-renting-order-item.validator';
+import { UpdateRentingOrderItemCommand } from './application/commands/update-renting-order-item.command';
+import { UpdateRentingOrderItemHandler } from './application/handlers/commands/update-renting-order-item.handler';
 
 export const CommandHandlers = [
   RegisterVehicleHandler,
   CreateRentingOrderItemHandler,
+  UpdateRentingOrderItemCommand,
 ];
 export const EventHandlers = [
   ProductRegisteredHandler,
   RentingOrderItemCreatedHandler,
+  UpdateRentingOrderItemHandler,
 ];
 export const QueryHandlers = [
   GetAllVehiclesHandler,
@@ -51,6 +56,7 @@ export const QueryHandlers = [
     RegisterVehicleValidator,
     RentingOrderItemService,
     CreateRentingOrderItemValidator,
+    UpdateRentingOrderItemValidator,
     ...CommandHandlers,
     ...EventHandlers,
     ...QueryHandlers,

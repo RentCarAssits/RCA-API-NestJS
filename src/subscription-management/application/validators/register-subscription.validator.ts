@@ -7,13 +7,31 @@ import { AppNotification } from "src/shared/application/app.notification";
 
 @Injectable()
 export class RegisterSubscriptionValidator{
-    constructor(@InjectRepository(Subscription) private subscriptionRepository: Repository<Subscription>){}
+    constructor(
+        @InjectRepository(Subscription) private subscriptionRepository: Repository<Subscription>
+        ){}
 
     public async validate(RegisterSubscriptionRequest: RegisterSubscriptionRequest): Promise<AppNotification>{
         const notification: AppNotification = new AppNotification();
-        const Frequency:string = RegisterSubscriptionRequest.Frequency;
+        
+        const unitPrice:number = RegisterSubscriptionRequest.UnitPrice;
+        if( unitPrice < 0 ){
+            notification.addError('UnitPrice is required and must be a valid price', null);
+        }
 
+        const startDate: Date = RegisterSubscriptionRequest.startDate;
+        if(!startDate || isNaN(startDate.getTime())){
+            notification.addError('StartDate is required and must be a valid date', null);
+        }
+        
+        const endDate:Date = RegisterSubscriptionRequest.endDate;
+        if(!endDate || isNaN(endDate.getTime())){
+            notification.addError('EndDate is required and must be a valid date', null);
+        }
+
+        const Frequency:string = RegisterSubscriptionRequest.Frequency;
         if(Frequency.length <= 0){notification.addError('Frequency is required', null);}
+    
         if (notification.hasErrors()) {return notification;}
 
         const Subscription: Subscription = await 

@@ -22,7 +22,7 @@ export class RegisterSubscriptionHandler implements ICommandHandler<RegisterSubs
     private subscription = Subscription;
     
     async execute(command: RegisterSubscription){
-        const accounts = command.AccountId;
+        /*const accounts = command.AccountId;
         const plan = command.PlanId;
         let subscriptionId = 0;
 
@@ -41,7 +41,7 @@ export class RegisterSubscriptionHandler implements ICommandHandler<RegisterSubs
             SubscriptionUnitPriceResult,
             SubscriptionFrequencyResult.value,
             SubcriptionPeriod.value,
-        )
+        )*/
     }
 
 }

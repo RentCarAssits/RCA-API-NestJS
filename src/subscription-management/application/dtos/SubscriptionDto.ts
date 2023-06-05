@@ -3,5 +3,6 @@ export class SubscriptionDto {
   public AccountId: number;
   public UnitPrice: number;
   public Frequency: string;
-  public Period: Date;
+  public startDate: Date;
+  public endDate: Date;
 }

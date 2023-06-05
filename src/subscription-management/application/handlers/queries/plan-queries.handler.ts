@@ -61,7 +61,6 @@ export class GetPlanByIdHandler implements IQueryHandler<getPlanByIdQuery>{
       const planDto = new PlanDto();
       planDto.PlanName = plan.name;
       planDto.Benefits = plan.Benefits;
-
       return planDto;
     }
 }

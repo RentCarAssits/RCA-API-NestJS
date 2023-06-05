@@ -7,7 +7,7 @@ module.exports = {
   password: '123456789',
   database: 'rca_db',
   autoLoadEntities: true,
-  synchronize: true, // sincronizacion
+  synchronize: false, // sincronizacion
   ssl: true,
   migrationsRun: true,
   logging: true,

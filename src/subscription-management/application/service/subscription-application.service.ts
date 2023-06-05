@@ -25,12 +25,12 @@ export class subscriptionApplicationService{
         if(notification.hasErrors()){return Result.error(notification);}
        
         const registerSubscription: RegisterSubscription = new RegisterSubscription(
-            RegisterSubscriptionRequest.AccountId,
+            //RegisterSubscriptionRequest.AccountId,
             RegisterSubscriptionRequest.PlanId,
             RegisterSubscriptionRequest.UnitPrice,
             RegisterSubscriptionRequest.Frequency,
-            RegisterSubscriptionRequest.PeriodId,
-            RegisterSubscriptionRequest.PeriodId,   
+            RegisterSubscriptionRequest.startDate,
+            RegisterSubscriptionRequest.endDate,   
             //RegisterSubscriptionRequest.PeriodId2.
           );  
         
@@ -39,11 +39,12 @@ export class subscriptionApplicationService{
           const registerSubscriptionResponse: RegisterSubscriptionResponse =
           new RegisterSubscriptionResponse(
             subscriptionId,
-            registerSubscription.PlanId,
-            registerSubscription.AccountId,
-            registerSubscription.UnitPrice,
-            registerSubscription.Frequency,
-            registerSubscription.Period,
+            registerSubscription.planId,
+            //registerSubscription.AccountId,
+            registerSubscription.unitPrice,
+            registerSubscription.frequency,
+            registerSubscription.startDate,
+            registerSubscription.endDate,
           );
         return Result.ok(registerSubscriptionResponse);
       }

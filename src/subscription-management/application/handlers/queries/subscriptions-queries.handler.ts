@@ -60,13 +60,13 @@ export class GetSubscriptionByIdHanlder implements IQueryHandler<getSubscription
         const subscription = result[0];
 
         const subscriptionDto = new SubscriptionDto();
-        
+        /*
         subscriptionDto.AccountId = subscription.AccountId;
         subscriptionDto.PlanId = subscription.PlanId;
         subscriptionDto.Period = subscription.Period;
         subscriptionDto.UnitPrice = subscription.UnitPrice;
         subscriptionDto.Frequency = subscription.Frequency;
-
+        */
         return subscriptionDto;
     }
     

@@ -22,7 +22,7 @@ export class subscriptionApplicationService{
       if(notification.hasErrors()){return Result.error(notification);} 
       
       const registerSubscription: RegisterSubscription = new RegisterSubscription(
-      //RegisterSubscriptionRequest.AccountId,
+      RegisterSubscriptionRequest.AccountId,
       RegisterSubscriptionRequest.PlanId,
       RegisterSubscriptionRequest.UnitPrice,
       RegisterSubscriptionRequest.Frequency,
@@ -34,8 +34,8 @@ export class subscriptionApplicationService{
       const registerSubscriptionResponse: RegisterSubscriptionResponse =
       new RegisterSubscriptionResponse(
         subscriptionId,
+        registerSubscription.accountId,
         registerSubscription.planId,
-      //registerSubscription.AccountId,
         registerSubscription.unitPrice,
         registerSubscription.frequency,
         registerSubscription.startDate,

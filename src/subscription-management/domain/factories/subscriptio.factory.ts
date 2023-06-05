@@ -1,3 +1,4 @@
+import { Account } from "src/iam-management/domain/entities/account.entity";
 import { Subscription } from "../entity/Subscription.entity";
 
 import { Plan } from "../entity/plan.entity";
@@ -16,6 +17,7 @@ export class SubscriptionFactory{
 
     public static withId(
         id:SubscriptionId,
+        account:Account,
         plan:Plan,
         unitPrice:number,
         frequency: SubscriptionFrequency,

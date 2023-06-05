@@ -13,6 +13,7 @@ import { Period } from '../values/period.value';
 import { Plan } from './plan.entity';
 import { SubscriptionFrequency } from '../values/subscription-frequency.value';
 import { SubscriptionRegistered } from '../events/subscription-registered.event';
+import { Account } from 'src/iam-management/domain/entities/account.entity';
 
 @Entity('Subscriptions')
 export class Subscription extends AggregateRoot {
@@ -20,13 +21,11 @@ export class Subscription extends AggregateRoot {
   @PrimaryGeneratedColumn()
   private id: SubscriptionId;
 
-  /*
+  // acounts id
   @ApiProperty()
-  @ManyToOne(()=> Account, (account)=> account.subscriptions,{
-      onDelete:'CASCADE',
-  })
+  @ManyToOne(()=> Account, (account)=> account.subscriptions)
   account: Account;
-  */
+  
 
   //planes
   @ManyToOne(()=>Plan, plan=>plan.subscriptions)
@@ -59,6 +58,8 @@ export class Subscription extends AggregateRoot {
   public register(){
       const event = new SubscriptionRegistered(
         this.id.getValue(),
+        this.account.id,
+        this.plan.getId().getValue(),
         this.unitPrice,
         this.frequency.getValue(),
         this.period.getStartDate(),
@@ -66,12 +67,7 @@ export class Subscription extends AggregateRoot {
       )
   }
   
-  /*
-  public getAccount(): Account {
-      return this.account;
-  }
-  */
-  
+    
   public getId(): SubscriptionId {
     return this.id;
   }
@@ -86,6 +82,10 @@ export class Subscription extends AggregateRoot {
 
   public getPeriod(): Period {
     return this.period;
+  }
+
+  public getAccount(): Account {
+    return this.account;
   }
 
   public changeId(id: SubscriptionId) {

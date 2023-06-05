@@ -1,5 +1,5 @@
 export class SubscriptionId {
-  protected readonly value: number;
+  public readonly value: number;
 
   protected constructor(value: number) {
     this.value = Number(value);

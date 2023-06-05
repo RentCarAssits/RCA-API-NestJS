@@ -6,7 +6,7 @@ import { Subscription } from 'src/subscription-management/domain/entity/Subscrip
 @Entity('accounts')
 export class Account {
   @PrimaryGeneratedColumn()
-  id: number;
+  public id: number;
 
   @Column('text')
   username: string;
@@ -24,16 +24,18 @@ export class Account {
 
   @Column('simple-array')
   roles: string[];
-
+  
   // subscription Bondex
-  /*
-  @ApiProperty()
   @OneToMany(()=> Subscription,(Subscription) => Subscription.account,{
     onDelete:'CASCADE',
     eager:true,
   })
   subscriptions: Subscription[];
-  */
+  
+  public getId(): number {
+    return this.id;
+  }
+
 }
 
 //AÑADIR REALACIONES PARA LOS DEMÁS BOUNDED CONTEXT

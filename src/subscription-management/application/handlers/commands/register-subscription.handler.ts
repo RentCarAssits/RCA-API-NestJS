@@ -41,8 +41,6 @@ export class RegisterSubscriptionHandler implements ICommandHandler<RegisterSubs
             SubscriptionFrequencyResult.value,
             period
         )
-        
-       
          
         const aux = {
             unitPrice: subscriptionUnitPrice,

@@ -8,65 +8,58 @@ import { getSubscriptionByIdQuery } from "../../queries/get-subscription-id.quer
 
 @QueryHandler(getAllSubscriptionQuery)
 export class GetAllSubscriptionHandler implements IQueryHandler<getAllSubscriptionQuery>{
-    constructor(@InjectRepository(Subscription) private readonly vehicleRepository: Repository<Subscription>,) {}
-  async execute(query: getAllSubscriptionQuery): Promise<any> {
+  constructor(@InjectRepository(Subscription) private readonly subscriptionRepository: Repository<Subscription>,) {}
+  
+  async execute(query: getAllSubscriptionQuery): Promise<SubscriptionDto[]> {
+    const subscriptions = await this.subscriptionRepository.find();
+    console.log('🚀 ~ file: subscriptions-queries.handler.ts:18 ~ GetAllSubscriptionsHandler ~ execute ~ subscriptions:',subscriptions['result'],); 
     
-  }
-    /*
-    async execute(query: getAllSubscriptionQuery): Promise<any> {
-        const subscriptions = await this.vehicleRepository.find({
-            relations: {
-              account: true,
-            },
-          });
-          console.log(
-            '🚀 ~ file: vehicles-queries.handler.ts:18 ~ GetAllVehiclesHandler ~ execute ~ vehicles:',
-            subscriptions['result'],
-          );
-          /*  
-          const subscriptionDtos: SubscriptionDto[] = subscriptions.map((subscription) => {
-            const subscriptionDto = new SubscriptionDto();
-            subscriptionDto.PlanId = subscription.getPlan().getId().getValue();
-            subscriptionDto.AccountId = subscription.getAccount().getAccountId().getValue();
-            subscriptionDto.UnitPrice = subscription.getUnitPrice();
-            subscriptionDto.Frequency = subscription.getFrequency().getValue();
-            subscriptionDto.Period = subscription.getPeriod().getStartDate();
-            return subscriptionDto;
-          });
-        return subscriptionDtos;
-      }
-      */
-      
+    const subscriptionDtos: SubscriptionDto[] = subscriptions.map((subscriptions)=>{
+      const subscriptionDto = new SubscriptionDto();
+      subscriptionDto.Frequency = subscriptions.getFrequency().getValue();
+      subscriptionDto.UnitPrice = subscriptions.getUnitPrice();
+      subscriptionDto.startDate = subscriptions.getPeriod().getStartDate();
+      subscriptionDto.endDate = subscriptions.getPeriod().getEndDate();
+
+      return subscriptionDto;
+    })
+    return subscriptionDtos;
+  }    
 }
+
 
 @QueryHandler(getSubscriptionByIdQuery)
 export class GetSubscriptionByIdHanlder implements IQueryHandler<getSubscriptionByIdQuery>{
     constructor(
         @InjectRepository(Subscription)
-        private readonly vehicleRepository: Repository<Subscription>,
+        private readonly subscriptionRepository: Repository<Subscription>,
         private readonly connection: Connection,
     ) {}
 
     async execute(query: getSubscriptionByIdQuery){
         const manager = this.connection.manager;
-        const sql=`SELECT *
-          FROM Subscriptions
-          WHERE vehicles.id = ?`;
+        const sql=`SELECT *   
+          FROM Subscriptions as S
+          WHERE S.id = ?`;
         const result = await manager.query(sql, [query.SubscriptionId]);
 
         if(result.length === 0){
             return null;
+            console.log('Not result in repository now. Sorry come back in other moment please');
         }
         const subscription = result[0];
 
+        console.log("Subscription",subscription);
+
         const subscriptionDto = new SubscriptionDto();
-        /*
-        subscriptionDto.AccountId = subscription.AccountId;
+        
+        //subscriptionDto.AccountId = subscription.AccountId;
         subscriptionDto.PlanId = subscription.PlanId;
-        subscriptionDto.Period = subscription.Period;
         subscriptionDto.UnitPrice = subscription.UnitPrice;
         subscriptionDto.Frequency = subscription.Frequency;
-        */
+        subscriptionDto.startDate = subscription.startDate;
+        subscriptionDto.endDate = subscription.endDate;
+        
         return subscriptionDto;
     }
     

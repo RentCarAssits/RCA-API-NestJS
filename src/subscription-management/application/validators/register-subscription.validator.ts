@@ -20,12 +20,12 @@ export class RegisterSubscriptionValidator{
         }
 
         const startDate: Date = RegisterSubscriptionRequest.startDate;
-        if(!startDate || isNaN(startDate.getTime())){
+        if(startDate===null){
             notification.addError('StartDate is required and must be a valid date', null);
         }
         
         const endDate:Date = RegisterSubscriptionRequest.endDate;
-        if(!endDate || isNaN(endDate.getTime())){
+        if(endDate===null){
             notification.addError('EndDate is required and must be a valid date', null);
         }
 

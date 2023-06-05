@@ -12,17 +12,10 @@ export class GetAllSubscriptionHandler implements IQueryHandler<getAllSubscripti
   
   async execute(query: getAllSubscriptionQuery): Promise<SubscriptionDto[]> {
     const subscriptions = await this.subscriptionRepository.find();
-    console.log('🚀 ~ file: subscriptions-queries.handler.ts:18 ~ GetAllSubscriptionsHandler ~ execute ~ subscriptions:',subscriptions['result'],); 
+    //console.log('🚀 ~ file: subscriptions-queries.handler.ts:18 ~ GetAllSubscriptionsHandler ~ execute ~ subscriptions:',subscriptions['result'],); 
     
-
-
-
     const subscriptionDtos: SubscriptionDto[] = subscriptions.map((subscriptions)=>{
       const subscriptionDto = new SubscriptionDto();
-
-      //console.log("-->",subscriptions.getId().getValue());
-      
-      //subscriptionDto.id = Number(subscriptions.getId().getValue().toString());
       subscriptionDto.Frequency = subscriptions.getFrequency().getValue();
       subscriptionDto.UnitPrice = subscriptions.getUnitPrice();
       subscriptionDto.startDate = subscriptions.getPeriod().getStartDate();

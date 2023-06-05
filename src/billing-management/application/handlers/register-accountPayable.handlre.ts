@@ -13,7 +13,7 @@ export class CreateAccountPayableHandler
   implements ICommandHandler<CreateAccountPayable> {
   constructor(
     @InjectRepository(AccountPayableAggregate)
-    private accountPayableRepository: Repository<AccountPayableAggregate>,
+    private accountPayableRepository: Repository<AccountPayableAggregate>
   ) {}
 
   async execute(command: CreateAccountPayable) {

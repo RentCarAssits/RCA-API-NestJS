@@ -14,6 +14,8 @@ import { VehicleId } from 'src/renting-management/domain/values/vehicle-id.value
 import { VehicleState } from 'src/renting-management/domain/enums/vehicle-state.enum';
 import { Category } from '../../../domain/entities/category.entity';
 import { CategoryName } from '../../../domain/values/category-name.value';
+import { User } from '../../../../iam-management/domain/entities/user.entity';
+import { NotFoundException } from '@nestjs/common';
 
 @CommandHandler(RegisterVehicle)
 export class RegisterVehicleHandler
@@ -24,6 +26,8 @@ export class RegisterVehicleHandler
     private vehicleRepository: Repository<Vehicle>,
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     private publisher: EventPublisher,
   ) {}
 
@@ -32,7 +36,8 @@ export class RegisterVehicleHandler
   async execute(command: RegisterVehicle) {
     const categories = command.categories;
     let vehicleId = 0;
-    console.log('commit', command);
+
+    console.log('command: ', command);
     const vehicleNameResult: Result<AppNotification, VehicleName> =
       VehicleName.create(command.name);
     if (vehicleNameResult.isFailure()) return vehicleId;
@@ -53,6 +58,12 @@ export class RegisterVehicleHandler
 
     const vehicleState: VehicleState = Number(command.state);
     const year: Date = command.year;
+    const id: number = command.ownerId;
+    const user = await this.userRepository.findOne({ where: { id: id } });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
     const vehicleEntity: Vehicle = VehicleFactory.createFrom(
       vehicleNameResult.value,
@@ -66,13 +77,13 @@ export class RegisterVehicleHandler
     let categoryEntities = categories.map((category) => {
       const categoryNameResult = CategoryName.create(category);
       if (!categoryNameResult.isSuccess()) {
-        // Handle error case
         console.log('Error creating category name: ', categoryNameResult.error);
         return null;
       } else {
         return new Category(categoryNameResult.value);
       }
     });
+
     categoryEntities = categoryEntities.filter((category) => category !== null);
 
     const aux = {
@@ -83,8 +94,10 @@ export class RegisterVehicleHandler
       year: year,
       vehicleSate: vehicleState,
       categories: categoryEntities,
+      owner: user,
     };
 
+    console.log('owneer: ', command.ownerId);
     const vehicleAux = this.vehicleRepository.create(aux);
     let vehicle = await this.vehicleRepository.save(vehicleAux);
     if (vehicle == null) {

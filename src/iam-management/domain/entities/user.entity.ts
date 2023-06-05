@@ -3,11 +3,13 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Profile } from './profile.entity';
 import { Account } from './account.entity';
+import { Vehicle } from '../../../renting-management/domain/entities/vehicle.entity';
 
 @Entity('users')
 export class User {
@@ -41,6 +43,9 @@ export class User {
     eager: true,
   })
   account: Account;
+
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.owner)
+  vehicles: Vehicle[];
 
   @BeforeInsert()
   checkFieldsBeforeInsert() {

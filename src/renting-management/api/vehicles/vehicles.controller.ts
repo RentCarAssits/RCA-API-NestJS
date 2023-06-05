@@ -3,7 +3,6 @@ import { Result } from 'typescript-result';
 import { QueryBus } from '@nestjs/cqrs';
 import { RegisterVehicleRequest } from 'src/renting-management/application/requests/register-vehicle.request';
 import { VehiclesApplicationService } from 'src/renting-management/application/services/vehicles-application.service';
-import { RegisterCategoryResponse } from 'src/renting-management/application/responses/register-category.response';
 import { AppNotification } from 'src/shared/application/app.notification';
 import { ApiController } from 'src/shared/api/api.controller';
 import { GetAllVehiclesQuery } from 'src/renting-management/application/queries/get-all-vehicles.query';
@@ -12,6 +11,8 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
 import { Auth } from 'src/iam-management/application/decorators/auth.decorator';
 import { RegisterVehicleResponse } from '../../application/responses/register-vehicle.response';
+import { GetUser } from '../../../iam-management/application/decorators/get-user.decorator';
+import { User } from '../../../iam-management/domain/entities/user.entity';
 
 @ApiTags('Products')
 @Controller('vehicles')
@@ -28,12 +29,16 @@ export class VehiclesController {
     type: RegisterVehicleResponse,
   })
   async register(
+    @GetUser() owner: User,
     @Body() registerVehicleRequest: RegisterVehicleRequest,
     @Res({ passthrough: true }) response: any,
   ) {
     try {
-      const result: Result<AppNotification, RegisterCategoryResponse> =
-        await this.vehiclesApplicationService.register(registerVehicleRequest);
+      const result: Result<AppNotification, RegisterVehicleResponse> =
+        await this.vehiclesApplicationService.register(
+          owner,
+          registerVehicleRequest,
+        );
       if (result.isSuccess()) {
         return ApiController.created(response, result.value);
       }

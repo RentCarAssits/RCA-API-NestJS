@@ -6,6 +6,7 @@ export class RegisterVehicle {
     public readonly integrity: string,
     public readonly state: number,
     public readonly year: Date,
+    public readonly ownerId: number,
     public readonly categories: string[],
   ) {}
 }

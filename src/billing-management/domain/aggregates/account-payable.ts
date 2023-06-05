@@ -18,10 +18,10 @@
       @Column((type) => PayeeIdFk, { prefix: false })
       private payeeId: PayeeIdFk;
     
-      @Column({ type: Number, name: "total_price" })
+      @Column({ type: 'number', name: "total_price" })
       private totalPrice: Price;
     
-      @Column({ type: Number, name: "parcial_price" })
+      @Column({ type: 'number', name: "parcial_price" })
       private parcialPrice: Price;
 
       @Column({ type: 'date', name: 'expiration_day' })

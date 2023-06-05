@@ -5,7 +5,6 @@ import { Model } from '../values/model.value';
 import { VehicleId } from '../values/vehicle-id.value';
 import { VehicleIntegrity } from '../values/vehicle-integrity.value';
 import { VehicleName } from '../values/vehicle-name.value';
-import { Category } from '../entities/category.entity';
 
 export class VehicleFactory {
   public static createFrom(
@@ -26,7 +25,6 @@ export class VehicleFactory {
     model: Model,
     integrity: VehicleIntegrity,
     year: Date,
-    categories: Category[],
     state: VehicleState,
   ): Vehicle {
     const vehicle: Vehicle = new Vehicle(

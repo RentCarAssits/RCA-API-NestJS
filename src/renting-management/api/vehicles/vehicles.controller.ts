@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Res } from '@nestjs/common';
 import { Result } from 'typescript-result';
 import { QueryBus } from '@nestjs/cqrs';
 import { RegisterVehicleRequest } from 'src/renting-management/application/requests/register-vehicle.request';
@@ -13,6 +13,7 @@ import { Auth } from 'src/iam-management/application/decorators/auth.decorator';
 import { RegisterVehicleResponse } from '../../application/responses/register-vehicle.response';
 import { GetUser } from '../../../iam-management/application/decorators/get-user.decorator';
 import { User } from '../../../iam-management/domain/entities/user.entity';
+import { UpdateVehicleRequest } from '../../application/requests/update-vehicle.request';
 
 @ApiTags('Products')
 @Controller('vehicles')
@@ -42,6 +43,39 @@ export class VehiclesController {
         );
       if (result.isSuccess()) {
         return ApiController.created(response, result.value);
+      }
+      return ApiController.error(response, result.error.getErrors());
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: vehicles.controller.ts:44 ~ VehiclesController ~ error:',
+        error,
+      );
+      return ApiController.serverError(response, error);
+    }
+  }
+
+  @Put(':id')
+  @Auth()
+  @ApiResponse({
+    status: 200,
+    description: 'OK',
+    type: Vehicle,
+  })
+  async update(
+    @Param('id') id: number,
+    @GetUser() owner: User,
+    @Body() updateVehicleRequest: UpdateVehicleRequest,
+    @Res({ passthrough: true }) response: any,
+  ) {
+    try {
+      const result: Result<AppNotification, RegisterVehicleResponse> =
+        await this.vehiclesApplicationService.update(
+          id,
+          owner,
+          updateVehicleRequest,
+        );
+      if (result.isSuccess()) {
+        return ApiController.updated(response, result.value);
       }
       return ApiController.error(response, result.error.getErrors());
     } catch (error) {

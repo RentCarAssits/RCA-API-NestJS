@@ -13,9 +13,12 @@ import { RegisterVehicleValidator } from './application/validators/register-vehi
 import { RegisterVehicleHandler } from './application/handlers/commands/register-vehicle.handler';
 import { ProductRegisteredHandler } from './application/handlers/events/vehicle-registered.handler';
 import { IamManagementModule } from 'src/iam-management/iam-management.module';
+import { UpdateVehicleHandler } from './application/handlers/commands/update-vehicle.handler';
+import { VehicleUpdatedHandler } from './application/handlers/events/vehicle-updated.handler';
+import { UpdateVehicleValidator } from './application/validators/update-vehicle.validator';
 
-export const CommandHandlers = [RegisterVehicleHandler];
-export const EventHandlers = [ProductRegisteredHandler];
+export const CommandHandlers = [RegisterVehicleHandler, UpdateVehicleHandler];
+export const EventHandlers = [ProductRegisteredHandler, VehicleUpdatedHandler];
 export const QueryHandlers = [GetAllVehiclesHandler, GetVehicleByIdHandler];
 
 @Module({
@@ -30,6 +33,7 @@ export const QueryHandlers = [GetAllVehiclesHandler, GetVehicleByIdHandler];
     GetAllVehiclesHandler,
     GetVehicleByIdHandler,
     RegisterVehicleValidator,
+    UpdateVehicleValidator,
     ...CommandHandlers,
     ...EventHandlers,
     ...QueryHandlers,

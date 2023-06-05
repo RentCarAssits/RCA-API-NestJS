@@ -8,6 +8,10 @@ import { RegisterVehicleRequest } from '../requests/register-vehicle.request';
 import { RegisterVehicleResponse } from '../responses/register-vehicle.response';
 import { Connection } from 'typeorm';
 import { User } from '../../../iam-management/domain/entities/user.entity';
+import { UpdateVehicleResponse } from '../responses/update-vehicle.response';
+import { UpdateVehicle } from '../commands/update-vehicle.command';
+import { UpdateVehicleRequest } from '../requests/update-vehicle.request';
+import { UpdateVehicleValidator } from '../validators/update-vehicle.validator';
 
 @Injectable()
 export class VehiclesApplicationService {
@@ -15,6 +19,7 @@ export class VehiclesApplicationService {
     private connection: Connection,
     private commandBus: CommandBus,
     private registerVehicleValidator: RegisterVehicleValidator,
+    private updateVehicleValidator: UpdateVehicleValidator,
   ) {
     console.log('this.connection.isConnected: ', this.connection.isConnected);
   }
@@ -55,5 +60,42 @@ export class VehiclesApplicationService {
         registerVehicleRequest.categories,
       );
     return Result.ok(registerVehicleResponse);
+  }
+
+  async update(
+    id: number,
+    owner: User,
+    updateVehicleRequest: UpdateVehicleRequest,
+  ): Promise<Result<AppNotification, UpdateVehicleResponse>> {
+    const notification: AppNotification =
+      await this.updateVehicleValidator.validate(updateVehicleRequest, owner);
+    if (notification.hasErrors()) {
+      return Result.error(notification);
+    }
+    const updateVehicle: UpdateVehicle = new UpdateVehicle(
+      id,
+      updateVehicleRequest.name,
+      updateVehicleRequest.brand,
+      updateVehicleRequest.model,
+      updateVehicleRequest.integrity,
+      updateVehicleRequest.state,
+      updateVehicleRequest.year,
+      owner.id,
+      updateVehicleRequest.categories,
+    );
+    const vehicleId: number = await this.commandBus.execute(updateVehicle);
+    const updateVehicleResponse: UpdateVehicleResponse =
+      new UpdateVehicleResponse(
+        vehicleId,
+        updateVehicle.name,
+        updateVehicle.brand,
+        updateVehicle.model,
+        updateVehicle.integrity,
+        Number(updateVehicle.state),
+        updateVehicle.year,
+        updateVehicle.ownerId,
+        updateVehicleRequest.categories,
+      );
+    return Result.ok(updateVehicleResponse);
   }
 }

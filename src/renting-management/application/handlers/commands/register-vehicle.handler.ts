@@ -86,6 +86,14 @@ export class RegisterVehicleHandler
 
     categoryEntities = categoryEntities.filter((category) => category !== null);
 
+    const vehicleX = {
+      name: vehicleEntity.getName().getValue(),
+      brand: vehicleEntity.getBrand().getValue(),
+      model: vehicleEntity.getModel().getValue(),
+      integrity: vehicleEntity.getIntegrity(),
+      year: vehicleEntity.getYear(),
+      vehicleSate: vehicleEntity.getState(),
+    };
     const aux = {
       name: vehicleNameResult.value,
       brand: brandResult.value,
@@ -96,6 +104,8 @@ export class RegisterVehicleHandler
       categories: categoryEntities,
       owner: user,
     };
+
+    console.log('owneer: ', aux);
 
     console.log('owneer: ', command.ownerId);
     const vehicleAux = this.vehicleRepository.create(aux);

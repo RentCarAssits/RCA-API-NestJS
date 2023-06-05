@@ -17,6 +17,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Category } from './category.entity';
 import { VehicleRegistered } from '../events/vehicle-registered.event';
 import { User } from '../../../iam-management/domain/entities/user.entity';
+import { VehicleUpdated } from '../events/vehicle-updated.event';
 
 @Entity('vehicles')
 export class Vehicle extends AggregateRoot {
@@ -88,6 +89,19 @@ export class Vehicle extends AggregateRoot {
 
   public register() {
     const event = new VehicleRegistered(
+      this.id.getValue(),
+      this.name.getValue(),
+      this.brand.getValue(),
+      this.model.getValue(),
+      this.integrity.getValue(),
+      this.state,
+      this.year,
+    );
+    this.apply(event);
+  }
+
+  public updated() {
+    const event = new VehicleUpdated(
       this.id.getValue(),
       this.name.getValue(),
       this.brand.getValue(),

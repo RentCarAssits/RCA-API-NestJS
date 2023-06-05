@@ -43,6 +43,7 @@ export class SubscriptionController{
           );
           return ApiController.serverError(response, error);
         }
+        
     }
     
     @Get()
@@ -62,10 +63,10 @@ export class SubscriptionController{
     @Get('/:id')
     async getById(@Param('id') subscriptionId: number,@Res({ passthrough: true }) response:any,) {
         try {
-        const subscription = await this.queryBus.execute(
-            new getSubscriptionByIdQuery(subscriptionId),
-        );
-        return ApiController.ok(response, subscription);
+            console.log("AQUI ENTRO EL APU");
+            const subscription = await this.queryBus.execute(new getSubscriptionByIdQuery(subscriptionId));
+            console.log("API --> ",subscription);
+            return ApiController.ok(response, subscription);
         } catch (error) {
         console.log(
             '🚀 ~ file: subscription.controller.ts:77 ~ SubscriptionsController ~ error:',

@@ -10,6 +10,6 @@ export class SubscriptionId {
   }
 
   public getValue(): number {
-    return Number(this.value);
+    return this.value;
   }
 }

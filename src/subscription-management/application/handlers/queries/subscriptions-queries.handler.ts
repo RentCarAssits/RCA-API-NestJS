@@ -14,8 +14,15 @@ export class GetAllSubscriptionHandler implements IQueryHandler<getAllSubscripti
     const subscriptions = await this.subscriptionRepository.find();
     console.log('🚀 ~ file: subscriptions-queries.handler.ts:18 ~ GetAllSubscriptionsHandler ~ execute ~ subscriptions:',subscriptions['result'],); 
     
+
+
+
     const subscriptionDtos: SubscriptionDto[] = subscriptions.map((subscriptions)=>{
       const subscriptionDto = new SubscriptionDto();
+
+      //console.log("-->",subscriptions.getId().getValue());
+      
+      //subscriptionDto.id = Number(subscriptions.getId().getValue().toString());
       subscriptionDto.Frequency = subscriptions.getFrequency().getValue();
       subscriptionDto.UnitPrice = subscriptions.getUnitPrice();
       subscriptionDto.startDate = subscriptions.getPeriod().getStartDate();
@@ -54,9 +61,9 @@ export class GetSubscriptionByIdHanlder implements IQueryHandler<getSubscription
         const subscriptionDto = new SubscriptionDto();
         
         //subscriptionDto.AccountId = subscription.AccountId;
-        subscriptionDto.PlanId = subscription.PlanId;
-        subscriptionDto.UnitPrice = subscription.UnitPrice;
-        subscriptionDto.Frequency = subscription.Frequency;
+        subscriptionDto.PlanId = subscription.planId;
+        subscriptionDto.UnitPrice = subscription.unitPrice;
+        subscriptionDto.Frequency = subscription.frequency;
         subscriptionDto.startDate = subscription.startDate;
         subscriptionDto.endDate = subscription.endDate;
         

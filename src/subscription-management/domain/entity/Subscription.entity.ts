@@ -65,16 +65,17 @@ export class Subscription extends AggregateRoot {
         this.period.getEndDate(),
       )
   }
-
-  public getId(): SubscriptionId {
-    return this.id;
-  }
-
+  
   /*
   public getAccount(): Account {
       return this.account;
   }
   */
+  
+  public getId(): SubscriptionId {
+    return this.id;
+  }
+
   public getUnitPrice(): number {
     return this.unitPrice;
   }

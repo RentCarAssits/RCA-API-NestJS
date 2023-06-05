@@ -9,27 +9,27 @@ import { Result } from 'typescript-result';
 
 
 @Controller('accountPayable')
-export class AccountPayableController{
-constructor(
-    private readonly accountPayableService:AccountPayableApplicationService,
-    private readonly queryBus: QueryBus 
-){}
+export class AccountPayableController {
+  constructor(
+    private readonly accountPayableService: AccountPayableApplicationService,
+    private readonly queryBus: QueryBus
+  ) { }
 
-@Post('register')
-async register(
-    @Body() registerAccountPayableRequest:RegisterAccountPayableRequest,
+  @Post('register')
+  async register(
+    @Body() registerAccountPayableRequest: RegisterAccountPayableRequest,
     @Res({ passthrough: true }) response
-):Promise<object>{
+  ): Promise<object> {
     try {
-        const result: Result<AppNotification, RegisterAccountPayableResponse> = 
-          await this.accountPayableService.register(registerAccountPayableRequest);
-        if (result.isSuccess()) {
-            return ApiController.created(response, result.value);
-        }
-        return ApiController.error(response, result.error.getErrors());
-      } catch (error) {
-        return ApiController.serverError(response, error);
+      const result: Result<AppNotification, RegisterAccountPayableResponse> =
+        await this.accountPayableService.register(registerAccountPayableRequest);
+      if (result.isSuccess()) {
+        return ApiController.created(response, result.value);
       }
-}
+      return ApiController.error(response, result.error.getErrors());
+    } catch (error) {
+      return ApiController.serverError(response, error);
+    }
+  }
 
 }

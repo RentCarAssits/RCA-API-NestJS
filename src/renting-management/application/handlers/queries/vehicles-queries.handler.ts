@@ -19,11 +19,12 @@ export class GetAllVehiclesHandler
     const vehicles = await this.vehicleRepository.find({
       relations: {
         categories: true,
+        owner: true,
       },
     });
     console.log(
       '🚀 ~ file: vehicles-queries.handler.ts:18 ~ GetAllVehiclesHandler ~ execute ~ vehicles:',
-      vehicles['result'],
+      vehicles,
     );
 
     const vehicleDtos: VehicleDto[] = vehicles.map((vehicle) => {
@@ -34,6 +35,7 @@ export class GetAllVehiclesHandler
       vehicleDto.integrity = vehicle.getIntegrity().getValue();
       vehicleDto.state = vehicle.getState();
       vehicleDto.year = vehicle.year;
+      vehicleDto.ownerId = vehicle.owner?.id;
       vehicleDto.categories = vehicle.categories.map((category) =>
         category.getName().getValue(),
       );
@@ -70,7 +72,7 @@ export class GetVehicleByIdHandler
     }
 
     const vehicle = result[0];
-
+    console.log('vechiles : ', result);
     const vehicleDto = new VehicleDto();
     vehicleDto.name = vehicle.name;
     vehicleDto.brand = vehicle.brand;
@@ -78,6 +80,7 @@ export class GetVehicleByIdHandler
     vehicleDto.integrity = vehicle.integrity;
     vehicleDto.state = vehicle.state;
     vehicleDto.year = vehicle.year;
+    vehicleDto.ownerId = vehicle.owner_id;
     vehicleDto.categories = vehicle.categories
       ? vehicle.categories.split(',')
       : [];

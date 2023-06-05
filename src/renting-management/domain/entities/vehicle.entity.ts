@@ -1,5 +1,12 @@
 import { AggregateRoot } from '@nestjs/cqrs';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { VehicleId } from '../values/vehicle-id.value';
 import { VehicleName } from '../values/vehicle-name.value';
 import { Brand } from '../values/brand.value';
@@ -9,6 +16,7 @@ import { Model } from '../values/model.value';
 import { ApiProperty } from '@nestjs/swagger';
 import { Category } from './category.entity';
 import { VehicleRegistered } from '../events/vehicle-registered.event';
+import { User } from '../../../iam-management/domain/entities/user.entity';
 
 @Entity('vehicles')
 export class Vehicle extends AggregateRoot {
@@ -45,12 +53,21 @@ export class Vehicle extends AggregateRoot {
   @Column({ nullable: false, type: 'date' })
   year: Date;
 
+  /*@ApiProperty()
+  @Column({ name: 'owner_id' })
+  ownerId: number;*/
+
   @ApiProperty()
   @OneToMany(() => Category, (category) => category.vehicle, {
     cascade: true,
     eager: true,
   })
   categories?: Category[];
+
+  @ApiProperty()
+  @ManyToOne(() => User, (user) => user.vehicles)
+  @JoinColumn({ name: 'owner_id' })
+  owner: User;
 
   public constructor(
     name: VehicleName,

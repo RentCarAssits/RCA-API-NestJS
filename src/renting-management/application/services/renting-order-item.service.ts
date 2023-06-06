@@ -11,6 +11,7 @@ import { UpdateRentingOrderItemValidator } from '../validators/update-renting-or
 import { UpdateRentingOrderItemRequest } from '../requests/update-renting-order-item.request';
 import { UpdateRentingOrderItemCommand } from '../commands/update-renting-order-item.command';
 import { UpdateRentingOrderItemResponse } from '../responses/update-renting-order-item.response';
+import { User } from '../../../iam-management/domain/entities/user.entity';
 
 @Injectable()
 export class RentingOrderItemService {
@@ -21,15 +22,18 @@ export class RentingOrderItemService {
   ) {}
 
   async register(
+    requester: User,
     createRentingOrderItemRequest: CreateRentingOrderItemRequest,
   ): Promise<Result<AppNotification, CreateRentingOrderItemResponse>> {
     const notification: AppNotification =
       await this.createRentingOrderItemValidator.validate(
         createRentingOrderItemRequest,
+        requester,
       );
     if (notification.hasErrors()) {
       return Result.error(notification);
     }
+
     const createRentingOrderItem: CreateRentingOrderItem =
       new CreateRentingOrderItem(
         createRentingOrderItemRequest.rentingPrice,
@@ -38,6 +42,7 @@ export class RentingOrderItemService {
         createRentingOrderItemRequest.endDate,
         createRentingOrderItemRequest.vehicleId,
         createRentingOrderItemRequest.rentingUnit,
+        requester.id,
       );
     const rentingOrderItemId: number = await this.commandBus.execute(
       createRentingOrderItem,
@@ -65,6 +70,7 @@ export class RentingOrderItemService {
     if (notification.hasErrors()) {
       return Result.error(notification);
     }
+
     const updateRentingOrderItemCommand: UpdateRentingOrderItemCommand =
       new UpdateRentingOrderItemCommand(
         updateRentingOrderItemRequest.id,
@@ -73,6 +79,7 @@ export class RentingOrderItemService {
     const rentingOrderItemId: number = await this.commandBus.execute(
       updateRentingOrderItemCommand,
     );
+
     const updateRentingOrderItemResponse: UpdateRentingOrderItemResponse =
       new UpdateRentingOrderItemResponse(
         rentingOrderItemId,

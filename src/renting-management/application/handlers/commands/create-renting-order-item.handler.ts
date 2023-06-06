@@ -23,6 +23,8 @@ import { VehicleDto } from '../../dtos/vehicle.dto';
 import { GetRentingOrderItemByIdQuery } from '../../queries/get-renting-order-item-by-id.query';
 import { Vehicle } from '../../../domain/entities/vehicle.entity';
 import { RentingOrderItemState } from '../../../domain/enums/renting-order-item-state.enum';
+import { User } from '../../../../iam-management/domain/entities/user.entity';
+import { NotFoundException } from '@nestjs/common';
 
 @CommandHandler(CreateRentingOrderItem)
 export class CreateRentingOrderItemHandler
@@ -31,6 +33,8 @@ export class CreateRentingOrderItemHandler
   constructor(
     @InjectRepository(RentingOrderItem)
     private rentingOrderItemRepository: Repository<RentingOrderItem>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     private publisher: EventPublisher,
   ) {}
 
@@ -46,7 +50,8 @@ export class CreateRentingOrderItemHandler
       command.endDate,
     );
     const vehicleId: VehicleIdFk = VehicleIdFk.of(command.vehicleId);
-
+    const id: number = command.requesterId;
+    const user = await this.userRepository.findOne({ where: { id: id } });
     const rentingOrderEntity: RentingOrderItem =
       RentingOrderItemFactory.createFrom(
         rentingPrice,
@@ -55,8 +60,14 @@ export class CreateRentingOrderItemHandler
         rentingUnit,
         accepted,
       );
-    let rentingOrderItem = await this.rentingOrderItemRepository.save(
+
+    console.log(user);
+    rentingOrderEntity.requester = user;
+    const rentingOrderItemAux = await this.rentingOrderItemRepository.create(
       rentingOrderEntity,
+    );
+    let rentingOrderItem = await this.rentingOrderItemRepository.save(
+      rentingOrderItemAux,
     );
     if (rentingOrderItem == null) {
       return rentingOrderItemId;

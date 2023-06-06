@@ -6,5 +6,6 @@ export class RentingOrderItemDto {
   public endDate: Date;
   public vehicleId: number;
   public rentingUnit: string;
+  public requesterId: number;
   public state: string;
 }

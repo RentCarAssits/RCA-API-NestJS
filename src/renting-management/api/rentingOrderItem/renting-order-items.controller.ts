@@ -12,6 +12,11 @@ import { Auth } from '../../../iam-management/application/decorators/auth.decora
 import { GetVehicleByIdQuery } from '../../application/queries/get-vehicle-by-id.query';
 import { GetRentingOrderItemByIdQuery } from '../../application/queries/get-renting-order-item-by-id.query';
 import { UpdateRentingOrderItemRequest } from '../../application/requests/update-renting-order-item.request';
+import { GetUser } from '../../../iam-management/application/decorators/get-user.decorator';
+import { User } from '../../../iam-management/domain/entities/user.entity';
+import { GetRentingItemsByVehiclesRequest } from '../../application/requests/get-renting-items-by-vehicles.request';
+import { GetAllRentingItemsByVehicleQuery } from '../../application/queries/get-all-renting-items-by-vehicle.query';
+import { GetAllRentingItemsByRenterIdQuery } from '../../application/queries/get-all-renting-items-by-renter-id.query';
 
 @ApiTags('Renting-Order-Items')
 @Controller('Renting-Order-Items')
@@ -22,17 +27,22 @@ export class RentingOrderItemsController {
   ) {}
 
   @Post()
+  @Auth()
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token Related' })
   @ApiResponse({ status: 500, description: 'Ups! Something Bad Happened' })
   async create(
+    @GetUser() requester: User,
     @Body() registerProductRequest: CreateRentingOrderItemRequest,
     @Res({ passthrough: true }) response,
   ): Promise<object> {
     try {
       const result: Result<AppNotification, CreateRentingOrderItemResponse> =
-        await this.rentingOrderItemService.register(registerProductRequest);
+        await this.rentingOrderItemService.register(
+          requester,
+          registerProductRequest,
+        );
       if (result.isSuccess()) {
         return ApiController.created(response, result.value);
       }
@@ -70,7 +80,43 @@ export class RentingOrderItemsController {
       return ApiController.ok(response, vehicle);
     } catch (error) {
       console.log(
-        '🚀 ~ file: vehicles.controller.ts:77 ~ VehiclesController ~ error:',
+        '🚀 ~ file: rentingOrderItems.controller.ts:77 ~ rentingOrderItems ~ error:',
+        error,
+      );
+      return ApiController.serverError(response, error);
+    }
+  }
+  @Get('get-by-renter-id/:id')
+  async getByRenterId(
+    @Param('id') renterId: number,
+    @Res({ passthrough: true }) response: any,
+  ) {
+    try {
+      const vehicle = await this.queryBus.execute(
+        new GetAllRentingItemsByRenterIdQuery(renterId),
+      );
+      return ApiController.ok(response, vehicle);
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: rentingOrderItems.controller.ts:77 ~ rentingOrderItems ~ error:',
+        error,
+      );
+      return ApiController.serverError(response, error);
+    }
+  }
+  @Post('/get-by-vehicles')
+  async GetByVehicles(
+    @Body() vehiclesIdRequest: GetRentingItemsByVehiclesRequest,
+    @Res({ passthrough: true }) response,
+  ): Promise<object> {
+    try {
+      const vehicle = await this.queryBus.execute(
+        new GetAllRentingItemsByVehicleQuery(vehiclesIdRequest.vehiclesId),
+      );
+      return ApiController.ok(response, vehicle);
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: rentingOrderItems.controller.ts:77 ~ rentingOrderItems ~ error:',
         error,
       );
       return ApiController.serverError(response, error);

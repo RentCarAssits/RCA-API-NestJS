@@ -24,6 +24,7 @@ export class VehiclesController {
   ) {}
 
   @Post()
+  @Auth()
   @ApiResponse({
     status: 201,
     description: 'OK',

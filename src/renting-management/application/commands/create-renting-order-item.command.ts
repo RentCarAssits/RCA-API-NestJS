@@ -6,5 +6,6 @@ export class CreateRentingOrderItem {
     public readonly endDate: Date,
     public readonly vehicleId: number,
     public readonly rentingUnit: string,
+    public readonly requesterId: number,
   ) {}
 }

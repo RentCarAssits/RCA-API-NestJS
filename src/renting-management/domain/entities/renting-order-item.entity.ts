@@ -50,6 +50,10 @@ export class RentingOrderItem extends AggregateRoot {
     nullable: false,
   })
   public rentingUnit: TimeUnit;
+  @ApiProperty()
+  @ManyToOne(() => User, (user) => user.vehicles)
+  @JoinColumn({ name: 'requester_id' })
+  requester: User;
 
   public constructor(
     rentingPrice: Money,

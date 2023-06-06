@@ -8,6 +8,8 @@ import { SubscriptionId } from "../values/subscription-id.value";
 
 export class SubscriptionFactory{
     public static createFrom(
+        //account:Account,
+        //Plan:Plan,
         UnitPrice:number,
         Frequency: SubscriptionFrequency,
         Period: Period,

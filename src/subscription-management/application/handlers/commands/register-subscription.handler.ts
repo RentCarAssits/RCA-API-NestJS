@@ -15,7 +15,6 @@ export class RegisterSubscriptionHandler implements ICommandHandler<RegisterSubs
     constructor(
         @InjectRepository(Subscription)
         private SubscriptionRepository: Repository<Subscription>, 
-        //private PlanRepository: Repository<Plan>,
         private publisher: EventPublisher
     ){}
 

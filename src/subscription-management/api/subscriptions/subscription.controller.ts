@@ -26,11 +26,13 @@ export class SubscriptionController{
         description: 'OK',
         type: Subscription,
     })
-    async register(@Body() registerSubscriptionRequest: RegisterSubscriptionRequest, @Res({ passthrough: true }) response:any,) {
+    async register(
+      @Body() registerSubscriptionRequest: RegisterSubscriptionRequest,
+       @Res({ passthrough: true }) response:any,) {
         try {
+          //console.log("HERE -->>>-dasD-sa<dSA");
           const result: Result<AppNotification, RegisterSubscriptionResponse> =
           await this.subscriptionApplicationService.register(registerSubscriptionRequest);
-          
           if (result.isSuccess()) {
             return ApiController.created(response, result.value);
           }
@@ -38,12 +40,11 @@ export class SubscriptionController{
         } 
         catch (error) {
           console.log(
-            '🚀 ~ file: subscription.controller.ts:44 ~ SubscriptionController ~ error:',
+            'CATCH -->:   🚀 ~ file: subscription.controller.ts:44 ~ SubscriptionController ~ error:',
             error,
           );
           return ApiController.serverError(response, error);
         }
-        
     }
     
     @Get()

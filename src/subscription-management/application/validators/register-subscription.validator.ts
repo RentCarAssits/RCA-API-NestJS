@@ -33,12 +33,14 @@ export class RegisterSubscriptionValidator{
         if(Frequency.length <= 0){notification.addError('Frequency is required', null);}
     
         if (notification.hasErrors()) {return notification;}
-
-        /*const Subscription: Subscription = await 
+        
+        /*
+        const Subscription: Subscription = await 
         this.subscriptionRepository.createQueryBuilder().where('Frequency =: Frequency',{Frequency}).getOne();
         if(Subscription!=null){
             notification.addError('Subscription Frequency is taken', null);
         }*/
+        
         return notification;
     }
 }

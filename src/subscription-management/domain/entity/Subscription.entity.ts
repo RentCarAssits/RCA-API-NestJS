@@ -28,6 +28,7 @@ export class Subscription extends AggregateRoot {
   
 
   //planes
+  @ApiProperty()
   @ManyToOne(()=>Plan, plan=>plan.subscriptions)
   public plan:Plan;
 

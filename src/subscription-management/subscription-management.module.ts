@@ -19,12 +19,13 @@ import { RegisterSubscription } from './application/commands/register-subscripti
 import { SubscriptionRegisteredHanlder } from './application/handlers/events/Subscription-registered.event';
 import { GetAllSubscriptionHandler, GetSubscriptionByIdHanlder } from './application/handlers/queries/subscriptions-queries.handler';
 import { Subscription } from './domain/entity/Subscription.entity';
+import { RegisterSubscriptionHandler } from './application/handlers/commands/register-subscription.handler';
 
 export const CommandHandlersPlan = [RegisterPlanHanlder];
 export const eventHandlerPlan = [PlanRegisteredHandler];
 export const QueryHandlerPlan = [GetAllPlanHandler, GetPlanByIdHandler];
 
-export const CommandHandlersSubscription = [RegisterSubscription];
+export const CommandHandlersSubscription = [RegisterSubscriptionHandler];
 export const eventHandlerSubscription = [SubscriptionRegisteredHanlder];
 export const QueryHandlerSubscription = [GetAllSubscriptionHandler,GetSubscriptionByIdHanlder];
 

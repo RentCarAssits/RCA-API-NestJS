@@ -15,9 +15,19 @@ export class VehicleFactory {
     year: Date,
     state: VehicleState,
     image: string,
+    stars: number,
   ): Vehicle {
     const stateAux = this.State(state);
-    return new Vehicle(name, brand, model, integrity, year, stateAux, image);
+    return new Vehicle(
+      name,
+      brand,
+      model,
+      integrity,
+      year,
+      stateAux,
+      image,
+      stars,
+    );
   }
 
   public static withId(
@@ -29,6 +39,7 @@ export class VehicleFactory {
     year: Date,
     state: number,
     image: string,
+    stars,
   ): Vehicle {
     const vehicle: Vehicle = new Vehicle(
       name,
@@ -38,6 +49,7 @@ export class VehicleFactory {
       year,
       state,
       image,
+      stars,
     );
     vehicle.changeId(vehicleId);
     return vehicle;

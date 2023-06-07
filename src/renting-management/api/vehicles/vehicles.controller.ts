@@ -15,8 +15,10 @@ import { GetUser } from '../../../iam-management/application/decorators/get-user
 import { User } from '../../../iam-management/domain/entities/user.entity';
 import { UpdateVehicleRequest } from '../../application/requests/update-vehicle.request';
 import { GetAllVehiclesByYearQuery } from '../../application/queries/get-all-vehicles-by-year.query';
+import { GetAllVehiclesByStarsQuery } from '../../application/queries/get-all-vehicles-by-stars.query';
+import { GetVehiclesByOwnerIdQuery } from '../../application/queries/get-vehicles-by-ownerId.query';
 
-@ApiTags('Products')
+@ApiTags('Vehicles')
 @Controller('vehicles')
 export class VehiclesController {
   constructor(
@@ -123,7 +125,7 @@ export class VehiclesController {
     }
   }
 
-  @Get('/latest')
+  @Get('/latest/vehicles')
   @Auth()
   async getByLatestYear(@Res({ passthrough: true }) response: any) {
     try {
@@ -139,4 +141,44 @@ export class VehiclesController {
       return ApiController.serverError(response, error);
     }
   }
+
+  @Get('/stars/vehicles')
+  @Auth()
+  async getByMostStars(@Res({ passthrough: true }) response: any) {
+    console.log('safafsafsafs');
+    try {
+      const vehicles = await this.queryBus.execute(
+        new GetAllVehiclesByStarsQuery(),
+      );
+      return ApiController.ok(response, vehicles);
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: vehicles.controller.ts:XX ~ VehiclesController ~ getByLatestYear ~ error:',
+        error,
+      );
+      return ApiController.serverError(response, error);
+    }
+  }
+
+  @Get('/by/owner')
+  @Auth()
+  async getVehiclesByOwner(
+    @GetUser() owner: User,
+    @Res({ passthrough: true }) response: any,
+  ) {
+    try {
+      const vehicle = await this.queryBus.execute(
+        new GetVehiclesByOwnerIdQuery(owner),
+      );
+      return ApiController.ok(response, vehicle);
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: vehicles.controller.ts:77 ~ VehiclesController ~ error:',
+        error,
+      );
+      return ApiController.serverError(response, error);
+    }
+  }
+
+  ///by/owner
 }

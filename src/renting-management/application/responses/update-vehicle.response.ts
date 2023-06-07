@@ -9,6 +9,7 @@ export class UpdateVehicleResponse {
     public year: Date,
     public ownerId: number,
     public image: string,
+    public stars: number,
     public categories: string[],
   ) {}
 }

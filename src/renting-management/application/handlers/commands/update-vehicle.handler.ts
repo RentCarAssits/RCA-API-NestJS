@@ -57,6 +57,8 @@ export class UpdateVehicleHandler implements ICommandHandler<UpdateVehicle> {
     const vehicleState: VehicleState = Number(command.state);
     const year: Date = command.year;
     const image: string = command.image;
+    const stars: number = Number(command.stars);
+    const starsUpdated: number = stars + 1;
 
     const vId = VehicleFactory.withId(
       vehicle.getId(),
@@ -67,6 +69,7 @@ export class UpdateVehicleHandler implements ICommandHandler<UpdateVehicle> {
       year,
       vehicleState,
       image,
+      starsUpdated,
     );
     const vehicleAux = this.vehicleRepository.create(vId);
     let updatedVehicle = await this.vehicleRepository.save(vehicleAux);

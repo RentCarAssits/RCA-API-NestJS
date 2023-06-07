@@ -9,6 +9,7 @@ export class UpdateVehicleRequest {
     public readonly year: Date,
     public readonly ownerId: number,
     public readonly image: string,
+    public readonly stars: number,
     public readonly categories: string[],
   ) {}
 }

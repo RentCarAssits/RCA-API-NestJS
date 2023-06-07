@@ -6,6 +6,9 @@ import { VehiclesController } from './api/vehicles/vehicles.controller';
 import { CqrsModule } from '@nestjs/cqrs';
 import { VehiclesApplicationService } from './application/services/vehicles-application.service';
 import {
+  GetAllVehiclesByByOwnerHandler,
+  GetAllVehiclesByStarsHandler,
+  GetAllVehiclesByYearHandler,
   GetAllVehiclesHandler,
   GetVehicleByIdHandler,
 } from './application/handlers/queries/vehicles-queries.handler';
@@ -19,7 +22,13 @@ import { UpdateVehicleValidator } from './application/validators/update-vehicle.
 
 export const CommandHandlers = [RegisterVehicleHandler, UpdateVehicleHandler];
 export const EventHandlers = [ProductRegisteredHandler, VehicleUpdatedHandler];
-export const QueryHandlers = [GetAllVehiclesHandler, GetVehicleByIdHandler];
+export const QueryHandlers = [
+  GetAllVehiclesHandler,
+  GetVehicleByIdHandler,
+  GetAllVehiclesByStarsHandler,
+  GetAllVehiclesByYearHandler,
+  GetAllVehiclesByByOwnerHandler,
+];
 
 @Module({
   imports: [

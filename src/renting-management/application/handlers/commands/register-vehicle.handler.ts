@@ -64,6 +64,7 @@ export class RegisterVehicleHandler
     const year: Date = command.year;
     const image: string = command.image;
     const id: number = command.ownerId;
+    const stars: number = command.stars;
     const user = await this.userRepository.findOne({ where: { id: id } });
 
     if (!user) {
@@ -78,6 +79,7 @@ export class RegisterVehicleHandler
       year,
       Number(command.state),
       image,
+      stars,
     );
 
     let categoryEntities = categories.map((category) => {

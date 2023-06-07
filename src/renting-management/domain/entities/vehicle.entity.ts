@@ -51,6 +51,9 @@ export class Vehicle extends AggregateRoot {
   @Column()
   image: string;
 
+  @Column()
+  stars: number;
+
   /*@ApiProperty()
   @Column({ name: 'owner_id' })
   ownerId: number;*/
@@ -75,6 +78,7 @@ export class Vehicle extends AggregateRoot {
     year: Date,
     state: number,
     image: string,
+    stars: number,
   ) {
     super();
     this.name = name;
@@ -84,6 +88,7 @@ export class Vehicle extends AggregateRoot {
     this.year = year;
     this.model = model;
     this.image = image;
+    this.stars = stars;
   }
 
   public register() {
@@ -146,6 +151,10 @@ export class Vehicle extends AggregateRoot {
 
   public getImage(): string {
     return this.image;
+  }
+
+  public getStars(): number {
+    return this.stars;
   }
 
   public getCategories(): Category[] {

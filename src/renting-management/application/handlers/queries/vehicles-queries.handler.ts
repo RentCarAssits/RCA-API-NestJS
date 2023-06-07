@@ -5,6 +5,7 @@ import { GetAllVehiclesQuery } from '../../queries/get-all-vehicles.query';
 import { GetVehicleByIdQuery } from '../../queries/get-vehicle-by-id.query';
 import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { GetAllVehiclesByYearQuery } from '../../queries/get-all-vehicles-by-year.query';
 
 @QueryHandler(GetAllVehiclesQuery)
 export class GetAllVehiclesHandler
@@ -36,6 +37,7 @@ export class GetAllVehiclesHandler
       vehicleDto.state = vehicle.getState();
       vehicleDto.year = vehicle.year;
       vehicleDto.ownerId = vehicle.owner?.id;
+      vehicleDto.image = vehicle.image;
       vehicleDto.categories = vehicle.categories.map((category) =>
         category.getName().getValue(),
       );
@@ -81,10 +83,57 @@ export class GetVehicleByIdHandler
     vehicleDto.state = vehicle.state;
     vehicleDto.year = vehicle.year;
     vehicleDto.ownerId = vehicle.owner_id;
+    vehicleDto.image = vehicle.image;
     vehicleDto.categories = vehicle.categories
       ? vehicle.categories.split(',')
       : [];
 
     return vehicleDto;
+  }
+}
+
+@QueryHandler(GetAllVehiclesByYearQuery)
+export class GetAllVehiclesByYearHandler
+  implements IQueryHandler<GetAllVehiclesByYearQuery>
+{
+  constructor(
+    @InjectRepository(Vehicle)
+    private readonly vehicleRepository: Repository<Vehicle>,
+    private readonly connection: Connection,
+  ) {}
+
+  async execute(query: GetAllVehiclesByYearQuery) {
+    const manager = this.connection.manager;
+    const sql = `
+    SELECT vehicles.*, GROUP_CONCAT(categories.category) as categories
+    FROM vehicles
+    LEFT JOIN categories ON vehicles.id = categories.vehicleId
+    WHERE YEAR(vehicles.year) = (SELECT MAX(YEAR(year)) FROM vehicles)
+    GROUP BY vehicles.id
+    `;
+
+    const result = await manager.query(sql);
+
+    if (result.length === 0) {
+      return null;
+    }
+
+    const vehicleDtos: VehicleDto[] = result.map((vehicle) => {
+      const vehicleDto = new VehicleDto();
+      vehicleDto.name = vehicle.name;
+      vehicleDto.brand = vehicle.brand;
+      vehicleDto.model = vehicle.model;
+      vehicleDto.integrity = vehicle.integrity;
+      vehicleDto.state = vehicle.state;
+      vehicleDto.year = vehicle.year;
+      vehicleDto.ownerId = vehicle.owner_id;
+      vehicleDto.image = vehicle.image;
+      vehicleDto.categories = vehicle.categories
+        ? vehicle.categories.split(',')
+        : [];
+      return vehicleDto;
+    });
+
+    return vehicleDtos;
   }
 }

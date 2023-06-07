@@ -14,6 +14,7 @@ import { RegisterVehicleResponse } from '../../application/responses/register-ve
 import { GetUser } from '../../../iam-management/application/decorators/get-user.decorator';
 import { User } from '../../../iam-management/domain/entities/user.entity';
 import { UpdateVehicleRequest } from '../../application/requests/update-vehicle.request';
+import { GetAllVehiclesByYearQuery } from '../../application/queries/get-all-vehicles-by-year.query';
 
 @ApiTags('Products')
 @Controller('vehicles')
@@ -116,6 +117,23 @@ export class VehiclesController {
     } catch (error) {
       console.log(
         '🚀 ~ file: vehicles.controller.ts:77 ~ VehiclesController ~ error:',
+        error,
+      );
+      return ApiController.serverError(response, error);
+    }
+  }
+
+  @Get('/latest')
+  @Auth()
+  async getByLatestYear(@Res({ passthrough: true }) response: any) {
+    try {
+      const vehicles = await this.queryBus.execute(
+        new GetAllVehiclesByYearQuery(),
+      );
+      return ApiController.ok(response, vehicles);
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: vehicles.controller.ts:XX ~ VehiclesController ~ getByLatestYear ~ error:',
         error,
       );
       return ApiController.serverError(response, error);

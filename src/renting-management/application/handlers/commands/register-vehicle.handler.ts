@@ -37,7 +37,7 @@ export class RegisterVehicleHandler
     const categories = command.categories;
     let vehicleId = 0;
 
-    console.log('command: ', command);
+    //console.log('command: ', command);
     const vehicleNameResult: Result<AppNotification, VehicleName> =
       VehicleName.create(command.name);
     if (vehicleNameResult.isFailure()) return vehicleId;
@@ -57,7 +57,12 @@ export class RegisterVehicleHandler
     if (vehicleIntegrityResult.isFailure()) return vehicleId;
 
     const vehicleState: VehicleState = Number(command.state);
+    const state = VehicleFactory.State(vehicleState);
+    console.log('vehicleState: ', vehicleState, typeof vehicleState);
+    console.log('command.state: ', command.state, typeof command.state);
+    console.log('state: ', state, typeof state);
     const year: Date = command.year;
+    const image: string = command.image;
     const id: number = command.ownerId;
     const user = await this.userRepository.findOne({ where: { id: id } });
 
@@ -71,7 +76,8 @@ export class RegisterVehicleHandler
       modelResult.value,
       vehicleIntegrityResult.value,
       year,
-      vehicleState,
+      Number(command.state),
+      image,
     );
 
     let categoryEntities = categories.map((category) => {
@@ -83,40 +89,23 @@ export class RegisterVehicleHandler
         return new Category(categoryNameResult.value);
       }
     });
-
     categoryEntities = categoryEntities.filter((category) => category !== null);
 
-    const vehicleX = {
-      name: vehicleEntity.getName().getValue(),
-      brand: vehicleEntity.getBrand().getValue(),
-      model: vehicleEntity.getModel().getValue(),
-      integrity: vehicleEntity.getIntegrity(),
-      year: vehicleEntity.getYear(),
-      vehicleSate: vehicleEntity.getState(),
-    };
     const aux = {
-      name: vehicleNameResult.value,
-      brand: brandResult.value,
-      model: modelResult.value,
-      integrity: vehicleIntegrityResult.value,
-      year: year,
-      vehicleSate: vehicleState,
+      ...vehicleEntity,
       categories: categoryEntities,
       owner: user,
     };
 
-    console.log('owneer: ', aux);
-
-    console.log('owneer: ', command.ownerId);
     const vehicleAux = this.vehicleRepository.create(aux);
     let vehicle = await this.vehicleRepository.save(vehicleAux);
     if (vehicle == null) {
       return vehicleId;
     }
-    console.log('vehicle: ', vehicle);
+    // console.log('vehicle: ', vehicle);
 
     vehicleId = Number(vehicle.getId());
-    console.log('vehicleId:', vehicleId);
+    // console.log('vehicleId:', vehicleId);
     vehicle.changeId(VehicleId.of(vehicleId));
     vehicle = this.publisher.mergeObjectContext(vehicle);
     vehicle.register();

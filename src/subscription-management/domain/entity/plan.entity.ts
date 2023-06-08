@@ -1,9 +1,10 @@
 import { AggregateRoot } from '@nestjs/cqrs';
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { PlanId } from '../values/plan-id.value';
 import { PlanName } from '../values/plan-name.value';
 import { PlanRegistered } from '../events/plan-registered.event';
+import { Subscription } from './Subscription.entity';
 
 @Entity('Plans')
 export class Plan extends AggregateRoot {
@@ -18,6 +19,10 @@ export class Plan extends AggregateRoot {
   @ApiProperty()
   @Column()
   private readonly Benefits: string;
+  
+  //Subscripcion relations
+  @OneToMany(()=> Subscription, subscription => subscription.plan)
+  public subscriptions: Subscription[];
 
   public constructor(PlanName: PlanName, benefits: string) {
     super();

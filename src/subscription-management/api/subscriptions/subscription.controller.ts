@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post, Res } from "@nestjs/common";
 import { QueryBus } from "@nestjs/cqrs";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { authorize } from "passport";
 import { Subscription } from "rxjs";
 import { ApiController } from "src/shared/api/api.controller";
 import { AppNotification } from "src/shared/application/app.notification";
@@ -21,18 +22,17 @@ export class SubscriptionController{
 
     @Post()
     @ApiResponse({
-        status: 201,
+        status: 200,
         description: 'OK',
         type: Subscription,
     })
-    @ApiResponse({ status: 400, description: 'Bad request' })
-    @ApiResponse({ status: 403, description: 'Forbiden. Token Related' })
-    @ApiResponse({ status: 500, description: 'Ups! Something Bad Happende' })
-    async register(@Body() registerSubscriptionRequest: RegisterSubscriptionRequest, @Res({ passthrough: true }) response,) {
+    async register(
+      @Body() registerSubscriptionRequest: RegisterSubscriptionRequest,
+       @Res({ passthrough: true }) response:any,) {
         try {
+          //console.log("HERE -->>>-dasD-sa<dSA");
           const result: Result<AppNotification, RegisterSubscriptionResponse> =
           await this.subscriptionApplicationService.register(registerSubscriptionRequest);
-          
           if (result.isSuccess()) {
             return ApiController.created(response, result.value);
           }
@@ -40,7 +40,7 @@ export class SubscriptionController{
         } 
         catch (error) {
           console.log(
-            '🚀 ~ file: vehicles.controller.ts:44 ~ VehiclesController ~ error:',
+            'CATCH -->:   🚀 ~ file: subscription.controller.ts:44 ~ SubscriptionController ~ error:',
             error,
           );
           return ApiController.serverError(response, error);
@@ -48,17 +48,13 @@ export class SubscriptionController{
     }
     
     @Get()
-    @ApiResponse({ status: 200, description: 'OK' })
-    @ApiResponse({ status: 400, description: 'Bad request' })
-    @ApiResponse({ status: 403, description: 'Forbiden. Token Related' })
-    @ApiResponse({ status: 500, description: 'Ups! Something Bad Happende' })
-    async getAll(@Res({ passthrough: true }) response) {
+    async getAll(@Res({ passthrough: true }) response:any) {
         try {
           const subscriptions = await this.queryBus.execute(new getAllSubscriptionQuery());
           return ApiController.ok(response, subscriptions);
         } catch (error) {
           console.log(
-            '🚀 ~ file: subscriptions.controller.ts:58 ~ VehiclesController ~ getAll ~ error:',
+            '🚀 ~ file: subscriptions.controller.ts:58 ~ SubscriptionsController ~ getAll ~ error:',
             error,
           );
           return ApiController.serverError(response, error);
@@ -66,19 +62,15 @@ export class SubscriptionController{
     }
 
     @Get('/:id')
-    @ApiResponse({ status: 200, description: 'OK' })
-    @ApiResponse({ status: 400, description: 'Bad request' })
-    @ApiResponse({ status: 403, description: 'Forbiden. Token Related' })
-    @ApiResponse({ status: 500, description: 'Ups! Something Bad Happende' })
-    async getById(@Param('id') subscriptionId: number,@Res({ passthrough: true }) response,) {
+    async getById(@Param('id') subscriptionId: number,@Res({ passthrough: true }) response:any,) {
         try {
-        const subscription = await this.queryBus.execute(
-            new getSubscriptionByIdQuery(subscriptionId),
-        );
-        return ApiController.ok(response, subscription);
+            console.log("AQUI ENTRO EL APU");
+            const subscription = await this.queryBus.execute(new getSubscriptionByIdQuery(subscriptionId));
+            console.log("API --> ",subscription);
+            return ApiController.ok(response, subscription);
         } catch (error) {
         console.log(
-            '🚀 ~ file: vehicles.controller.ts:77 ~ VehiclesController ~ error:',
+            '🚀 ~ file: subscription.controller.ts:77 ~ SubscriptionsController ~ error:',
             error,
         );
         return ApiController.serverError(response, error);

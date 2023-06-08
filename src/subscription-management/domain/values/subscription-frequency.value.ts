@@ -1,7 +1,9 @@
 import { AppNotification } from "src/shared/application/app.notification";
+import { Column } from "typeorm";
 import { Result } from "typescript-result";
 
 export class SubscriptionFrequency {
+  @Column('varchar', {name:'frequency'})
   private readonly value: string;
   private static MAX_LENGTH: number = 250;
   private constructor(value: string) {

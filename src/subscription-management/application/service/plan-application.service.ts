@@ -20,7 +20,7 @@ export class PlanApplicationService {
 
   async register(
     registerPlanRequest: RegisterPlanRequest,
-  ): Promise<Result<AppNotification, RegisterPlanRequest>> {
+  ): Promise<Result<AppNotification, RegisterPlanResponse>> {
     const notification: AppNotification =
       await this.RegisterPlanValidator.validate(registerPlanRequest);
     if (notification.hasErrors()) {

@@ -8,65 +8,63 @@ import { getSubscriptionByIdQuery } from "../../queries/get-subscription-id.quer
 
 @QueryHandler(getAllSubscriptionQuery)
 export class GetAllSubscriptionHandler implements IQueryHandler<getAllSubscriptionQuery>{
-    constructor(@InjectRepository(Subscription) private readonly vehicleRepository: Repository<Subscription>,) {}
-  async execute(query: getAllSubscriptionQuery): Promise<any> {
+  constructor(@InjectRepository(Subscription) private readonly subscriptionRepository: Repository<Subscription>,private readonly connection: Connection,) {}
+  
+  async execute(query: getAllSubscriptionQuery): Promise<SubscriptionDto[]> {
+    const manager = this.connection.manager;
+    const sql = 'SELECT * FROM Subscriptions';
+    const result = await manager.query(sql);
+    if(result.length === 0){
+      console.log("Not result in repository now. Sorry come back later please");
+      return null;
+    }
+    console.log(result);
     
-  }
-    /*
-    async execute(query: getAllSubscriptionQuery): Promise<any> {
-        const subscriptions = await this.vehicleRepository.find({
-            relations: {
-              account: true,
-            },
-          });
-          console.log(
-            '🚀 ~ file: vehicles-queries.handler.ts:18 ~ GetAllVehiclesHandler ~ execute ~ vehicles:',
-            subscriptions['result'],
-          );
-          /*  
-          const subscriptionDtos: SubscriptionDto[] = subscriptions.map((subscription) => {
-            const subscriptionDto = new SubscriptionDto();
-            subscriptionDto.PlanId = subscription.getPlan().getId().getValue();
-            subscriptionDto.AccountId = subscription.getAccount().getAccountId().getValue();
-            subscriptionDto.UnitPrice = subscription.getUnitPrice();
-            subscriptionDto.Frequency = subscription.getFrequency().getValue();
-            subscriptionDto.Period = subscription.getPeriod().getStartDate();
-            return subscriptionDto;
-          });
-        return subscriptionDtos;
-      }
-      */
-      
+    const subscriptionsDto: SubscriptionDto[] = result.map((subscriptions)=>{
+      const subscriptionDto = new SubscriptionDto();
+      subscriptionDto.id = subscriptions.id;
+      subscriptionDto.PlanId = subscriptions.planId;   
+      subscriptionDto.AccountId = subscriptions.accountId; 
+      subscriptionDto.Frequency = subscriptions.frequency;
+      subscriptionDto.UnitPrice = subscriptions.unitPrice;
+      subscriptionDto.startDate = subscriptions.startDate;
+      subscriptionDto.endDate = subscriptions.endDate;
+      return subscriptionDto;
+    })
+    return subscriptionsDto;
+  }    
 }
+
+
 
 @QueryHandler(getSubscriptionByIdQuery)
 export class GetSubscriptionByIdHanlder implements IQueryHandler<getSubscriptionByIdQuery>{
-    constructor(
-        @InjectRepository(Subscription)
-        private readonly vehicleRepository: Repository<Subscription>,
-        private readonly connection: Connection,
-    ) {}
+    constructor(@InjectRepository(Subscription) private readonly subscriptionRepository: Repository<Subscription>,private readonly connection: Connection,) {}
 
     async execute(query: getSubscriptionByIdQuery){
         const manager = this.connection.manager;
-        const sql=`SELECT *
-          FROM Subscriptions
-          WHERE vehicles.id = ?`;
+        const sql=`SELECT *   
+          FROM Subscriptions as S
+          WHERE S.id = ?`;
         const result = await manager.query(sql, [query.SubscriptionId]);
 
         if(result.length === 0){
+            console.log('Not result in repository now. Sorry come back in other moment please');
             return null;
         }
         const subscription = result[0];
 
-        const subscriptionDto = new SubscriptionDto();
-        
-        subscriptionDto.AccountId = subscription.AccountId;
-        subscriptionDto.PlanId = subscription.PlanId;
-        subscriptionDto.Period = subscription.Period;
-        subscriptionDto.UnitPrice = subscription.UnitPrice;
-        subscriptionDto.Frequency = subscription.Frequency;
+        console.log("Subscription",subscription);
 
+        const subscriptionDto = new SubscriptionDto();
+        subscriptionDto.AccountId = subscription.accountId;
+        subscriptionDto.PlanId = subscription.planId;
+        subscriptionDto.UnitPrice = subscription.unitPrice;
+        subscriptionDto.Frequency = subscription.frequency;
+        subscriptionDto.startDate = subscription.startDate;
+        subscriptionDto.endDate = subscription.endDate;
+        
+        console.log("accountId dto: --> ",subscriptionDto.AccountId, "accountId --> normal", subscription.accountId);
         return subscriptionDto;
     }
     

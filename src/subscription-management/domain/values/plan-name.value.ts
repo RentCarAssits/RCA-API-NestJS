@@ -1,7 +1,9 @@
 import { AppNotification } from 'src/shared/application/app.notification';
+import { Column } from 'typeorm';
 import { Result } from 'typescript-result';
 
 export class PlanName {
+  @Column('varchar',{name:'name'})
   private readonly value: string;
   private static MAX_LENGTH = 250;
 

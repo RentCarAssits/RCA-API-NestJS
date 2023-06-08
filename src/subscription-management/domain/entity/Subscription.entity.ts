@@ -4,6 +4,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -11,6 +12,8 @@ import { SubscriptionId } from '../values/subscription-id.value';
 import { Period } from '../values/period.value';
 import { Plan } from './plan.entity';
 import { SubscriptionFrequency } from '../values/subscription-frequency.value';
+import { SubscriptionRegistered } from '../events/subscription-registered.event';
+import { Account } from 'src/iam-management/domain/entities/account.entity';
 
 @Entity('Subscriptions')
 export class Subscription extends AggregateRoot {
@@ -18,29 +21,28 @@ export class Subscription extends AggregateRoot {
   @PrimaryGeneratedColumn()
   private id: SubscriptionId;
 
-  /*
+  // acounts id
   @ApiProperty()
-  @ManyToOne(()=> Account, (account)=> account.subscriptions,{
-      onDelete:'CASCADE',
-  })
+  @ManyToOne(()=> Account, (account)=> account.subscriptions)
   account: Account;
-  */
+  
 
-  @OneToOne(() => Plan)
-  @JoinColumn()
-  private readonly Plan: Plan;
+  //planes
+  @ApiProperty()
+  @ManyToOne(()=>Plan, plan=>plan.subscriptions)
+  public plan:Plan;
 
   @ApiProperty()
   @Column()
-  private readonly UnitPrice: number;
+  private readonly unitPrice: number;
 
   @ApiProperty()
-  @Column()
-  private readonly Frequency: SubscriptionFrequency;
+  @Column(()=> SubscriptionFrequency, { prefix: false })
+  private readonly frequency: SubscriptionFrequency;
 
   @ApiProperty()
   @Column(() => Period, { prefix: false })
-  private readonly Period: Period;
+  private readonly period: Period;
 
   public constructor(
     UnitPrice: number,
@@ -48,47 +50,47 @@ export class Subscription extends AggregateRoot {
     Period: Period,
   ) {
     super();
-
-    this.UnitPrice = UnitPrice;
-    this.Frequency = Frequency;
-    this.Period = Period;
+    this.unitPrice = UnitPrice;
+    this.frequency = Frequency;
+    this.period = Period;
   }
 
-  /*
+  
   public register(){
       const event = new SubscriptionRegistered(
-          this.id.getValue(),
-          //this.account.id,
-          this.Plan.getId().getValue(),
-          this.UnitPrice,
-          this.Frequency.getValue(),
-          this.Period.getStartDate(),
-      );
-      this.apply(event);
+        this.id.getValue(),
+        this.account.id,
+        this.plan.getId().getValue(),
+        this.unitPrice,
+        this.frequency.getValue(),
+        this.period.getStartDate(),
+        this.period.getEndDate(),
+      )
   }
-  */
+  
+    
   public getId(): SubscriptionId {
     return this.id;
   }
 
-  /*
-  public getAccount(): Account {
-      return this.account;
-  }
-  */
-  public getPlan(): Plan {
-    return this.Plan;
-  }
-
   public getUnitPrice(): number {
-    return this.UnitPrice;
+    return this.unitPrice;
   }
 
   public getFrequency(): SubscriptionFrequency {
-    return this.Frequency;
+    return this.frequency;
   }
 
   public getPeriod(): Period {
-    return this.Period;
+    return this.period;
   }
+
+  public getAccount(): Account {
+    return this.account;
+  }
+
+  public changeId(id: SubscriptionId) {
+    this.id = id;
+  }
+
 }

@@ -17,6 +17,7 @@ import { UpdateVehicleRequest } from '../../application/requests/update-vehicle.
 import { GetAllVehiclesByYearQuery } from '../../application/queries/get-all-vehicles-by-year.query';
 import { GetAllVehiclesByStarsQuery } from '../../application/queries/get-all-vehicles-by-stars.query';
 import { GetVehiclesByOwnerIdQuery } from '../../application/queries/get-vehicles-by-ownerId.query';
+import { Get20VehiclesMixedQuery } from '../../application/queries/get-20-vehicles-mixed.query';
 
 @ApiTags('Vehicles')
 @Controller('vehicles')
@@ -95,6 +96,23 @@ export class VehiclesController {
   async getAll(@Res({ passthrough: true }) response: any) {
     try {
       const vehicles = await this.queryBus.execute(new GetAllVehiclesQuery());
+      return ApiController.ok(response, vehicles);
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: vehicles.controller.ts:58 ~ VehiclesController ~ getAll ~ error:',
+        error,
+      );
+      return ApiController.serverError(response, error);
+    }
+  }
+
+  @Get('random/vehicles')
+  @Auth()
+  async get20Random(@Res({ passthrough: true }) response: any) {
+    try {
+      const vehicles = await this.queryBus.execute(
+        new Get20VehiclesMixedQuery(),
+      );
       return ApiController.ok(response, vehicles);
     } catch (error) {
       console.log(

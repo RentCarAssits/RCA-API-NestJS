@@ -13,13 +13,13 @@ export class Product {
   @Column('varchar', { name: 'name' })
   private productName: string;
 
-  @Column('bigint', { name: 'quantity' })
+  @Column('bigint', { name: 'quantityProduct' })
   private quantity: number;
 
   @Column((type) => Price, { prefix: false })
   private price: Price;
 
-  @ManyToOne(() => Inventory, (inventory) => inventory.getProducts())
+  @ManyToOne(() => Inventory, (inventory) => inventory.getProducts)
   @JoinColumn({ name: 'inventory_id' })
   private inventory: Inventory;
 

@@ -16,7 +16,7 @@ export class Warehouse {
   @Column((type) => Address, { prefix: false })
   private address: Address;
 
-  @OneToMany(() => Inventory, (Inventory) => Inventory.getWarehouse())
+  @OneToMany(() => Inventory, (Inventory) => Inventory.getWarehouse)
   private inventories: Inventory[];
 
   public constructor(name: string, address: Address) {

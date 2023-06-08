@@ -10,7 +10,7 @@ import { Price } from '../value-objects/price.value';
 import { InventoryTransaction } from './inventory-transaction.entity';
 import { Product } from './product.entity';
 import { RequestItemId } from '../value-objects/request-item-id.value';
-import { ServiceItem } from './service-item.value';
+import { ServiceItem } from './service-item';
 
 @Entity('RequestItem')
 export class RequestItem {
@@ -21,13 +21,13 @@ export class RequestItem {
   @JoinColumn({ name: 'product_id' })
   private product: Product;
 
-  @Column('bigint', { name: 'quantity' })
+  @Column('bigint', { name: 'quantityRequestItem' })
   private quantity: number;
 
   @Column((type) => Price, { prefix: false })
   private price: Price;
 
-  @ManyToOne(() => ServiceItem, (ServiceItem) => ServiceItem.getRequestItems())
+  @ManyToOne(() => ServiceItem, (ServiceItem) => ServiceItem.getRequestItems)
   @JoinColumn({ name: 'serviceItem_id' })
   private serviceItem: ServiceItem;
 

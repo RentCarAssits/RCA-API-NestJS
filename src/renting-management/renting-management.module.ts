@@ -6,6 +6,9 @@ import { VehiclesController } from './api/vehicles/vehicles.controller';
 import { CqrsModule } from '@nestjs/cqrs';
 import { VehiclesApplicationService } from './application/services/vehicles-application.service';
 import {
+  GetAllVehiclesByByOwnerHandler,
+  GetAllVehiclesByStarsHandler,
+  GetAllVehiclesByYearHandler,
   GetAllVehiclesHandler,
   GetVehicleByIdHandler,
 } from './application/handlers/queries/vehicles-queries.handler';

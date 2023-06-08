@@ -11,7 +11,7 @@ module.exports = {
   ssl: true,
   migrationsRun: true,
   logging: true,
-  timezone: '+0',
+  //timezone: '+0',
   bigNumberStrings: false,
   extra: {
     ssl: {

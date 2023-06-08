@@ -44,6 +44,8 @@ export class VehiclesApplicationService {
       registerVehicleRequest.state,
       registerVehicleRequest.year,
       owner.id,
+      registerVehicleRequest.image,
+      registerVehicleRequest.stars,
       registerVehicleRequest.categories,
     );
     const vehicleId: number = await this.commandBus.execute(registerVehicle);
@@ -57,6 +59,8 @@ export class VehiclesApplicationService {
         Number(registerVehicle.state),
         registerVehicle.year,
         registerVehicle.ownerId,
+        registerVehicle.image,
+        registerVehicle.stars,
         registerVehicleRequest.categories,
       );
     return Result.ok(registerVehicleResponse);
@@ -81,6 +85,8 @@ export class VehiclesApplicationService {
       updateVehicleRequest.state,
       updateVehicleRequest.year,
       owner.id,
+      updateVehicleRequest.image,
+      updateVehicleRequest.stars,
       updateVehicleRequest.categories,
     );
     const vehicleId: number = await this.commandBus.execute(updateVehicle);
@@ -94,6 +100,8 @@ export class VehiclesApplicationService {
         Number(updateVehicle.state),
         updateVehicle.year,
         updateVehicle.ownerId,
+        updateVehicle.image,
+        updateVehicle.stars,
         updateVehicleRequest.categories,
       );
     return Result.ok(updateVehicleResponse);

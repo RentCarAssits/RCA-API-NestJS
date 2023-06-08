@@ -41,18 +41,18 @@ export class Vehicle extends AggregateRoot {
   @Column(() => VehicleIntegrity, { prefix: false })
   private readonly integrity: VehicleIntegrity;
 
-  @ApiProperty()
-  @Column({
-    type: 'enum',
-    enum: VehicleState,
-    default: VehicleState.UNAVAILABLE,
-    nullable: false,
-  })
+  @Column({ type: 'enum', enum: VehicleState })
   private readonly state: VehicleState;
 
   @ApiProperty()
   @Column({ nullable: false, type: 'date' })
   year: Date;
+
+  @Column()
+  image: string;
+
+  @Column()
+  stars: number;
 
   /*@ApiProperty()
   @Column({ name: 'owner_id' })
@@ -76,7 +76,9 @@ export class Vehicle extends AggregateRoot {
     model: Model,
     integrity: VehicleIntegrity,
     year: Date,
-    state: VehicleState,
+    state: number,
+    image: string,
+    stars: number,
   ) {
     super();
     this.name = name;
@@ -85,6 +87,8 @@ export class Vehicle extends AggregateRoot {
     this.state = state;
     this.year = year;
     this.model = model;
+    this.image = image;
+    this.stars = stars;
   }
 
   public register() {
@@ -143,6 +147,14 @@ export class Vehicle extends AggregateRoot {
 
   public getState(): VehicleState {
     return this.state;
+  }
+
+  public getImage(): string {
+    return this.image;
+  }
+
+  public getStars(): number {
+    return this.stars;
   }
 
   public getCategories(): Category[] {

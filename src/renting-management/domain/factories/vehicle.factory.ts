@@ -14,8 +14,20 @@ export class VehicleFactory {
     integrity: VehicleIntegrity,
     year: Date,
     state: VehicleState,
+    image: string,
+    stars: number,
   ): Vehicle {
-    return new Vehicle(name, brand, model, integrity, year, state);
+    const stateAux = this.State(state);
+    return new Vehicle(
+      name,
+      brand,
+      model,
+      integrity,
+      year,
+      stateAux,
+      image,
+      stars,
+    );
   }
 
   public static withId(
@@ -25,7 +37,9 @@ export class VehicleFactory {
     model: Model,
     integrity: VehicleIntegrity,
     year: Date,
-    state: VehicleState,
+    state: number,
+    image: string,
+    stars,
   ): Vehicle {
     const vehicle: Vehicle = new Vehicle(
       name,
@@ -34,8 +48,25 @@ export class VehicleFactory {
       integrity,
       year,
       state,
+      image,
+      stars,
     );
     vehicle.changeId(vehicleId);
     return vehicle;
+  }
+
+  public static State(type: number) {
+    switch (type) {
+      case 0:
+        return VehicleState.MAINTENANCE;
+      case 1:
+        return VehicleState.AVAILABLE;
+      case 2:
+        return VehicleState.RENTED;
+      case 3:
+        return VehicleState.UNAVAILABLE;
+      default:
+        throw new Error(`Invalid number: ${type}`);
+    }
   }
 }

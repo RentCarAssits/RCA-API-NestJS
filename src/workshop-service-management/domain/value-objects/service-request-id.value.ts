@@ -12,6 +12,10 @@ export class ServiceRequestId {
     return new ServiceRequestId(value);
   }
 
+  public static create(value: number) {
+    return new ServiceRequestId(value);
+  }
+
   public getValue(): number {
     return Number(this.id);
   }

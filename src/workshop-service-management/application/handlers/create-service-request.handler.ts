@@ -7,6 +7,7 @@ import { WorkshopIdFK } from 'src/workshop-service-management/domain/value-objec
 import { OwnerIdFK } from 'src/workshop-service-management/domain/value-objects/owner-id-fk.value';
 import { VehicleIdFK } from 'src/workshop-service-management/domain/value-objects/vehicle-id-fk.value';
 import { ServiceRequestFactory } from 'src/workshop-service-management/domain/factory/service-request-factory.factory';
+import { ServiceRequestId } from '../../domain/value-objects/service-request-id.value';
 
 @CommandHandler(CreateServiceRequest)
 export class CreateServiceRequestHandler
@@ -25,23 +26,27 @@ export class CreateServiceRequestHandler
     const ownerId: OwnerIdFK = OwnerIdFK.of(command.ownerId);
     const vehicleId: VehicleIdFK = VehicleIdFK.of(command.vehicleId);
 
-    const serviceRequestEntity: ServiceRequest =
-      ServiceRequestFactory.createFrom(
-        descriptionProblems,
-        workshopId,
-        vehicleId,
-        ownerId,
-      );
+    let serviceRequestEntity: ServiceRequest = ServiceRequestFactory.createFrom(
+      descriptionProblems,
+      workshopId,
+      vehicleId,
+      ownerId,
+    );
 
-    let serviceRequest = await this.serviceRequestRepository.save(
+    const serviceRequest = await this.serviceRequestRepository.save(
       serviceRequestEntity,
     );
 
-    if(serviceRequest === null) {
+    if (serviceRequest === null) {
       return serviceRequestId;
     }
 
     serviceRequestId = Number(serviceRequest.getId());
-    
+    serviceRequestEntity.changeId(ServiceRequestId.create(serviceRequestId));
+    serviceRequestEntity =
+      this.publisher.mergeObjectContext(serviceRequestEntity);
+    serviceRequestEntity.create();
+    serviceRequestEntity.commit();
+    return serviceRequestId;
   }
 }

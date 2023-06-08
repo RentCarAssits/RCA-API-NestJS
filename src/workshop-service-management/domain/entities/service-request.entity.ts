@@ -4,21 +4,22 @@ import { ServiceRequestId } from '../value-objects/service-request-id.value';
 import { WorkshopIdFK } from '../value-objects/workshop-id-fk.value';
 import { VehicleIdFK } from '../value-objects/vehicle-id-fk.value';
 import { OwnerIdFK } from '../value-objects/owner-id-fk.value';
+import { ServiceRequestCreated } from '../events/service-request-created.event';
 
 export class ServiceRequest extends AggregateRoot {
   @PrimaryGeneratedColumn()
-  private readonly id: ServiceRequestId;
+  private id: ServiceRequestId;
 
   @Column('varchar', { name: 'description_problems' })
   private descriptionProblems: string;
 
-  @Column((type) => WorkshopIdFK, { prefix: false })
+  @Column(() => WorkshopIdFK, { prefix: false })
   private workshopId: WorkshopIdFK;
 
-  @Column((type) => VehicleIdFK, { prefix: false })
+  @Column(() => VehicleIdFK, { prefix: false })
   private vehicleId: VehicleIdFK;
 
-  @Column((type) => OwnerIdFK, { prefix: false })
+  @Column(() => OwnerIdFK, { prefix: false })
   private ownerId: OwnerIdFK;
 
   public constructor(
@@ -34,11 +35,21 @@ export class ServiceRequest extends AggregateRoot {
     this.ownerId = ownerId;
   }
 
+  public create() {
+    const event = new ServiceRequestCreated(
+      this.id.getValue(),
+      this.descriptionProblems,
+      this.workshopId.getValue(),
+      this.ownerId.getValue(),
+      this.vehicleId.getValue(),
+    );
+  }
+
   public getId(): ServiceRequestId {
     return this.id;
   }
 
-  public getDescriptionProblem(): string{
+  public getDescriptionProblem(): string {
     return this.descriptionProblems;
   }
 
@@ -53,5 +64,8 @@ export class ServiceRequest extends AggregateRoot {
   public getOwnerId(): OwnerIdFK {
     return this.ownerId;
   }
-}
 
+  public changeId(id: ServiceRequestId) {
+    this.id = id;
+  }
+}

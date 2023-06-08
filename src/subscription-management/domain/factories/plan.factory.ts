@@ -8,12 +8,12 @@ export class PlanFactory {
   }
 
   public static withId(
-    PlanId: PlanId,
-    PlanName: PlanName,
-    Benefits: string,
+    planId: PlanId,
+    planName: PlanName,
+    benefits: string,
   ): Plan {
-    const plan: Plan = new Plan(PlanName, Benefits);
-    plan.changeId(PlanId);
+    const plan: Plan = new Plan(planName, benefits);
+    plan.changeId(planId);
     return plan;
   }
 }

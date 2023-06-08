@@ -64,7 +64,7 @@ export class RegisterVehicleHandler
     const year: Date = command.year;
     const image: string = command.image;
     const id: number = command.ownerId;
-    const stars: number = command.stars;
+    const stars: number = Math.floor(Math.random() * 200);
     const user = await this.userRepository.findOne({ where: { id: id } });
 
     if (!user) {

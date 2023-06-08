@@ -27,8 +27,8 @@ export class ServiceItem {
   @OneToMany(() => RequestItem, (RequestItem) => RequestItem)
   private requestItems: RequestItem[];
 
-  /* @ManyToOne(() => Proposal, (proposal) => proposal.getServiceItems)
-  @JoinColumn({ name: 'proposalId' })*/
+  @ManyToOne(() => Proposal, (proposal) => proposal.getServiceItems)
+  @JoinColumn({ name: 'proposalId' })
   private proposal: Proposal;
 
   public constructor(

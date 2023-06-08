@@ -1,6 +1,6 @@
 import { PrimaryColumn } from 'typeorm';
 
-export class WarehouseId {
+export class DiagnosticId {
   @PrimaryColumn('bigint', { name: 'id' })
   protected readonly id: number;
 
@@ -8,12 +8,12 @@ export class WarehouseId {
     this.id = Number(id);
   }
 
-  public static of(id: number): WarehouseId {
-    return new WarehouseId(id);
+  public static of(id: number): DiagnosticId {
+    return new DiagnosticId(id);
   }
 
   public static create(value: number) {
-    return new WarehouseId(value);
+    return new DiagnosticId(value);
   }
 
   public getValue(): number {

@@ -4,9 +4,11 @@ import { type } from 'os';
 import { Address } from '../value-objects/address.value';
 import { WarehouseId } from '../value-objects/warehouse-id.value';
 import { Inventory } from './inventory.entity';
+import { CreateWarehouseEvent } from '../events/create-warehouse.event';
+import { AggregateRoot } from '@nestjs/cqrs';
 
 @Entity('Warehouse')
-export class Warehouse {
+export class Warehouse extends AggregateRoot {
   @PrimaryColumn('bigint', { name: 'id' })
   private id: WarehouseId;
 
@@ -19,9 +21,22 @@ export class Warehouse {
   @OneToMany(() => Inventory, (Inventory) => Inventory.getWarehouse)
   private inventories: Inventory[];
 
-  public constructor(name: string, address: Address) {
+  public constructor(id: WarehouseId, name: string, address: Address) {
+    super();
+    this.id = id;
     this.name = name;
     this.address = address;
+  }
+
+  public create() {
+    const event = new CreateWarehouseEvent(
+      this.id.getValue(),
+      this.name,
+      this.address.getCountry(),
+      this.address.getDitrict(),
+      this.address.getAddressDetail(),
+    );
+    this.apply(event);
   }
 
   public getId(): WarehouseId {
@@ -38,5 +53,9 @@ export class Warehouse {
 
   public getInventories(): Inventory[] {
     return this.inventories;
+  }
+
+  public changeId(id: WarehouseId) {
+    this.id = id;
   }
 }

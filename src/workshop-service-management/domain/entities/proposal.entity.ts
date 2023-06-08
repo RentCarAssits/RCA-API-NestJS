@@ -46,6 +46,7 @@ export class Proposal extends AggregateRoot {
       this.period.getStart(),
       this.period.getEnd(),
     );
+    this.apply(event);
   }
 
   public getId(): ProposalId {
@@ -63,6 +64,7 @@ export class Proposal extends AggregateRoot {
   public getServiceItems(): ServiceItem[] {
     return this.serviceItems;
   }
+
   public changeId(id: ProposalId) {
     this.id = id;
   }

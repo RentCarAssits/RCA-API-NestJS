@@ -11,7 +11,9 @@ export class InventoryId {
   public static of(id: number): InventoryId {
     return new InventoryId(id);
   }
-
+  public static create(value: number) {
+    return new InventoryId(value);
+  }
   public getValue(): number {
     return Number(this.id);
   }

@@ -11,9 +11,11 @@ import { Address } from '../value-objects/address.value';
 import { Product } from './product.entity';
 import { Warehouse } from './warehouse.entity';
 import { InventoryOperation } from './inventory-operation.entity';
+import { AggregateRoot } from '@nestjs/cqrs';
+import { CreateInventoryEvent } from '../events/create-inventory.event';
 
 @Entity('Inventory')
-export class Inventory {
+export class Inventory extends AggregateRoot {
   @PrimaryColumn('bigint', { name: 'id' })
   private id: InventoryId;
 
@@ -36,9 +38,22 @@ export class Inventory {
   )
   private inventoryOperation: InventoryOperation[];
 
-  public constructor(description: string, address: Address) {
+  public constructor(id: InventoryId, description: string, address: Address) {
+    super();
+    this.id = id;
     this.description = description;
     this.address = address;
+  }
+
+  public create() {
+    const event = new CreateInventoryEvent(
+      this.id.getValue(),
+      this.description,
+      this.address.getCountry(),
+      this.address.getDitrict(),
+      this.address.getAddressDetail(),
+    );
+    this.apply(event);
   }
 
   public getId(): InventoryId {
@@ -62,5 +77,9 @@ export class Inventory {
   }
   public getInventoryOperation(): InventoryOperation[] {
     return this.inventoryOperation;
+  }
+
+  public changeId(id: InventoryId) {
+    this.id = id;
   }
 }

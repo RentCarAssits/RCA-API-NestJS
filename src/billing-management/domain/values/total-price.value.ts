@@ -1,7 +1,6 @@
 import { Column } from "typeorm";
 
 export class TotalPrice {
-    @Column('money', { name: 'total_price' })
     private value: number
 
     private constructor(value: number) {

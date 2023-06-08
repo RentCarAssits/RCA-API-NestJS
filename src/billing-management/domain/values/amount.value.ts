@@ -1,6 +1,6 @@
 import { Column } from "typeorm";
 export class Amount{
-    @Column('money',{name:'amount'})
+    @Column('double',{name:'amount'})
     private value:number;
 
     private constructor(value:number){

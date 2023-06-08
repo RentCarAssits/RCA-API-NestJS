@@ -12,7 +12,7 @@ export class PaymentPayableAggregate extends AggregateRoot {
   @PrimaryColumn('bigint', { name: 'account_payable_id' })
   private accountPayableId: AccountPaybleIdFk;
 
-  @Column({ type:'money' , name: "amount" })
+  @Column({ type:'double' , name: "amount" })
   private amount: Amount;
 
   public constructor(

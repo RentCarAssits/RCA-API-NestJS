@@ -1,5 +1,5 @@
 export class VehicleDto {
-  public id?: string;
+  public id?: number;
   public name: string;
   public brand: string;
   public model: string;

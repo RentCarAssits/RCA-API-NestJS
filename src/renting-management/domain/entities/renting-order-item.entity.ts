@@ -16,7 +16,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { RentingOrderItemState } from '../enums/renting-order-item-state.enum';
 import { User } from '../../../iam-management/domain/entities/user.entity';
 
-@Entity('renting_order_item')
+@Entity('renting_order_items')
 export class RentingOrderItem extends AggregateRoot {
   @ApiProperty()
   @PrimaryGeneratedColumn('increment', { name: 'id' })

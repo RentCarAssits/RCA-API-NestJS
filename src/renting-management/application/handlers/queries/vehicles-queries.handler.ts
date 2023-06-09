@@ -41,6 +41,10 @@ export class GetAllVehiclesHandler
       vehicleDto.year = vehicle.year;
       vehicleDto.ownerId = vehicle.owner?.id;
       vehicleDto.image = vehicle.image;
+      vehicleDto.stars = vehicle.stars;
+      vehicleDto.price = vehicle.price;
+      vehicleDto.currency = vehicle.currency;
+      vehicleDto.timeUnit = vehicle.timeUnit;
       vehicleDto.categories = vehicle.categories.map((category) =>
         category.getName().getValue(),
       );
@@ -87,6 +91,10 @@ export class GetVehicleByIdHandler
     vehicleDto.year = vehicle.year;
     vehicleDto.ownerId = vehicle.owner_id;
     vehicleDto.image = vehicle.image;
+    vehicleDto.stars = vehicle.stars;
+    vehicleDto.price = vehicle.price;
+    vehicleDto.currency = vehicle.currency;
+    vehicleDto.timeUnit = vehicle.timeUnit;
     vehicleDto.categories = vehicle.categories
       ? vehicle.categories.split(',')
       : [];
@@ -133,6 +141,9 @@ export class GetAllVehiclesByYearHandler
       vehicleDto.ownerId = vehicle.owner_id;
       vehicleDto.image = vehicle.image;
       vehicleDto.stars = vehicle.stars;
+      vehicleDto.price = vehicle.price;
+      vehicleDto.currency = vehicle.currency;
+      vehicleDto.timeUnit = vehicle.timeUnit;
       vehicleDto.categories = vehicle.categories
         ? vehicle.categories.split(',')
         : [];
@@ -182,6 +193,9 @@ export class GetAllVehiclesByStarsHandler
       vehicleDto.ownerId = vehicle.owner_id;
       vehicleDto.image = vehicle.image;
       vehicleDto.stars = vehicle.stars;
+      vehicleDto.price = vehicle.price;
+      vehicleDto.currency = vehicle.currency;
+      vehicleDto.timeUnit = vehicle.timeUnit;
       vehicleDto.categories = vehicle.categories
         ? vehicle.categories.split(',')
         : [];
@@ -231,6 +245,9 @@ export class GetAllVehiclesByByOwnerHandler
       vehicleDto.ownerId = vehicle.owner_id;
       vehicleDto.image = vehicle.image;
       vehicleDto.stars = vehicle.stars;
+      vehicleDto.price = vehicle.price;
+      vehicleDto.currency = vehicle.currency;
+      vehicleDto.timeUnit = vehicle.timeUnit;
       vehicleDto.categories = vehicle.categories
         ? vehicle.categories.split(',')
         : [];
@@ -281,6 +298,9 @@ export class Get20VehiclesMixedHandler
       vehicleDto.ownerId = vehicle.owner_id;
       vehicleDto.image = vehicle.image;
       vehicleDto.stars = vehicle.stars;
+      vehicleDto.price = vehicle.price;
+      vehicleDto.currency = vehicle.currency;
+      vehicleDto.timeUnit = vehicle.timeUnit;
       vehicleDto.categories = vehicle.categories
         ? vehicle.categories.split(',')
         : [];

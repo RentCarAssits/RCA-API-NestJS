@@ -9,5 +9,8 @@ export class VehicleDto {
   public ownerId: number;
   public image: string;
   public stars: number;
+  public price: number;
+  public currency: string;
+  public timeUnit: string;
   public categories?: string[];
 }

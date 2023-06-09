@@ -66,6 +66,9 @@ export class RegisterVehicleHandler
     const id: number = command.ownerId;
     const stars: number = Math.floor(Math.random() * 200);
     const user = await this.userRepository.findOne({ where: { id: id } });
+    const price: number = command.price;
+    const currency: string = command.currency;
+    const timeUnit: string = command.timeUnit;
 
     if (!user) {
       throw new NotFoundException('User not found');
@@ -80,7 +83,12 @@ export class RegisterVehicleHandler
       Number(command.state),
       image,
       stars,
+      price,
+      currency,
+      timeUnit,
     );
+
+    console.log('vehicleEntity: ', vehicleEntity);
 
     let categoryEntities = categories.map((category) => {
       const categoryNameResult = CategoryName.create(category);

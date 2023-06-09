@@ -46,6 +46,9 @@ export class VehiclesApplicationService {
       owner.id,
       registerVehicleRequest.image,
       registerVehicleRequest.stars,
+      registerVehicleRequest.price,
+      registerVehicleRequest.currency,
+      registerVehicleRequest.timeUnit,
       registerVehicleRequest.categories,
     );
     const vehicleId: number = await this.commandBus.execute(registerVehicle);
@@ -87,6 +90,9 @@ export class VehiclesApplicationService {
       owner.id,
       updateVehicleRequest.image,
       updateVehicleRequest.stars,
+      updateVehicleRequest.price,
+      updateVehicleRequest.currency,
+      updateVehicleRequest.timeUnit,
       updateVehicleRequest.categories,
     );
     const vehicleId: number = await this.commandBus.execute(updateVehicle);

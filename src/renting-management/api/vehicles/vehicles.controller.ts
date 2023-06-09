@@ -32,7 +32,7 @@ export class VehiclesController {
   @ApiResponse({
     status: 201,
     description: 'OK',
-    type: Vehicle,
+    type: RegisterVehicleResponse,
   })
   async register(
     @GetUser() owner: User,
@@ -92,7 +92,6 @@ export class VehiclesController {
   }
 
   @Get()
-  @Auth()
   async getAll(@Res({ passthrough: true }) response: any) {
     try {
       const vehicles = await this.queryBus.execute(new GetAllVehiclesQuery());
@@ -124,7 +123,6 @@ export class VehiclesController {
   }
 
   @Get('/:id')
-  @Auth()
   async getById(
     @Param('id') vehicleId: number,
     @Res({ passthrough: true }) response: any,

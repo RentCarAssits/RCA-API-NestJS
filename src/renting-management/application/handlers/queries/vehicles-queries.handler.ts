@@ -5,6 +5,7 @@ import { GetAllVehiclesQuery } from '../../queries/get-all-vehicles.query';
 import { GetVehicleByIdQuery } from '../../queries/get-vehicle-by-id.query';
 import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Category } from '../../../domain/entities/category.entity';
 import { GetAllVehiclesByYearQuery } from '../../queries/get-all-vehicles-by-year.query';
 import { GetAllVehiclesByStarsQuery } from '../../queries/get-all-vehicles-by-stars.query';
 import { GetVehiclesByOwnerIdQuery } from '../../queries/get-vehicles-by-ownerId.query';

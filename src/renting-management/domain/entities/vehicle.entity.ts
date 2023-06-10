@@ -41,7 +41,7 @@ export class Vehicle extends AggregateRoot {
   @Column(() => VehicleIntegrity, { prefix: false })
   private readonly integrity: VehicleIntegrity;
 
-  @Column({ type: 'enum', enum: VehicleState })
+  @Column({ type: 'enum', enum: VehicleState, default: VehicleState.AVAILABLE })
   private readonly state: VehicleState;
 
   @ApiProperty()

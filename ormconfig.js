@@ -10,7 +10,6 @@ module.exports = {
   ssl: true,
   migrationsRun: true,
   logging: false,
-  timezone: '+0',
   bigNumberStrings: false,
   entities: [
     process.env.ENVIRONMENT == 'prod'

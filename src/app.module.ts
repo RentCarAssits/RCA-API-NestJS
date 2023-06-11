@@ -26,9 +26,9 @@ import { IamManagementModule } from './iam-management/iam-management.module';
       autoLoadEntities: true,
       synchronize: true,
       ssl: true,
-      //migrationsRun: true,
+      migrationsRun: true,
       logging: false,
-      //timezone: '+0',
+      timezone: '+0',
       bigNumberStrings: false,
       extra: {
         ssl: {

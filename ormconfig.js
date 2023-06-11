@@ -10,8 +10,13 @@ module.exports = {
   ssl: true,
   migrationsRun: true,
   logging: false,
-  //timezone: '+0',
+  timezone: '+0',
   bigNumberStrings: false,
+  entities: [
+    process.env.ENVIRONMENT == 'prod'
+      ? '**/domain/entities/*.js'
+      : 'dist/**/domain/entities/*.js',
+  ],
   extra: {
     ssl: {
       rejectUnauthorized: false,

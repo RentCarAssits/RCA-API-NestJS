@@ -10,7 +10,7 @@ module.exports = {
   synchronize: true,
   ssl: true,
   migrationsRun: true,
-  logging: true,
+  logging: false,
   //timezone: '+0',
   bigNumberStrings: false,
   extra: {

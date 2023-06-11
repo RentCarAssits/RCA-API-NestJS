@@ -161,7 +161,6 @@ export class VehiclesController {
   @Get('/stars/vehicles')
   @Auth()
   async getByMostStars(@Res({ passthrough: true }) response: any) {
-    console.log('safafsafsafs');
     try {
       const vehicles = await this.queryBus.execute(
         new GetAllVehiclesByStarsQuery(),

@@ -11,6 +11,6 @@ export class VehicleUpdated {
     public readonly year: Date,
     public readonly price: number,
     public readonly currency: string,
-    public readonly unit: string,
+    public readonly timeUnit: string,
   ) {}
 }

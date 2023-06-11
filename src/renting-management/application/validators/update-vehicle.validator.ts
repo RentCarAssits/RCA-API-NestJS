@@ -47,6 +47,15 @@ export class UpdateVehicleValidator {
       notification.addError('Vehicle year is required', null);
     }
 
+    const state: number = Number(updateVehicleRequest.state);
+    if (state === null) {
+      notification.addError('Vehicle state is required', null);
+    }
+    if (state > 3)
+      notification.addError('Vehicle state must be from 0 to 3', null);
+    if (state < 0)
+      notification.addError('Vehicle state must be from 0 to 3', null);
+
     const yearRegex = /^\d{4}-\d{2}-\d{2}$/;
     if (!yearRegex.test(year.toString())) {
       notification.addError(

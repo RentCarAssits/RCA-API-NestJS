@@ -4,7 +4,7 @@ import {
   JoinColumn,
   OneToMany,
   OneToOne,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ProposalId } from '../value-objects/proposal-id.value';
 import { Price } from '../value-objects/price.value';
@@ -18,9 +18,9 @@ import { User } from 'src/iam-management/domain/entities/user.entity';
 import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
 import { CreateDiagnosticEvent } from '../events/create-diagnostic.event';
 
-@Entity('Diagnostic')
+@Entity('diagnostic')
 export class Diagnostic extends AggregateRoot {
-  @PrimaryColumn('bigint', { name: 'id' })
+  @PrimaryGeneratedColumn()
   private id: DiagnosticId;
 
   @OneToOne(() => User)

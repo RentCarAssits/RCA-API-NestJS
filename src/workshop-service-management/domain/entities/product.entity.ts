@@ -1,19 +1,25 @@
-import { Column, Entity, JoinColumn, PrimaryColumn, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+} from 'typeorm';
 import { ProductId } from '../value-objects/product-id.value';
 import { Price } from '../value-objects/price.value';
 import { InventoryId } from '../value-objects/inventory-id.value';
 import { type } from 'os';
 import { Inventory } from './inventory.entity';
 
-@Entity('Product')
+@Entity('product')
 export class Product {
-  @PrimaryColumn('bigint', { name: 'id' })
+  @PrimaryGeneratedColumn()
   private id: ProductId;
 
   @Column('varchar', { name: 'name' })
   private productName: string;
 
-  @Column('bigint', { name: 'quantityProduct' })
+  @Column('bigint', { name: 'quantity_product' })
   private quantity: number;
 
   @Column((type) => Price, { prefix: false })

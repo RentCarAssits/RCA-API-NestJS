@@ -8,6 +8,8 @@ import { Inventory } from 'src/workshop-service-management/domain/entities/inven
 import { InventoryFactory } from 'src/workshop-service-management/domain/factories/inventory.factory';
 import { InventoryId } from 'src/workshop-service-management/domain/value-objects/inventory-id.value';
 import { User } from 'src/iam-management/domain/entities/user.entity';
+import { WarehouseId } from 'src/workshop-service-management/domain/value-objects/warehouse-id.value';
+import { NotFoundException } from '@nestjs/common';
 
 @CommandHandler(CreateInventoryCommand)
 export class CreateInventoryHandler
@@ -30,20 +32,29 @@ export class CreateInventoryHandler
       command.district,
       command.addressDetail,
     );
-
-    //const warehouseId = await this.warehouseRepositroy.findOne(
-    //  command.warehouseId,
-    //);
+    const warehouseId: number = command.warehouseId;
+    const warehouse = await this.warehouseRepositroy
+      .createQueryBuilder()
+      .where('warehouse.id = :id', { id: warehouseId })
+      .getOne();
+    if (!warehouse) {
+      throw new NotFoundException('Warehouse not found');
+    }
     let inventory: Inventory = InventoryFactory.createFrom(name, address);
-    let inventoryTypeORM = await this.inventoryRepository.save(inventory);
+    const aux = {
+      ...inventory,
+      warehouse: warehouse,
+    };
+    const inventoryAux = this.inventoryRepository.create(aux);
+    let inventoryTypeORM = await this.inventoryRepository.save(inventoryAux);
     if (inventoryTypeORM == null) {
       return inventoryId;
     }
-    inventoryId = Number(inventory.getId());
-    inventory.changeId(InventoryId.create(inventoryId));
-    inventory = this.publisher.mergeObjectContext(inventory);
-    inventory.create();
-    inventory.commit();
-    return inventory;
+    inventoryId = Number(inventoryTypeORM.getId());
+    inventoryTypeORM.changeId(InventoryId.create(inventoryId));
+    inventoryTypeORM = this.publisher.mergeObjectContext(inventoryTypeORM);
+    inventoryTypeORM.create();
+    inventoryTypeORM.commit();
+    return inventoryId;
   }
 }

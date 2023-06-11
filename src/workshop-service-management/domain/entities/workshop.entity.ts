@@ -1,11 +1,11 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { WorkshopId } from '../value-objects/workshop-id.value';
 import { type } from 'os';
 import { Address } from '../value-objects/address.value';
 
 @Entity('Workshop')
 export class Workshop {
-  @PrimaryColumn('bigint', { name: 'id' })
+  @PrimaryGeneratedColumn()
   private id: WorkshopId;
 
   @Column('varchar', { name: 'name' })

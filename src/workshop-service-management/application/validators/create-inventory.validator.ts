@@ -12,6 +12,8 @@ export class CreateInventoryValidator {
   constructor(
     @InjectRepository(Inventory)
     private inventoryRepository: Repository<Inventory>,
+    @InjectRepository(Warehouse)
+    private warehouseRepository: Repository<Warehouse>,
   ) {}
 
   public async validate(
@@ -34,7 +36,22 @@ export class CreateInventoryValidator {
     if (addressDetail == null) {
       notification.addError('Address Detail is required', null);
     }
+    const warehouseId: number = createInventoryDto.warehouseId || 0;
 
+    if (warehouseId <= 0) {
+      notification.addError('Invalid owner Id', null);
+    }
+    const existingWarehouse: Warehouse = await this.warehouseRepository
+      .createQueryBuilder()
+      .where('id = :warehouseId', { warehouseId })
+      .getOne();
+
+    if (!existingWarehouse) {
+      notification.addError(
+        'Warehouse with the specified Id does not exist',
+        null,
+      );
+    }
     return notification;
   }
 }

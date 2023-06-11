@@ -2,7 +2,7 @@ import {
   Column,
   Entity,
   ManyToOne,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   JoinColumn,
   OneToOne,
 } from 'typeorm';
@@ -11,44 +11,54 @@ import { InventoryTransaction } from './inventory-transaction.entity';
 import { Product } from './product.entity';
 import { RequestItemId } from '../value-objects/request-item-id.value';
 import { ServiceItem } from './service-item';
+import { CreateRequestItemEvent } from '../events/create-request-item-event';
+import { AggregateRoot } from '@nestjs/cqrs';
 
-@Entity('RequestItem')
-export class RequestItem {
-  @PrimaryColumn('bigint', { name: 'id' })
+@Entity('request_item')
+export class RequestItem extends AggregateRoot {
+  @PrimaryGeneratedColumn()
   private id: RequestItemId;
 
   @OneToOne(() => Product)
   @JoinColumn({ name: 'product_id' })
   private product: Product;
 
-  @Column('bigint', { name: 'quantityRequestItem' })
-  private quantity: number;
+  @Column('bigint', { name: 'quantity_request_item' })
+  private quantityRequestItem: number;
 
   @Column((type) => Price, { prefix: false })
   private price: Price;
 
   @ManyToOne(() => ServiceItem, (ServiceItem) => ServiceItem.getRequestItems)
-  @JoinColumn({ name: 'serviceItem_id' })
+  @JoinColumn({ name: 'service_item_id' })
   private serviceItem: ServiceItem;
 
   public constructor(
-    product: Product,
-    quantity: number,
+    id: RequestItemId,
+    quantityRequestItem: number,
     price: Price,
-    serviceItem: ServiceItem,
   ) {
-    this.product = product;
-    this.quantity = quantity;
+    super();
+    this.id = id;
+    this.quantityRequestItem = quantityRequestItem;
     this.price = price;
-    this.serviceItem = serviceItem;
+  }
+  public create() {
+    const event = new CreateRequestItemEvent(
+      this.id.getValue(),
+      this.quantityRequestItem,
+      this.price.getQuantity(),
+      this.price.getCurrency(),
+    );
+    this.apply(event);
   }
 
   public getId(): RequestItemId {
     return this.id;
   }
 
-  public getQuantity(): number {
-    return this.quantity;
+  public getQuantityRequestItem(): number {
+    return this.quantityRequestItem;
   }
 
   public getPrice(): Price {

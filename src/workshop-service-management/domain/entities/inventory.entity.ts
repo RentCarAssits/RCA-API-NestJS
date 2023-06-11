@@ -2,7 +2,7 @@ import {
   Column,
   Entity,
   OneToMany,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   JoinColumn,
   ManyToOne,
 } from 'typeorm';
@@ -14,9 +14,9 @@ import { InventoryOperation } from './inventory-operation.entity';
 import { AggregateRoot } from '@nestjs/cqrs';
 import { CreateInventoryEvent } from '../events/create-inventory.event';
 
-@Entity('Inventory')
+@Entity('inventory')
 export class Inventory extends AggregateRoot {
-  @PrimaryColumn('bigint', { name: 'id' })
+  @PrimaryGeneratedColumn()
   private id: InventoryId;
 
   @Column('varchar', { name: 'name' })
@@ -38,9 +38,8 @@ export class Inventory extends AggregateRoot {
   )
   private inventoryOperation: InventoryOperation[];
 
-  public constructor(id: InventoryId, description: string, address: Address) {
+  public constructor(description: string, address: Address) {
     super();
-    this.id = id;
     this.description = description;
     this.address = address;
   }

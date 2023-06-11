@@ -14,7 +14,7 @@ import { InventoryService } from '../application/services/inventory.service';
 
 @ApiTags('Inventory')
 @Controller('inventory')
-export class WarehouseController {
+export class InventoryController {
   constructor(
     private readonly inventoryService: InventoryService,
     private readonly queryBus: QueryBus,

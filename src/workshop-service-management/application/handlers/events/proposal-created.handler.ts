@@ -9,7 +9,7 @@ export class ProposalCreatedHandler
   constructor() {}
 
   handle(event: CreateProposalEvent) {
-    console.log('handle logic for renting item Created event');
+    console.log('handle logic for proposal Created event');
     console.log(event);
   }
 }

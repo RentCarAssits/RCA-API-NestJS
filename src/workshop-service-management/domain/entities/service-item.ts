@@ -1,6 +1,6 @@
 import {
   Entity,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   Column,
   OneToMany,
   ManyToOne,
@@ -13,12 +13,12 @@ import { ServiceItemId } from '../value-objects/service-item-id.value';
 import { RequestItem } from './request-item.entity';
 import { Proposal } from './proposal.entity';
 
-@Entity('ServiceItem')
+@Entity('service_item')
 export class ServiceItem {
-  @PrimaryColumn('bigint', { name: 'id' })
+  @PrimaryGeneratedColumn()
   private id: ServiceItemId;
 
-  @Column('varchar', { name: 'serviceName' })
+  @Column('varchar', { name: 'service_name' })
   private serviceName: string;
 
   @Column((type) => Price, { prefix: false })
@@ -28,7 +28,7 @@ export class ServiceItem {
   private requestItems: RequestItem[];
 
   @ManyToOne(() => Proposal, (proposal) => proposal.getServiceItems)
-  @JoinColumn({ name: 'proposalId' })
+  @JoinColumn({ name: 'proposal_id' })
   private proposal: Proposal;
 
   public constructor(

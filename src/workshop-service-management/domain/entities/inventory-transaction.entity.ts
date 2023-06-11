@@ -1,7 +1,7 @@
 import {
   Entity,
   OneToMany,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
@@ -9,9 +9,9 @@ import { InventoryTransactionId } from '../value-objects/inventory-transaction-i
 import { InventoryOperation } from './inventory-operation.entity';
 import { ServiceItemOrder } from './service-item-order-entity';
 
-@Entity('InventoryTransaction')
+@Entity('inventory_transaction')
 export class InventoryTransaction {
-  @PrimaryColumn('bigint', { name: 'id' })
+  @PrimaryGeneratedColumn()
   private id: InventoryTransactionId;
 
   @OneToMany(
@@ -24,7 +24,7 @@ export class InventoryTransaction {
     () => ServiceItemOrder,
     (ServiceItemOrder) => ServiceItemOrder.getInventoryTransactions,
   )
-  @JoinColumn({ name: 'serviceItemOrder_id' })
+  @JoinColumn({ name: 'service_itemOrder_id' })
   private serviceITemOrder: ServiceItemOrder;
 
   public constructor(

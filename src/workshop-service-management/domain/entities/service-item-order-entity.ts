@@ -1,14 +1,14 @@
-import { Entity, PrimaryColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { ServiceItemOrderId } from '../value-objects/service-item-order-id.value';
 import { Price } from '../value-objects/price.value';
 import { InventoryTransaction } from './inventory-transaction.entity';
 
-@Entity('ServiceItemOrder')
+@Entity('service_item_order')
 export class ServiceItemOrder {
-  @PrimaryColumn('bigint', { name: 'id' })
+  @PrimaryGeneratedColumn()
   private id: ServiceItemOrderId;
 
-  @Column('varchar', { name: 'serviceName' })
+  @Column('varchar', { name: 'service_name' })
   private serviceName: string;
 
   @Column((type) => Price, { prefix: false })

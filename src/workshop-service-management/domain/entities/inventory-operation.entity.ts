@@ -2,7 +2,7 @@ import {
   Column,
   Entity,
   ManyToOne,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   JoinColumn,
   OneToOne,
 } from 'typeorm';
@@ -15,9 +15,9 @@ import { InventoryTransaction } from './inventory-transaction.entity';
 import { Product } from './product.entity';
 import { Inventory } from './inventory.entity';
 
-@Entity('InventoryOperation')
+@Entity('inventory_operation')
 export class InventoryOperation {
-  @PrimaryColumn('bigint', { name: 'id' })
+  @PrimaryGeneratedColumn()
   private id: InventoryOperationId;
 
   @OneToOne(() => Product)

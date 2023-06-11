@@ -26,15 +26,17 @@ export class CreateWarehouseHandler
       command.addressDetail,
     );
     let warehouse: Warehouse = WarehouseFactory.createFrom(name, address);
-    let warehouseTypeORM = await this.warehouseRepository.save(warehouse);
+    const aux = warehouse;
+    const warehouseAux = this.warehouseRepository.create(aux);
+    let warehouseTypeORM = await this.warehouseRepository.save(warehouseAux);
     if (warehouseTypeORM == null) {
       return warehouseId;
     }
-    warehouseId = Number(warehouse.getId());
-    warehouse.changeId(WarehouseId.create(warehouseId));
-    warehouse = this.publisher.mergeObjectContext(warehouse);
-    warehouse.create();
-    warehouse.commit();
-    return warehouse;
+    warehouseId = Number(warehouseTypeORM.getId());
+    warehouseTypeORM.changeId(WarehouseId.of(warehouseId));
+    warehouseTypeORM = this.publisher.mergeObjectContext(warehouseTypeORM);
+    warehouseTypeORM.create();
+    warehouseTypeORM.commit();
+    return warehouseId;
   }
 }

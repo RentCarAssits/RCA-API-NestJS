@@ -4,9 +4,9 @@ import { WarehouseId } from '../value-objects/warehouse-id.value';
 
 export class WarehouseFactory {
   public static createFrom(name: string, addres: Address) {
-    return new Warehouse(WarehouseId.of(0), name, addres);
+    return new Warehouse(name, addres);
   }
-  public static withId(id: WarehouseId, name: string, addres: Address) {
-    return new Warehouse(id, name, addres);
+  public static withId(name: string, addres: Address) {
+    return new Warehouse(name, addres);
   }
 }

@@ -15,9 +15,29 @@ import { ProposalService } from './application/services/proposal.service';
 import { CreateProposalHandler } from './application/handlers/commands/create-proposal.handler';
 import { CreateProposalValidator } from './application/validators/create-proposal.validator';
 import { CqrsModule } from '@nestjs/cqrs';
+import { Diagnostic } from './domain/entities/diagnostic.entity';
+import { ProposalCreatedHandler } from './application/handlers/events/proposal-created.handler';
+import { WarehouseCreatedHandler } from './application/handlers/events/warehouse-created.handler';
+import { InventoryCreatedHandler } from './application/handlers/events/inventory-created.handler';
+import { InventoryController } from './api/inventory.controller';
+import { WarehouseController } from './api/warehouse.controller';
+import { WarehouseService } from './application/services/warehouse.service';
+import { CreateWarehouseValidator } from './application/validators/create-warehouse.validator';
+import { InventoryService } from './application/services/inventory.service';
+import { CreateInventoryValidator } from './application/validators/create-inventory.validator';
+import { CreateWarehouseHandler } from './application/handlers/commands/create-warehouse.handler';
+import { CreateInventoryHandler } from './application/handlers/commands/create-inventory.handler';
 
-export const CommandHandlers = [CreateProposalHandler];
-export const EventHandlers = [];
+export const CommandHandlers = [
+  CreateProposalHandler,
+  CreateWarehouseHandler,
+  CreateInventoryHandler,
+];
+export const EventHandlers = [
+  ProposalCreatedHandler,
+  WarehouseCreatedHandler,
+  InventoryCreatedHandler,
+];
 export const QueryHandlers = [];
 
 @Module({
@@ -33,13 +53,18 @@ export const QueryHandlers = [];
       ServiceItem,
       Warehouse,
       Workshop,
+      Diagnostic,
     ]),
     CqrsModule,
   ],
-  controllers: [ProposalController],
+  controllers: [ProposalController, WarehouseController, InventoryController],
   providers: [
     ProposalService,
     CreateProposalValidator,
+    WarehouseService,
+    CreateWarehouseValidator,
+    InventoryService,
+    CreateInventoryValidator,
     ...CommandHandlers,
     ...EventHandlers,
     ...QueryHandlers,

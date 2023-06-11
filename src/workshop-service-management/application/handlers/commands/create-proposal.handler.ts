@@ -30,15 +30,17 @@ export class CreateProposalHandler
       price,
       period,
     );
-    let proposalTypeORM = await this.proposalRepository.save(proposal);
+    const aux = proposal;
+    const proposalAux = this.proposalRepository.create(aux);
+    let proposalTypeORM = await this.proposalRepository.save(proposalAux);
     if (proposalTypeORM == null) {
       return proposalId;
     }
-    proposalId = Number(proposal.getId());
-    proposal.changeId(ProposalId.create(proposalId));
-    proposal = this.publisher.mergeObjectContext(proposal);
-    proposal.create();
-    proposal.commit();
+    proposalId = Number(proposalTypeORM.getId());
+    proposalTypeORM.changeId(ProposalId.of(proposalId));
+    proposalTypeORM = this.publisher.mergeObjectContext(proposalTypeORM);
+    proposalTypeORM.create();
+    proposalTypeORM.commit();
     return proposalId;
   }
 }

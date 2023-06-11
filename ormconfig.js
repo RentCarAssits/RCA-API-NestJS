@@ -17,9 +17,4 @@ module.exports = {
       rejectUnauthorized: false,
     },
   },
-  entities: [
-    process.env.ENVIRONMENT == 'prod'
-      ? '**/domain/entities/*.js'
-      : 'dist/**/domain/entities/*.js',
-  ],
 };

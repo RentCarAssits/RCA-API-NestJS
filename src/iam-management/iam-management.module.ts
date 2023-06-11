@@ -23,7 +23,7 @@ import { Profile } from './domain/entities/profile.entity';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         return {
-          secret: configService.get('JWT_SECRET'),
+          secret: 'sflkahfkjhakjfhakjsfhsakjfhk',
           signOptions: {
             expiresIn: '12h',
           },

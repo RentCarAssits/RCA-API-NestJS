@@ -1,10 +1,9 @@
 module.exports = {
   type: 'mysql',
-  url: process.env.RCA_DB_MYSQL,
-  host: 'localhost',
+  host: 'rca-parsimonia-server.mysql.database.azure.com',
   port: 3306,
-  username: 'root',
-  password: '1234',
+  username: 'rca123parsimonia',
+  password: 'edco-password1',
   database: 'rca-db',
   autoLoadEntities: true,
   synchronize: true,

@@ -16,6 +16,9 @@ export class VehicleFactory {
     state: VehicleState,
     image: string,
     stars: number,
+    price: number,
+    currency: string,
+    timeUnit: string,
   ): Vehicle {
     const stateAux = this.State(state);
     return new Vehicle(
@@ -27,6 +30,9 @@ export class VehicleFactory {
       stateAux,
       image,
       stars,
+      price,
+      currency,
+      timeUnit,
     );
   }
 
@@ -40,6 +46,9 @@ export class VehicleFactory {
     state: number,
     image: string,
     stars,
+    price,
+    currency,
+    timeUnit,
   ): Vehicle {
     const vehicle: Vehicle = new Vehicle(
       name,
@@ -50,6 +59,9 @@ export class VehicleFactory {
       state,
       image,
       stars,
+      price,
+      currency,
+      timeUnit,
     );
     vehicle.changeId(vehicleId);
     return vehicle;

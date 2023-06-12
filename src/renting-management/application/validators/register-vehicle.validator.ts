@@ -28,24 +28,26 @@ export class RegisterVehicleValidator {
       notification.addError('Vehicle name must be a string', null);
     }
     const brand: string = registerVehicleRequest.brand?.trim() || '';
-    if (!brand) {
-      notification.addError('Vehicle brand is required', null);
-    }
+    if (!brand) notification.addError('Vehicle brand is required', null);
 
     const model: string = registerVehicleRequest.model?.trim() || '';
-    if (!model) {
-      notification.addError('Vehicle model is required', null);
-    }
+    if (!model) notification.addError('Vehicle model is required', null);
 
     const integrity: string = registerVehicleRequest.integrity?.trim() || '';
-    if (!integrity) {
+    if (!integrity)
       notification.addError('Vehicle integrity is required', null);
-    }
 
     const year: Date = registerVehicleRequest.year || null;
-    if (!year) {
-      notification.addError('Vehicle year is required', null);
+    if (!year) notification.addError('Vehicle year is required', null);
+
+    const state: number = Number(registerVehicleRequest.state);
+    if (state === null) {
+      notification.addError('Vehicle state is required', null);
     }
+    if (state > 3)
+      notification.addError('Vehicle state must be from 0 to 3', null);
+    if (state < 0)
+      notification.addError('Vehicle state must be from 0 to 3', null);
 
     const yearRegex = /^\d{4}-\d{2}-\d{2}$/;
     if (!yearRegex.test(year.toString())) {

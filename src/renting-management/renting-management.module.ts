@@ -6,6 +6,7 @@ import { VehiclesController } from './api/vehicles/vehicles.controller';
 import { CqrsModule } from '@nestjs/cqrs';
 import { VehiclesApplicationService } from './application/services/vehicles-application.service';
 import {
+  Get20VehiclesMixedHandler,
   GetAllVehiclesByByOwnerHandler,
   GetAllVehiclesByStarsHandler,
   GetAllVehiclesByYearHandler,
@@ -55,6 +56,10 @@ export const QueryHandlers = [
   GetRentingOrderItemByIdHandler,
   GetRentingOrderItemByVehiclesIdHandler,
   GetAllRentingItemsByRenterIdHandler,
+  GetAllVehiclesByStarsHandler,
+  GetAllVehiclesByYearHandler,
+  GetAllVehiclesByByOwnerHandler,
+  Get20VehiclesMixedHandler,
 ];
 
 @Module({

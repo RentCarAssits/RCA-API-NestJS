@@ -4,8 +4,11 @@ export class RentingOrderItemDto {
   public currency: string;
   public startDate: Date;
   public endDate: Date;
-  public vehicleId: number;
   public rentingUnit: string;
-  public requesterId: number;
   public state: string;
+  public requesterId: number;
+  public requesterName: string;
+  public ownerId: number;
+  public vehicleId: number;
+  public vehicleName: string;
 }

@@ -4,7 +4,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { RentingOrderItemId } from '../values/renting-order-id.value';
@@ -14,12 +13,10 @@ import { TimeUnit } from '../enums/TimeUnit';
 import { RentingOrderItemCreated } from '../events/renting-order-item-created.event';
 import { VehicleIdFk } from '../values/vehicle-id-fk.value';
 import { ApiProperty } from '@nestjs/swagger';
-import { VehicleId } from '../values/vehicle-id.value';
-import { VehicleIntegrity } from '../values/vehicle-integrity.value';
 import { RentingOrderItemState } from '../enums/renting-order-item-state.enum';
 import { User } from '../../../iam-management/domain/entities/user.entity';
 
-@Entity('RentingOrderItem')
+@Entity('renting_order_items')
 export class RentingOrderItem extends AggregateRoot {
   @ApiProperty()
   @PrimaryGeneratedColumn('increment', { name: 'id' })

@@ -26,9 +26,8 @@ jobs:
           npm install --if-present
           npm run build --if-present
 
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
         with:
           app-name: 'rca'
           slot-name: 'Production'

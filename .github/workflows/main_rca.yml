@@ -28,7 +28,7 @@ jobs:
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
-        uses: actions/upload-artifact@v2
+        uses: azure/webapps-deploy@v2
         with:
           app-name: 'rca'
           slot-name: 'Production'

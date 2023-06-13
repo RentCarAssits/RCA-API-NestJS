@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { CreateServiceRequestValidator } from '../validators/create-service-request.validator';
-import { ServiceRequestDto } from '../dtos/service-request.dto';
+import { ServiceRequestDto } from '../dto/request/service-request.dto';
 import { Result } from 'typescript-result';
 import { AppNotification } from 'src/shared/application/app.notification';
 import { CreateServiceRequest } from '../commands/create-service-request.command';
-import { ServiceRequestResponseDto } from '../dtos/service-request-response.dto';
+import { ServiceRequestResponseDto } from '../dto/response/service-request-response.dto';
 
 @Injectable()
 export class ServiceRequestService {

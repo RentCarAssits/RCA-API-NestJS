@@ -1,5 +1,5 @@
 import { CommandHandler, EventPublisher, ICommandHandler } from '@nestjs/cqrs';
-import { CreateServiceRequest } from '../commands/create-service-request.command';
+import { CreateServiceRequest } from '../../commands/create-service-request.command';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ServiceRequest } from 'src/workshop-service-management/domain/entities/service-request.entity';
 import { Repository } from 'typeorm';
@@ -7,7 +7,7 @@ import { WorkshopIdFK } from 'src/workshop-service-management/domain/value-objec
 import { OwnerIdFK } from 'src/workshop-service-management/domain/value-objects/owner-id-fk.value';
 import { VehicleIdFK } from 'src/workshop-service-management/domain/value-objects/vehicle-id-fk.value';
 import { ServiceRequestFactory } from 'src/workshop-service-management/domain/factory/service-request-factory.factory';
-import { ServiceRequestId } from '../../domain/value-objects/service-request-id.value';
+import { ServiceRequestId } from '../../../domain/value-objects/service-request-id.value';
 
 @CommandHandler(CreateServiceRequest)
 export class CreateServiceRequestHandler

@@ -3,7 +3,7 @@ import { WorkshopId } from '../value-objects/workshop-id.value';
 import { type } from 'os';
 import { Address } from '../value-objects/address.value';
 
-@Entity('Workshop')
+@Entity('workshop')
 export class Workshop {
   @PrimaryGeneratedColumn()
   private id: WorkshopId;

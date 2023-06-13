@@ -1,4 +1,4 @@
-import { ServiceItem } from 'src/workshop-service-management/domain/entities/service-item';
+import { ServiceItem } from 'src/workshop-service-management/domain/entities/service-item.entity';
 
 export class CreateProposalCommand {
   constructor(

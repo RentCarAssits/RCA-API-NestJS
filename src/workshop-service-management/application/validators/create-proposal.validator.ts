@@ -4,7 +4,7 @@ import { Proposal } from 'src/workshop-service-management/domain/entities/propos
 import { Repository } from 'typeorm';
 import { CreateProposalDto } from '../dto/request/create-proposal.dto';
 import { AppNotification } from 'src/shared/application/app.notification';
-import { ServiceItem } from '../../domain/entities/service-item';
+import { ServiceItem } from '../../domain/entities/service-item.entity';
 
 @Injectable()
 export class CreateProposalValidator {

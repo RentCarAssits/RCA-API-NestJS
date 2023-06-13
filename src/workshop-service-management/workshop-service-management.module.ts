@@ -7,7 +7,6 @@ import { Product } from './domain/entities/product.entity';
 import { Proposal } from './domain/entities/proposal.entity';
 import { RequestItem } from './domain/entities/request-item.entity';
 import { ServiceItemOrder } from './domain/entities/service-item-order-entity';
-import { ServiceItem } from './domain/entities/service-item';
 import { Warehouse } from './domain/entities/warehouse.entity';
 import { Workshop } from './domain/entities/workshop.entity';
 import { ProposalController } from './api/proposal.controller';
@@ -27,6 +26,12 @@ import { InventoryService } from './application/services/inventory.service';
 import { CreateInventoryValidator } from './application/validators/create-inventory.validator';
 import { CreateWarehouseHandler } from './application/handlers/commands/create-warehouse.handler';
 import { CreateInventoryHandler } from './application/handlers/commands/create-inventory.handler';
+import { ServiceItem } from './domain/entities/service-item.entity';
+import { ServiceRequest } from './domain/entities/service-request.entity';
+import {
+  GetAllInventoryHandler,
+  GetInventoryByIdHandler,
+} from './application/handlers/queries/inventory.query';
 
 export const CommandHandlers = [
   CreateProposalHandler,
@@ -38,7 +43,7 @@ export const EventHandlers = [
   WarehouseCreatedHandler,
   InventoryCreatedHandler,
 ];
-export const QueryHandlers = [];
+export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
 
 @Module({
   imports: [
@@ -49,11 +54,12 @@ export const QueryHandlers = [];
       Product,
       Proposal,
       RequestItem,
-      ServiceItemOrder,
       ServiceItem,
+      ServiceItemOrder,
       Warehouse,
       Workshop,
       Diagnostic,
+      ServiceRequest,
     ]),
     CqrsModule,
   ],

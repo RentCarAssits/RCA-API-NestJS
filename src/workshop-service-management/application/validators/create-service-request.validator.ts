@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ServiceRequest } from 'src/workshop-service-management/domain/entities/service-request.entity';
 import { Repository } from 'typeorm';
-import { ServiceRequestDto } from '../dtos/service-request.dto';
+import { ServiceRequestDto } from '../dto/request/service-request.dto';
 import { AppNotification } from 'src/shared/application/app.notification';
 
 @Injectable()

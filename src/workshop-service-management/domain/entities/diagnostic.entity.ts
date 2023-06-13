@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { ProposalId } from '../value-objects/proposal-id.value';
 import { Price } from '../value-objects/price.value';
-import { ServiceItem } from './service-item';
+import { ServiceItem } from './service-item.entity';
 import { Period } from '../value-objects/period.value';
 import { AggregateRoot } from '@nestjs/cqrs';
 import { CreateProposalCommand } from 'src/workshop-service-management/application/commands/create-proposal.command';

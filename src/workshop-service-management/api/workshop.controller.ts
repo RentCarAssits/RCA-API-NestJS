@@ -4,26 +4,26 @@ import { QueryBus } from '@nestjs/cqrs';
 import { Result } from 'typescript-result';
 import { AppNotification } from 'src/shared/application/app.notification';
 import { ApiController } from 'src/shared/api/api.controller';
-import { WarehouseService } from '../application/services/warehouse.service';
-import { CreateWarehouseDTO } from '../application/dto/request/create-warehouse.dto';
+import { WorkshopService } from '../application/services/workshop.service';
+import { CreateWorkshopDTO } from '../application/dto/request/create-workshop.dto';
 
-@ApiTags('Warehouse')
-@Controller('warehouse')
-export class WarehouseController {
+@ApiTags('Workshop')
+@Controller('workshop')
+export class WorkshopController {
   constructor(
-    private readonly warehouseService: WarehouseService,
+    private readonly workshopService: WorkshopService,
     private readonly queryBus: QueryBus,
   ) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create Warehouse' })
+  @ApiOperation({ summary: 'Create Workshop' })
   async create(
-    @Body() createWarehouseDto: CreateWarehouseDTO,
+    @Body() createWorkshopDto: CreateWorkshopDTO,
     @Res({ passthrough: true }) response,
   ): Promise<object> {
     try {
-      const result: Result<AppNotification, CreateWarehouseDTO> =
-        await this.warehouseService.create(createWarehouseDto);
+      const result: Result<AppNotification, CreateWorkshopDTO> =
+        await this.workshopService.create(createWorkshopDto);
       if (result.isSuccess()) {
         return ApiController.created(response, result.value);
       }

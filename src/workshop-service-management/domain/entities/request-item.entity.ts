@@ -10,7 +10,7 @@ import { Price } from '../value-objects/price.value';
 import { InventoryTransaction } from './inventory-transaction.entity';
 import { Product } from './product.entity';
 import { RequestItemId } from '../value-objects/request-item-id.value';
-import { ServiceItem } from './service-item';
+import { ServiceItem } from './service-item.entity';
 import { CreateRequestItemEvent } from '../events/create-request-item-event';
 import { AggregateRoot } from '@nestjs/cqrs';
 
@@ -67,5 +67,8 @@ export class RequestItem extends AggregateRoot {
 
   public getServiceItem(): ServiceItem {
     return this.serviceItem;
+  }
+  public getProduct(): Product {
+    return this.product;
   }
 }

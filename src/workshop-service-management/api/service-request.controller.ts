@@ -1,32 +1,30 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ServiceRequestService } from '../application/services/service-request.service';
 import { QueryBus } from '@nestjs/cqrs';
+import { ServiceRequestDto } from '../application/dto/request/service-request.dto';
 import { Result } from 'typescript-result';
 import { AppNotification } from 'src/shared/application/app.notification';
 import { ApiController } from 'src/shared/api/api.controller';
-import { WarehouseService } from '../application/services/warehouse.service';
-import { CreateWarehouseDTO } from '../application/dto/request/create-warehouse.dto';
 
-@ApiTags('Warehouse')
-@Controller('warehouse')
-export class WarehouseController {
+@Controller('serviceRequest')
+export class ServiceRequestController {
   constructor(
-    private readonly warehouseService: WarehouseService,
+    private readonly serviceRequestService: ServiceRequestService,
     private readonly queryBus: QueryBus,
   ) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create Warehouse' })
   async create(
-    @Body() createWarehouseDto: CreateWarehouseDTO,
+    @Body() serviceRequestDto: ServiceRequestDto,
     @Res({ passthrough: true }) response,
   ): Promise<object> {
     try {
-      const result: Result<AppNotification, CreateWarehouseDTO> =
-        await this.warehouseService.create(createWarehouseDto);
+      const result: Result<AppNotification, ServiceRequestDto> =
+        await this.serviceRequestService.create(serviceRequestDto);
       if (result.isSuccess()) {
         return ApiController.created(response, result.value);
       }
+
       return ApiController.error(response, result.error.getErrors());
     } catch (error) {
       return ApiController.serverError(response, error);

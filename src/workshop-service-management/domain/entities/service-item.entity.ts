@@ -6,9 +6,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { ServiceItemOrderId } from '../value-objects/service-item-order-id.value';
 import { Price } from '../value-objects/price.value';
-import { InventoryTransaction } from './inventory-transaction.entity';
 import { ServiceItemId } from '../value-objects/service-item-id.value';
 import { RequestItem } from './request-item.entity';
 import { Proposal } from './proposal.entity';

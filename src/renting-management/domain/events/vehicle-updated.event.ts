@@ -9,5 +9,8 @@ export class VehicleUpdated {
     public readonly integrity: string,
     public readonly state: VehicleState,
     public readonly year: Date,
+    public readonly price: number,
+    public readonly currency: string,
+    public readonly timeUnit: string,
   ) {}
 }

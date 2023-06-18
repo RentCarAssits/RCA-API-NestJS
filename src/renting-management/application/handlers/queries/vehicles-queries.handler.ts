@@ -5,10 +5,10 @@ import { GetAllVehiclesQuery } from '../../queries/get-all-vehicles.query';
 import { GetVehicleByIdQuery } from '../../queries/get-vehicle-by-id.query';
 import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Category } from '../../../domain/entities/category.entity';
 import { GetAllVehiclesByYearQuery } from '../../queries/get-all-vehicles-by-year.query';
 import { GetAllVehiclesByStarsQuery } from '../../queries/get-all-vehicles-by-stars.query';
 import { GetVehiclesByOwnerIdQuery } from '../../queries/get-vehicles-by-ownerId.query';
+import { Get20VehiclesMixedQuery } from '../../queries/get-20-vehicles-mixed.query';
 
 @QueryHandler(GetAllVehiclesQuery)
 export class GetAllVehiclesHandler
@@ -41,6 +41,10 @@ export class GetAllVehiclesHandler
       vehicleDto.year = vehicle.year;
       vehicleDto.ownerId = vehicle.owner?.id;
       vehicleDto.image = vehicle.image;
+      vehicleDto.stars = vehicle.stars;
+      vehicleDto.price = vehicle.price;
+      vehicleDto.currency = vehicle.currency;
+      vehicleDto.timeUnit = vehicle.timeUnit;
       vehicleDto.categories = vehicle.categories.map((category) =>
         category.getName().getValue(),
       );
@@ -77,8 +81,8 @@ export class GetVehicleByIdHandler
     }
 
     const vehicle = result[0];
-    console.log('vechiles : ', result);
     const vehicleDto = new VehicleDto();
+    vehicleDto.id = vehicle.id;
     vehicleDto.name = vehicle.name;
     vehicleDto.brand = vehicle.brand;
     vehicleDto.model = vehicle.model;
@@ -87,6 +91,10 @@ export class GetVehicleByIdHandler
     vehicleDto.year = vehicle.year;
     vehicleDto.ownerId = vehicle.owner_id;
     vehicleDto.image = vehicle.image;
+    vehicleDto.stars = vehicle.stars;
+    vehicleDto.price = vehicle.price;
+    vehicleDto.currency = vehicle.currency;
+    vehicleDto.timeUnit = vehicle.timeUnit;
     vehicleDto.categories = vehicle.categories
       ? vehicle.categories.split(',')
       : [];
@@ -123,6 +131,7 @@ export class GetAllVehiclesByYearHandler
 
     const vehicleDtos: VehicleDto[] = result.map((vehicle) => {
       const vehicleDto = new VehicleDto();
+      vehicleDto.id = vehicle.id;
       vehicleDto.name = vehicle.name;
       vehicleDto.brand = vehicle.brand;
       vehicleDto.model = vehicle.model;
@@ -131,6 +140,10 @@ export class GetAllVehiclesByYearHandler
       vehicleDto.year = vehicle.year;
       vehicleDto.ownerId = vehicle.owner_id;
       vehicleDto.image = vehicle.image;
+      vehicleDto.stars = vehicle.stars;
+      vehicleDto.price = vehicle.price;
+      vehicleDto.currency = vehicle.currency;
+      vehicleDto.timeUnit = vehicle.timeUnit;
       vehicleDto.categories = vehicle.categories
         ? vehicle.categories.split(',')
         : [];
@@ -152,7 +165,6 @@ export class GetAllVehiclesByStarsHandler
   ) {}
 
   async execute(query: GetAllVehiclesByStarsQuery) {
-    console.log('asffssaafafasf');
     const manager = this.connection.manager;
     const sql = `
     SELECT vehicles.*, GROUP_CONCAT(categories.category) as categories
@@ -160,7 +172,7 @@ export class GetAllVehiclesByStarsHandler
         LEFT JOIN categories ON vehicles.id = categories.vehicleId
         GROUP BY vehicles.id
         ORDER BY vehicles.stars DESC
-        LIMIT 20
+        LIMIT 10
     `;
 
     const result = await manager.query(sql);
@@ -171,6 +183,7 @@ export class GetAllVehiclesByStarsHandler
 
     const vehicleDtos: VehicleDto[] = result.map((vehicle) => {
       const vehicleDto = new VehicleDto();
+      vehicleDto.id = vehicle.id;
       vehicleDto.name = vehicle.name;
       vehicleDto.brand = vehicle.brand;
       vehicleDto.model = vehicle.model;
@@ -180,6 +193,9 @@ export class GetAllVehiclesByStarsHandler
       vehicleDto.ownerId = vehicle.owner_id;
       vehicleDto.image = vehicle.image;
       vehicleDto.stars = vehicle.stars;
+      vehicleDto.price = vehicle.price;
+      vehicleDto.currency = vehicle.currency;
+      vehicleDto.timeUnit = vehicle.timeUnit;
       vehicleDto.categories = vehicle.categories
         ? vehicle.categories.split(',')
         : [];
@@ -219,6 +235,7 @@ export class GetAllVehiclesByByOwnerHandler
 
     const vehicleDtos: VehicleDto[] = result.map((vehicle) => {
       const vehicleDto = new VehicleDto();
+      vehicleDto.id = vehicle.id;
       vehicleDto.name = vehicle.name;
       vehicleDto.brand = vehicle.brand;
       vehicleDto.model = vehicle.model;
@@ -228,6 +245,62 @@ export class GetAllVehiclesByByOwnerHandler
       vehicleDto.ownerId = vehicle.owner_id;
       vehicleDto.image = vehicle.image;
       vehicleDto.stars = vehicle.stars;
+      vehicleDto.price = vehicle.price;
+      vehicleDto.currency = vehicle.currency;
+      vehicleDto.timeUnit = vehicle.timeUnit;
+      vehicleDto.categories = vehicle.categories
+        ? vehicle.categories.split(',')
+        : [];
+      return vehicleDto;
+    });
+
+    return vehicleDtos;
+  }
+}
+
+//Get20VehiclesMixedQuery
+@QueryHandler(Get20VehiclesMixedQuery)
+export class Get20VehiclesMixedHandler
+  implements IQueryHandler<Get20VehiclesMixedQuery>
+{
+  constructor(
+    @InjectRepository(Vehicle)
+    private readonly vehicleRepository: Repository<Vehicle>,
+    private readonly connection: Connection,
+  ) {}
+
+  async execute(query: Get20VehiclesMixedQuery) {
+    const manager = this.connection.manager;
+    const sql = `
+    SELECT vehicles.*, GROUP_CONCAT(categories.category) as categories
+    FROM vehicles
+    LEFT JOIN categories ON vehicles.id = categories.vehicleId
+    GROUP BY vehicles.id
+    ORDER BY RAND()
+    LIMIT 20;
+    `;
+
+    const result = await manager.query(sql);
+
+    if (result.length === 0) {
+      return null;
+    }
+
+    const vehicleDtos: VehicleDto[] = result.map((vehicle) => {
+      const vehicleDto = new VehicleDto();
+      vehicleDto.id = vehicle.id;
+      vehicleDto.name = vehicle.name;
+      vehicleDto.brand = vehicle.brand;
+      vehicleDto.model = vehicle.model;
+      vehicleDto.integrity = vehicle.integrity;
+      vehicleDto.state = vehicle.state;
+      vehicleDto.year = vehicle.year;
+      vehicleDto.ownerId = vehicle.owner_id;
+      vehicleDto.image = vehicle.image;
+      vehicleDto.stars = vehicle.stars;
+      vehicleDto.price = vehicle.price;
+      vehicleDto.currency = vehicle.currency;
+      vehicleDto.timeUnit = vehicle.timeUnit;
       vehicleDto.categories = vehicle.categories
         ? vehicle.categories.split(',')
         : [];

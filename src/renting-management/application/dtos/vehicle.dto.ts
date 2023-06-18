@@ -1,5 +1,5 @@
 export class VehicleDto {
-  public id?: string;
+  public id?: number;
   public name: string;
   public brand: string;
   public model: string;
@@ -9,5 +9,8 @@ export class VehicleDto {
   public ownerId: number;
   public image: string;
   public stars: number;
+  public price: number;
+  public currency: string;
+  public timeUnit: string;
   public categories?: string[];
 }

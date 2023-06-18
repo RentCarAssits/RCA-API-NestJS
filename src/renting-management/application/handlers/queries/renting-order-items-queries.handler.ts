@@ -1,11 +1,9 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { RentingOrderItemDto } from '../../dtos/renting-order-item.dto';
 import { GetAllRentingOrderItemsQuery } from '../../queries/get-all-renting-order-items.query';
-import { Connection, getManager, Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Vehicle } from '../../../domain/entities/vehicle.entity';
 import { RentingOrderItem } from '../../../domain/entities/renting-order-item.entity';
-import { VehicleDto } from '../../dtos/vehicle.dto';
 import { GetRentingOrderItemByIdQuery } from '../../queries/get-renting-order-item-by-id.query';
 import { GetAllRentingItemsByVehicleQuery } from '../../queries/get-all-renting-items-by-vehicle.query';
 import { GetAllRentingItemsByRenterIdQuery } from '../../queries/get-all-renting-items-by-renter-id.query';
@@ -110,10 +108,7 @@ export class GetRentingOrderItemByVehiclesIdHandler
       .createQueryBuilder()
       .where('vehicle_id IN (:...tempIdList)', { tempIdList })
       .getMany();
-    console.log(
-      '🚀 ~ file: renting-queries.handler.ts:18 ~ GetAllRentingItemsByVehiclesHandler ~ execute ~ rentingItems:',
-      ormRentingOrderItems['result'],
-    );
+
     console.log(ormRentingOrderItems);
     const rentingOrderItems: RentingOrderItemDto[] = ormRentingOrderItems.map(
       (ormRentingOrderItem) => {
@@ -155,10 +150,7 @@ export class GetAllRentingItemsByRenterIdHandler
     const ormRentingOrderItems = await this.rentingOrderItemRepository.find({
       where: { requester: { id: query.renterId } },
     });
-    console.log(
-      '🚀 ~ file: renting-queries.handler.ts:18 ~ GetAllRentingItemsByVehicleHandler ~ execute ~ rentingItems:',
-      ormRentingOrderItems,
-    );
+    console.log('IDDDDDDDDD: ', query.renterId);
     const rentingOrderItems: RentingOrderItemDto[] = ormRentingOrderItems.map(
       (ormRentingOrderItem) => {
         const rentingOrderItemDto = new RentingOrderItemDto();

@@ -17,6 +17,7 @@ import { UpdateVehicleRequest } from '../../application/requests/update-vehicle.
 import { GetAllVehiclesByYearQuery } from '../../application/queries/get-all-vehicles-by-year.query';
 import { GetAllVehiclesByStarsQuery } from '../../application/queries/get-all-vehicles-by-stars.query';
 import { GetVehiclesByOwnerIdQuery } from '../../application/queries/get-vehicles-by-ownerId.query';
+import { Get20VehiclesMixedQuery } from '../../application/queries/get-20-vehicles-mixed.query';
 
 @ApiTags('Vehicles')
 @Controller('vehicles')
@@ -104,6 +105,23 @@ export class VehiclesController {
     }
   }
 
+  @Get('random/vehicles')
+  @Auth()
+  async get20Random(@Res({ passthrough: true }) response: any) {
+    try {
+      const vehicles = await this.queryBus.execute(
+        new Get20VehiclesMixedQuery(),
+      );
+      return ApiController.ok(response, vehicles);
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: vehicles.controller.ts:58 ~ VehiclesController ~ getAll ~ error:',
+        error,
+      );
+      return ApiController.serverError(response, error);
+    }
+  }
+
   @Get('/:id')
   async getById(
     @Param('id') vehicleId: number,
@@ -143,7 +161,6 @@ export class VehiclesController {
   @Get('/stars/vehicles')
   @Auth()
   async getByMostStars(@Res({ passthrough: true }) response: any) {
-    console.log('safafsafsafs');
     try {
       const vehicles = await this.queryBus.execute(
         new GetAllVehiclesByStarsQuery(),

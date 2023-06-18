@@ -39,7 +39,7 @@ export class CreateInventoryValidator {
     const warehouseId: number = createInventoryDto.warehouseId || 0;
 
     if (warehouseId <= 0) {
-      notification.addError('Invalid owner Id', null);
+      notification.addError('Invalid warehouse Id', null);
     }
     const existingWarehouse: Warehouse = await this.warehouseRepository
       .createQueryBuilder()

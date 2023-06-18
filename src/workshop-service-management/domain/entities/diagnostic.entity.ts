@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -23,34 +24,24 @@ export class Diagnostic extends AggregateRoot {
   @PrimaryGeneratedColumn()
   private id: DiagnosticId;
 
-  @OneToOne(() => User)
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
   private owner: User;
 
-  @OneToOne(() => Vehicle)
+  @ManyToOne(() => Vehicle)
   @JoinColumn({ name: 'vechicle_id' })
   private vehicle: Vehicle;
 
   @Column('varchar', { name: 'diagnostic_description' })
   private diagnosticDescription: string;
 
-  @OneToOne(() => User)
+  @ManyToOne(() => User)
   @JoinColumn({ name: 'mechanic_id' })
   private mechanic: User;
 
-  public constructor(
-    id: DiagnosticId,
-    owner: User,
-    vehicle: Vehicle,
-    diagnosticDescription: string,
-    mechanic: User,
-  ) {
+  public constructor(diagnosticDescription: string) {
     super();
-    this.id = id;
-    this.owner = owner;
-    this.vehicle = vehicle;
     this.diagnosticDescription = diagnosticDescription;
-    this.mechanic = mechanic;
   }
 
   public create() {

@@ -19,7 +19,7 @@ import { VehicleIntegrity } from '../values/vehicle-integrity.value';
 import { RentingOrderItemState } from '../enums/renting-order-item-state.enum';
 import { User } from '../../../iam-management/domain/entities/user.entity';
 
-@Entity('RentingOrderItem')
+@Entity('renting_order_item')
 export class RentingOrderItem extends AggregateRoot {
   @ApiProperty()
   @PrimaryGeneratedColumn('increment', { name: 'id' })

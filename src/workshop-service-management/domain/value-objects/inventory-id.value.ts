@@ -1,7 +1,6 @@
 import { PrimaryColumn } from 'typeorm';
 
 export class InventoryId {
-  @PrimaryColumn('bigint', { name: 'id' })
   protected readonly id: number;
 
   protected constructor(id: number) {

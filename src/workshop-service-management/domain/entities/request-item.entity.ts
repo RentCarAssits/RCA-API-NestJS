@@ -68,4 +68,7 @@ export class RequestItem extends AggregateRoot {
   public getServiceItem(): ServiceItem {
     return this.serviceItem;
   }
+  public getProduct(): Product {
+    return this.product;
+  }
 }

@@ -32,16 +32,39 @@ import {
   GetAllInventoryHandler,
   GetInventoryByIdHandler,
 } from './application/handlers/queries/inventory.query';
+import { CreateServiceRequestHandler } from './application/handlers/commands/create-service-request.handler';
+import { ServiceRequestCreatedHandler } from './application/handlers/events/service-request-created.handler';
+import { ServiceRequestController } from './api/service-request.controller';
+import { CreateServiceRequestValidator } from './application/validators/create-service-request.validator';
+import { ServiceRequestService } from './application/services/service-request.service';
+import { IamManagementModule } from 'src/iam-management/iam-management.module';
+import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
+import { WorkshopController } from './api/workshop.controller';
+import { CreateWorkshopHandler } from './application/handlers/commands/create-workshop.handler';
+import { WorkshopCreatedHandler } from './application/handlers/events/workshop-created-handler';
+import { WorkshopService } from './application/services/workshop.service';
+import { CreateWorkshopValidator } from './application/validators/create-workshop.validator';
+import { CreateDiagnostictHandler } from './application/handlers/commands/create-diagnostic.handler';
+import { DiagnosticCreatedHandler } from './application/handlers/events/diagnostic-created.handler';
+import { DiagnosticController } from './api/diagnostic.controller';
+import { DiagnosticService } from './application/services/diagnostic.service';
+import { CreateDiagnosticValidator } from './application/validators/create-diagnostic.validator';
 
 export const CommandHandlers = [
   CreateProposalHandler,
   CreateWarehouseHandler,
   CreateInventoryHandler,
+  CreateServiceRequestHandler,
+  CreateWorkshopHandler,
+  CreateDiagnostictHandler,
 ];
 export const EventHandlers = [
   ProposalCreatedHandler,
   WarehouseCreatedHandler,
   InventoryCreatedHandler,
+  ServiceRequestCreatedHandler,
+  WorkshopCreatedHandler,
+  DiagnosticCreatedHandler,
 ];
 export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
 
@@ -60,10 +83,19 @@ export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
       Workshop,
       Diagnostic,
       ServiceRequest,
+      Vehicle,
     ]),
     CqrsModule,
+    IamManagementModule,
   ],
-  controllers: [ProposalController, WarehouseController, InventoryController],
+  controllers: [
+    ProposalController,
+    WarehouseController,
+    InventoryController,
+    ServiceRequestController,
+    WorkshopController,
+    DiagnosticController,
+  ],
   providers: [
     ProposalService,
     CreateProposalValidator,
@@ -71,6 +103,12 @@ export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
     CreateWarehouseValidator,
     InventoryService,
     CreateInventoryValidator,
+    ServiceRequestService,
+    CreateServiceRequestValidator,
+    WorkshopService,
+    CreateWorkshopValidator,
+    DiagnosticService,
+    CreateDiagnosticValidator,
     ...CommandHandlers,
     ...EventHandlers,
     ...QueryHandlers,

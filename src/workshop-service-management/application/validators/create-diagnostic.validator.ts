@@ -1,57 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ServiceRequest } from 'src/workshop-service-management/domain/entities/service-request.entity';
 import { Repository } from 'typeorm';
-import { ServiceRequestDto } from '../dto/request/service-request.dto';
 import { AppNotification } from 'src/shared/application/app.notification';
 import { User } from 'src/iam-management/domain/entities/user.entity';
-import { Workshop } from 'src/workshop-service-management/domain/entities/workshop.entity';
 import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
+import { Diagnostic } from 'src/workshop-service-management/domain/entities/diagnostic.entity';
+import { CreateDiagnosticDTO } from '../dto/request/create-diagnostic.dto';
 
 @Injectable()
-export class CreateServiceRequestValidator {
+export class CreateDiagnosticValidator {
   constructor(
-    @InjectRepository(ServiceRequest)
-    private serviceRequestRepository: Repository<ServiceRequest>,
+    @InjectRepository(Diagnostic)
+    private diagnosticRepository: Repository<Diagnostic>,
 
     @InjectRepository(User)
     private userRepository: Repository<User>,
-
-    @InjectRepository(Workshop)
-    private workshopRepository: Repository<Workshop>,
 
     @InjectRepository(Vehicle)
     private vechicleRepository: Repository<Vehicle>,
   ) {}
 
   public async validate(
-    serviceRequestDto: ServiceRequestDto,
+    diagnostictDto: CreateDiagnosticDTO,
   ): Promise<AppNotification> {
     const notification: AppNotification = new AppNotification();
-    const descriptionProblems: string = serviceRequestDto.descriptionProblems;
+    const descriptionProblems: string = diagnostictDto.diagnosticDescription;
     if (descriptionProblems === null) {
       notification.addError('Description Problem is required', null);
     }
 
-    const workshopId: number = serviceRequestDto.workshopId;
-    if (workshopId == null) {
-      notification.addError('Workshop Id is required', null);
-    } else if (workshopId <= 0) {
-      notification.addError('Workshop Id is invalid ', null);
-    } else {
-      const workshop: Workshop = await this.workshopRepository
-        .createQueryBuilder()
-        .where('id = :workshopId', { workshopId })
-        .getOne();
-      if (workshop == null) {
-        notification.addError(
-          'Workshop with the specified Id does not exist',
-          null,
-        );
-      }
-    }
-
-    const vehicleId: number = serviceRequestDto.vehicleId;
+    const vehicleId: number = diagnostictDto.vehicleId;
     if (vehicleId == null) {
       notification.addError('Vehicle id is required', null);
     } else if (vehicleId <= 0) {
@@ -69,7 +47,7 @@ export class CreateServiceRequestValidator {
       }
     }
 
-    const ownerId: number = serviceRequestDto.ownerId;
+    const ownerId: number = diagnostictDto.ownerId;
     if (ownerId == null) {
       notification.addError('OwnerId is required', null);
     } else if (ownerId <= 0) {
@@ -83,6 +61,24 @@ export class CreateServiceRequestValidator {
       if (owner == null) {
         notification.addError(
           'User with the specified owner Id does not exist',
+          null,
+        );
+      }
+    }
+
+    const mechanicId: number = diagnostictDto.mechanicId;
+    if (mechanicId == null) {
+      notification.addError('Mechanic Id is required', null);
+    } else if (mechanicId <= 0) {
+      notification.addError('Mechanic Id is invalid ', null);
+    } else {
+      const mechanic: User = await this.userRepository
+        .createQueryBuilder()
+        .where('id = :mechanicId', { mechanicId })
+        .getOne();
+      if (mechanic == null) {
+        notification.addError(
+          'Mechanic with the specified Id does not exist',
           null,
         );
       }

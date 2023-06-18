@@ -1,11 +1,21 @@
 import { AggregateRoot } from '@nestjs/cqrs';
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ServiceRequestId } from '../value-objects/service-request-id.value';
-import { WorkshopIdFK } from '../value-objects/workshop-id-fk.value';
-import { VehicleIdFK } from '../value-objects/vehicle-id-fk.value';
-import { OwnerIdFK } from '../value-objects/owner-id-fk.value';
 import { ServiceRequestCreated } from '../events/service-request-created.event';
+import { Workshop } from './workshop.entity';
+import { User } from 'src/iam-management/domain/entities/user.entity';
+import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
+import { VehicleIdFK } from '../value-objects/vehicle-id-fk.value';
 
+@Entity('service_request')
 export class ServiceRequest extends AggregateRoot {
   @PrimaryGeneratedColumn()
   private id: ServiceRequestId;
@@ -13,35 +23,27 @@ export class ServiceRequest extends AggregateRoot {
   @Column('varchar', { name: 'description_problems' })
   private descriptionProblems: string;
 
-  @Column(() => WorkshopIdFK, { prefix: false })
-  private workshopId: WorkshopIdFK;
+  @ManyToOne(() => Workshop, (Workshop) => Workshop.getServiceRequests)
+  @JoinColumn({ name: 'workshop_id' })
+  private workshop: Workshop;
 
-  @Column(() => VehicleIdFK, { prefix: false })
-  private vehicleId: VehicleIdFK;
+  @ManyToOne(() => Vehicle)
+  @JoinColumn({ name: 'vehicle_id' })
+  private vehicle: Vehicle;
 
-  @Column(() => OwnerIdFK, { prefix: false })
-  private ownerId: OwnerIdFK;
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'user_id' })
+  private owner: User;
 
-  public constructor(
-    descriptionProblems: string,
-    workshopId: WorkshopIdFK,
-    vehicleId: VehicleIdFK,
-    ownerId: OwnerIdFK,
-  ) {
+  public constructor(descriptionProblems: string) {
     super();
     this.descriptionProblems = descriptionProblems;
-    this.workshopId = workshopId;
-    this.vehicleId = vehicleId;
-    this.ownerId = ownerId;
   }
 
   public create() {
     const event = new ServiceRequestCreated(
       this.id.getValue(),
       this.descriptionProblems,
-      this.workshopId.getValue(),
-      this.ownerId.getValue(),
-      this.vehicleId.getValue(),
     );
   }
 
@@ -53,16 +55,16 @@ export class ServiceRequest extends AggregateRoot {
     return this.descriptionProblems;
   }
 
-  public getWorkshopId(): WorkshopIdFK {
-    return this.workshopId;
+  public getWorkshop(): Workshop {
+    return this.workshop;
   }
 
-  public getVehicleId(): VehicleIdFK {
-    return this.vehicleId;
+  public getVehicle(): Vehicle {
+    return this.vehicle;
   }
 
-  public getOwnerId(): OwnerIdFK {
-    return this.ownerId;
+  public getOwner(): User {
+    return this.owner;
   }
 
   public changeId(id: ServiceRequestId) {

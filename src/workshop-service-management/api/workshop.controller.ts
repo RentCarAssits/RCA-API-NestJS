@@ -1,30 +1,32 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
-import { ServiceRequestService } from '../application/services/service-request.service';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { QueryBus } from '@nestjs/cqrs';
-import { ServiceRequestDto } from '../application/dto/request/service-request.dto';
 import { Result } from 'typescript-result';
 import { AppNotification } from 'src/shared/application/app.notification';
 import { ApiController } from 'src/shared/api/api.controller';
+import { WorkshopService } from '../application/services/workshop.service';
+import { CreateWorkshopDTO } from '../application/dto/request/create-workshop.dto';
 
-@Controller('serviceRequest')
-export class ServiceRequestController {
+@ApiTags('Workshop')
+@Controller('workshop')
+export class WorkshopController {
   constructor(
-    private readonly serviceRequestService: ServiceRequestService,
+    private readonly workshopService: WorkshopService,
     private readonly queryBus: QueryBus,
   ) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create Workshop' })
   async create(
-    @Body() serviceRequestDto: ServiceRequestDto,
+    @Body() createWorkshopDto: CreateWorkshopDTO,
     @Res({ passthrough: true }) response,
   ): Promise<object> {
     try {
-      const result: Result<AppNotification, ServiceRequestDto> =
-        await this.serviceRequestService.create(serviceRequestDto);
+      const result: Result<AppNotification, CreateWorkshopDTO> =
+        await this.workshopService.create(createWorkshopDto);
       if (result.isSuccess()) {
         return ApiController.created(response, result.value);
       }
-
       return ApiController.error(response, result.error.getErrors());
     } catch (error) {
       return ApiController.serverError(response, error);

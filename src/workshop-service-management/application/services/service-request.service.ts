@@ -22,7 +22,7 @@ export class ServiceRequestService {
     if (notification.hasErrors()) {
       return Result.error(notification);
     }
-
+    console.log(notification);
     const createServiceRequestCommand: CreateServiceRequest =
       new CreateServiceRequest(
         serviceRequestDto.descriptionProblems,

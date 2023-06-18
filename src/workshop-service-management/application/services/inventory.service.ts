@@ -2,20 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { Result } from 'typescript-result';
 import { AppNotification } from 'src/shared/application/app.notification';
-import { CreateWarehouseValidator } from '../validators/create-warehouse.validator';
-import { CreateWarehouseDTO } from '../dto/request/create-warehouse.dto';
-import { CreateWarehouseCommand } from '../commands/create-warehouse.command';
-import { CreateWarehouseResponseDTO } from '../dto/response/create-warehouse-response.dto';
 import { CreateInventoryValidator } from '../validators/create-inventory.validator';
 import { CreateInventoryDTO } from '../dto/request/create-inventory.dto';
 import { CreateInventoryCommand } from '../commands/create-inventory.command';
 import { CreateInventoryResponseDTO } from '../dto/response/create-inventory-response.dto';
+import { Repository, FindOptionsWhere } from 'typeorm';
+import { Inventory } from 'src/workshop-service-management/domain/entities/inventory.entity';
+import { InventoryDTO } from '../dto/Inventory.dto';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class InventoryService {
   constructor(
     private commandBus: CommandBus,
     private createInventoryValidator: CreateInventoryValidator,
+
+    @InjectRepository(Inventory)
+    private inventoryRepository: Repository<Inventory>,
   ) {}
   async create(
     createInventoryDto: CreateInventoryDTO,
@@ -44,5 +47,48 @@ export class InventoryService {
         createInventoryDto.warehouseId,
       );
     return Result.ok(createInventoryResponseDto);
+  }
+
+  async findAll(): Promise<Result<AppNotification, InventoryDTO[]>> {
+    const inventory = await this.inventoryRepository.find({
+      relations: ['warehouse'],
+    });
+
+    const inventoryDtos: InventoryDTO[] = inventory.map((inventory) => {
+      const inventoryDto = new InventoryDTO();
+      console.log(inventory);
+      inventoryDto.id = Number(inventory.getId());
+      inventoryDto.description = inventory.getDescription();
+      inventoryDto.country = inventory.getAddress().getCountry();
+      inventoryDto.district = inventory.getAddress().getDitrict();
+      inventoryDto.addressDetail = inventory.getAddress().getAddressDetail();
+      inventoryDto.warehouse = inventory.getWarehouse();
+      return inventoryDto;
+    });
+    return Result.ok(inventoryDtos);
+  }
+  async findById(
+    inventoryId: Number,
+  ): Promise<Result<AppNotification, InventoryDTO>> {
+    let filter = {
+      id: inventoryId,
+    };
+    const inventory = await this.inventoryRepository.findOne({
+      relations: ['warehouse'],
+      where: {
+        id: inventoryId,
+      } as FindOptionsWhere<Inventory>,
+    });
+
+    const inventoryDto = new InventoryDTO();
+    console.log(inventory);
+    inventoryDto.id = Number(inventory.getId());
+    inventoryDto.description = inventory.getDescription();
+    inventoryDto.country = inventory.getAddress().getCountry();
+    inventoryDto.district = inventory.getAddress().getDitrict();
+    inventoryDto.addressDetail = inventory.getAddress().getAddressDetail();
+    inventoryDto.warehouse = inventory.getWarehouse();
+
+    return Result.ok(inventoryDto);
   }
 }

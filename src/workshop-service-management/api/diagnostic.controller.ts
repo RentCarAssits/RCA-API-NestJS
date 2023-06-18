@@ -4,28 +4,28 @@ import { QueryBus } from '@nestjs/cqrs';
 import { Result } from 'typescript-result';
 import { AppNotification } from 'src/shared/application/app.notification';
 import { ApiController } from 'src/shared/api/api.controller';
-import { CreateInventoryDTO } from '../application/dto/request/create-inventory.dto';
-import { InventoryService } from '../application/services/inventory.service';
 import { GetInventoryByIdQuery } from '../application/queries/get-inventory-by-id.query';
-import { InventoryDTO } from '../application/dto/Inventory.dto';
+import { DiagnosticService } from '../application/services/diagnostic.service';
+import { CreateDiagnosticDTO } from '../application/dto/request/create-diagnostic.dto';
+import { DiagnosticDTO } from '../application/dto/Diagnostic.dto';
 
-@ApiTags('Inventory')
-@Controller('inventory')
-export class InventoryController {
+@ApiTags('Diagnostic')
+@Controller('diagnostic')
+export class DiagnosticController {
   constructor(
-    private readonly inventoryService: InventoryService,
+    private readonly diagnosticService: DiagnosticService,
     private readonly queryBus: QueryBus,
   ) {}
 
   @Post()
-  @ApiOperation({ summary: 'Create Inventory' })
+  @ApiOperation({ summary: 'Create Diagnostic' })
   async create(
-    @Body() createInventoryDto: CreateInventoryDTO,
+    @Body() createDiagnosticDto: CreateDiagnosticDTO,
     @Res({ passthrough: true }) response,
   ): Promise<object> {
     try {
-      const result: Result<AppNotification, CreateInventoryDTO> =
-        await this.inventoryService.create(createInventoryDto);
+      const result: Result<AppNotification, CreateDiagnosticDTO> =
+        await this.diagnosticService.create(createDiagnosticDto);
       if (result.isSuccess()) {
         return ApiController.created(response, result.value);
       }
@@ -38,24 +38,8 @@ export class InventoryController {
   @Get()
   async getAll(@Res({ passthrough: true }) response: any) {
     try {
-      const result: Result<AppNotification, InventoryDTO[]> =
-        await this.inventoryService.findAll();
-      if (result.isSuccess()) {
-        return ApiController.ok(response, result.value);
-      }
-    } catch (error) {
-      return ApiController.serverError(response, error);
-    }
-  }
-
-  @Get('/:id')
-  async getById(
-    @Param('id') inventoryId: number,
-    @Res({ passthrough: true }) response: any,
-  ) {
-    try {
-      const result: Result<AppNotification, InventoryDTO> =
-        await this.inventoryService.findById(inventoryId);
+      const result: Result<AppNotification, DiagnosticDTO[]> =
+        await this.diagnosticService.findAll();
       if (result.isSuccess()) {
         return ApiController.ok(response, result.value);
       }

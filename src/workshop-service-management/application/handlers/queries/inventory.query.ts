@@ -38,7 +38,7 @@ export class GetAllInventoryHandler
       inventoriesDto.country = ormInventories.country;
       inventoriesDto.district = ormInventories.district;
       inventoriesDto.addressDetail = ormInventories.addressDetail;
-      inventoriesDto.warehouseId = ormInventories.warehouseId;
+      inventoriesDto.warehouse = ormInventories.warehouseId;
       return inventoriesDto;
     });
     return inventories;
@@ -79,7 +79,7 @@ export class GetInventoryByIdHandler
     inventoriesDto.country = inventories.country;
     inventoriesDto.district = inventories.district;
     inventoriesDto.addressDetail = inventories.addressDetail;
-    inventoriesDto.warehouseId = inventories.warehouseId;
+    inventoriesDto.warehouse = inventories.warehouse;
 
     return inventoriesDto;
   }

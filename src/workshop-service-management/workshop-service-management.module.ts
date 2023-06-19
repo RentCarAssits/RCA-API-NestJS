@@ -49,6 +49,11 @@ import { DiagnosticCreatedHandler } from './application/handlers/events/diagnost
 import { DiagnosticController } from './api/diagnostic.controller';
 import { DiagnosticService } from './application/services/diagnostic.service';
 import { CreateDiagnosticValidator } from './application/validators/create-diagnostic.validator';
+import { ProductController } from './api/product.controller';
+import { ProductService } from './application/services/product.service';
+import { CreateProductValidator } from './application/validators/create-product.validator';
+import { CreateProductHandler } from './application/handlers/commands/create-product.handler';
+import { ProductCreatedHandler } from './application/handlers/events/product-created.handler';
 
 export const CommandHandlers = [
   CreateProposalHandler,
@@ -57,6 +62,7 @@ export const CommandHandlers = [
   CreateServiceRequestHandler,
   CreateWorkshopHandler,
   CreateDiagnostictHandler,
+  CreateProductHandler,
 ];
 export const EventHandlers = [
   ProposalCreatedHandler,
@@ -65,6 +71,7 @@ export const EventHandlers = [
   ServiceRequestCreatedHandler,
   WorkshopCreatedHandler,
   DiagnosticCreatedHandler,
+  ProductCreatedHandler,
 ];
 export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
 
@@ -95,6 +102,7 @@ export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
     ServiceRequestController,
     WorkshopController,
     DiagnosticController,
+    ProductController,
   ],
   providers: [
     ProposalService,
@@ -109,6 +117,8 @@ export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
     CreateWorkshopValidator,
     DiagnosticService,
     CreateDiagnosticValidator,
+    ProductService,
+    CreateProductValidator,
     ...CommandHandlers,
     ...EventHandlers,
     ...QueryHandlers,

@@ -23,7 +23,7 @@ export class CreateProposalHandler
   async execute(command: CreateProposalCommand) {
     let proposalId: number = 0;
     const humanResources = command.humanResources;
-    const price = Price.create(command.price, command.currency);
+    const price = Price.create(command.quantity, command.currency);
     const period = Period.create(command.start, command.end);
     let proposal: Proposal = ProposalFactory.createFrom(
       humanResources,

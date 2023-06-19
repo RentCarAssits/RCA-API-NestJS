@@ -1,7 +1,6 @@
 import { Proposal } from '../entities/proposal.entity';
 import { Period } from '../value-objects/period.value';
 import { Price } from '../value-objects/price.value';
-import { ProposalId } from '../value-objects/proposal-id.value';
 
 export class ProposalFactory {
   public static createFrom(

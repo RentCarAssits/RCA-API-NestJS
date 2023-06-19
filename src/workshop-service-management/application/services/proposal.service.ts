@@ -24,7 +24,7 @@ export class ProposalService {
     const createProposalCommand: CreateProposalCommand =
       new CreateProposalCommand(
         createProposalDto.humanResources,
-        createProposalDto.price,
+        createProposalDto.quantity,
         createProposalDto.currency,
         createProposalDto.start,
         createProposalDto.end,
@@ -34,7 +34,7 @@ export class ProposalService {
       new CreateProposalResponseDto(
         proposalId,
         createProposalDto.humanResources,
-        createProposalDto.price,
+        createProposalDto.quantity,
         createProposalDto.currency,
         createProposalDto.start,
         createProposalDto.end,

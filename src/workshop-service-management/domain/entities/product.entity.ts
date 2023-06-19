@@ -7,12 +7,12 @@ import {
 } from 'typeorm';
 import { ProductId } from '../value-objects/product-id.value';
 import { Price } from '../value-objects/price.value';
-import { InventoryId } from '../value-objects/inventory-id.value';
-import { type } from 'os';
 import { Inventory } from './inventory.entity';
+import { AggregateRoot } from '@nestjs/cqrs';
+import { CreateProductEvent } from '../events/create-product.event';
 
 @Entity('product')
-export class Product {
+export class Product extends AggregateRoot {
   @PrimaryGeneratedColumn()
   private id: ProductId;
 
@@ -20,7 +20,7 @@ export class Product {
   private productName: string;
 
   @Column('bigint', { name: 'quantity_product' })
-  private quantity: number;
+  private quantityProduct: number;
 
   @Column((type) => Price, { prefix: false })
   private price: Price;
@@ -29,10 +29,26 @@ export class Product {
   @JoinColumn({ name: 'inventory_id' })
   private inventory: Inventory;
 
-  public constructor(productName: string, quantity: number, price: Price) {
+  public constructor(
+    productName: string,
+    quantityProduct: number,
+    price: Price,
+  ) {
+    super();
     this.productName = productName;
-    this.quantity = quantity;
+    this.quantityProduct = quantityProduct;
     this.price = price;
+  }
+
+  public create() {
+    const event = new CreateProductEvent(
+      this.id.getValue(),
+      this.productName,
+      this.quantityProduct,
+      this.price.getQuantity(),
+      this.price.getCurrency(),
+    );
+    this.apply(event);
   }
 
   public getId(): ProductId {
@@ -43,8 +59,8 @@ export class Product {
     return this.productName;
   }
 
-  public getQuantity(): number {
-    return this.quantity;
+  public getQuantityProduct(): number {
+    return this.quantityProduct;
   }
 
   public getInventory(): Inventory {
@@ -53,5 +69,9 @@ export class Product {
 
   public getPrice(): Price {
     return this.price;
+  }
+
+  public changeId(id: ProductId) {
+    this.id = id;
   }
 }

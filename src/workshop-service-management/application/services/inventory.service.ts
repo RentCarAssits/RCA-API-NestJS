@@ -70,9 +70,6 @@ export class InventoryService {
   async findById(
     inventoryId: Number,
   ): Promise<Result<AppNotification, InventoryDTO>> {
-    let filter = {
-      id: inventoryId,
-    };
     const inventory = await this.inventoryRepository.findOne({
       relations: ['warehouse'],
       where: {
@@ -81,7 +78,6 @@ export class InventoryService {
     });
 
     const inventoryDto = new InventoryDTO();
-    console.log(inventory);
     inventoryDto.id = Number(inventory.getId());
     inventoryDto.description = inventory.getDescription();
     inventoryDto.country = inventory.getAddress().getCountry();

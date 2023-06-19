@@ -23,9 +23,9 @@ export class CreateProposalValidator {
     if (humanResources == null) {
       notification.addError('Human Resources is required', null);
     }
-    const price: number = createProposalDto.price;
-    if (price == null) {
-      notification.addError('Price is required', null);
+    const quantity: number = createProposalDto.quantity;
+    if (quantity == null) {
+      notification.addError('Quantity is required', null);
     }
     const currency: string = createProposalDto.currency;
     if (currency == null) {

@@ -12,16 +12,13 @@ export class AccountPayableAggregate extends AggregateRoot {
   private id: AccountPayableId;
 
   @Column((type) => PayerIdFk, { prefix: false })
-  private payerId: PayerIdFk;
+  private readonly payerId: PayerIdFk;
 
   @Column((type) => PayeeIdFk, { prefix: false })
-  private payeeId: PayeeIdFk;
+  private readonly payeeId: PayeeIdFk;
 
-  @Column({ type: 'double', name: "total_price" })
-  private totalPrice: Price;
-
-  @Column({ type: 'double', name: "parcial_price" })
-  private parcialPrice: Price;
+  @Column((type) => Price, { prefix: false })
+  private price: Price;
 
   @Column({ type: 'date', name: 'expiration_day' })
   private expirationDay: Date;
@@ -29,14 +26,14 @@ export class AccountPayableAggregate extends AggregateRoot {
   constructor(
     payerIdValue: PayerIdFk,
     payeeIdValue: PayeeIdFk,
-    totalPriceValue: Price,
+    price: Price,
     expirationDay: Date
   ) {
     super();
     this.payerId = payerIdValue;
     this.payeeId = payeeIdValue;
-    this.totalPrice = totalPriceValue;
-    this.parcialPrice = totalPriceValue; // parcialPrice igual a totalPrice
+    this.price = price;
+
     this.expirationDay = expirationDay;
   }
 
@@ -52,12 +49,8 @@ export class AccountPayableAggregate extends AggregateRoot {
     return this.payeeId;
   }
 
-  public getTotalPrice(): Price {
-    return this.totalPrice;
-  }
-
-  public getParcialPrice(): Price {
-    return this.parcialPrice;
+  public getPrice(): Price {
+    return this.price;
   }
 
   public getExpirationDay(): Date {

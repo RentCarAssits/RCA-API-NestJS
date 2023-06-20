@@ -1,18 +1,25 @@
 import { Column } from "typeorm"
 
 export class Price {
-    @Column('decimal', { name: 'price' })
-    private value: number
+    @Column('decimal', { name: 'total_price' })
+    private value: number;
+    @Column('decimal', { name: 'parcial_price' })
+    private parcial: number;
 
-    private constructor(value: number) {
-        this.value = value
+    private constructor(value: number, parcial:number) {
+        this.value = value;
+        this.parcial=parcial;
     }
 
-    public static create(value: number): Price {
-        return new Price(value)
+    public static create(value: number, parcial:number): Price {
+        return new Price(value,parcial);
     }
 
     public getValue(): number {
         return this.value
+    }
+
+    public getParcial():number{
+        return this.parcial
     }
 }

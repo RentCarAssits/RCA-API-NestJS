@@ -10,6 +10,6 @@ export class AccountPayableId{
     }
 
     public getValue():number{
-        return this.value;
+        return Number(this.value);
     }
 }

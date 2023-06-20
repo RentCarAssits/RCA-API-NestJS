@@ -1,7 +1,7 @@
-import { Column } from "typeorm";
+import { Column } from "typeorm"
 
 export class Price {
-    
+    @Column('decimal', { name: 'price' })
     private value: number
 
     private constructor(value: number) {

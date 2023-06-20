@@ -10,7 +10,7 @@ import { RegisterAccountPayableResponse } from '../reponses/register-accountPaya
 @Injectable()
 export class AccountPayableApplicationService {
   constructor(
-    private commandBus: CommandBus,
+    private commandBus: CommandBus
   ) {}
 
   async register(registerAccountPayableRequest: RegisterAccountPayableRequest): Promise<Result<AppNotification, RegisterAccountPayableResponse>> {

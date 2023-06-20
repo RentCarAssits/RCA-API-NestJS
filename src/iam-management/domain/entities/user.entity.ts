@@ -3,11 +3,10 @@ import {
   BeforeUpdate,
   Column,
   Entity,
-  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
-  Unique,
 } from 'typeorm';
+import { Profile } from './profile.entity';
 import { Account } from './account.entity';
 
 @Entity('users')
@@ -16,30 +15,31 @@ export class User {
   id: number;
 
   @Column('text')
-  fullName: string;
-
-  @Column('text')
-  address: string;
+  userName: string;
 
   @Column('text')
   email: string;
 
-  @Column('text')
-  phone: string;
-
-  @Column('text')
-  dni: string;
-
-  @Column('bool', {
-    default: true,
+  @Column('text', {
+    select: false,
   })
-  isActive: boolean;
+  password: string;
 
-  @OneToOne(() => Account, (cuenta) => cuenta.username, {
+  @Column('text', {
+    select: false,
+  })
+  roles: string[];
+
+  @OneToOne(() => Profile, (profile) => profile.user, {
     cascade: true,
     eager: true,
   })
-  @JoinColumn()
+  profile: Profile;
+
+  @OneToOne(() => Account, (account) => account.user, {
+    cascade: true,
+    eager: true,
+  })
   account: Account;
 
   @BeforeInsert()

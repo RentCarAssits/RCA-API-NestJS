@@ -1,17 +1,16 @@
 import { Column } from "typeorm";
-export class Amount{
-    @Column('money',{name:'amount'})
-    private value:number;
-
-    private constructor(value:number){
-        this.value=value;
+export class Amount {
+    @Column('decimal', { name: 'amount' })
+    private value: number;
+    private constructor(value: number) {
+        this.value = value;
     }
 
-    public static create(value:number):Amount{
+    public static create(value: number): Amount {
         return new Amount(value);
     }
 
-    public getValue():number{
+    public getValue(): number {
         return this.value;
     }
 }

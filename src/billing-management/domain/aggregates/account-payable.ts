@@ -5,7 +5,7 @@
   import { PayeeIdFk } from '../values/payee-id-fk.value';
   import { Price } from '../values/price.value';
 
-  @Entity()
+  @Entity('account_payable')
   export class AccountPayableAggregate extends AggregateRoot {
 
     @PrimaryGeneratedColumn({ name: 'id' })
@@ -18,10 +18,10 @@
       @Column((type) => PayeeIdFk, { prefix: false })
       private payeeId: PayeeIdFk;
     
-      @Column({ type: Number, name: "total_price" })
+      @Column({ type: 'double', name: "total_price"})
       private totalPrice: Price;
     
-      @Column({ type: Number, name: "parcial_price" })
+      @Column({ type: 'double', name: "parcial_price"})
       private parcialPrice: Price;
 
       @Column({ type: 'date', name: 'expiration_day' })

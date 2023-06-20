@@ -24,11 +24,10 @@ export class PaymentAggregate extends AggregateRoot {
   private paymentDay: Date;
 
   constructor(
-    idValue: number, 
-    payerIdValue: number, 
-    paymentMethod: PaymentMethod, 
-    paymentDay: Date) 
-    {
+    idValue: number,
+    payerIdValue: number,
+    paymentMethod: PaymentMethod,
+    paymentDay: Date) {
     super();
     this.paymentId = PaymentId.create(idValue);
     this.payerId = PayerIdFk.create(payerIdValue);

@@ -25,10 +25,10 @@ export class AccountPayableApplicationService {
     const accountId: number= await this.commandBus.execute(createAccountPayable);
     const registerAccountPayableResponse: RegisterAccountPayableResponse = new RegisterAccountPayableResponse(
       accountId,
-      payerId,
-      payeeId,
-      totalPrice,
-      expirationDay,
+      createAccountPayable.payerId,
+      createAccountPayable.payeeId,
+      createAccountPayable.totalPrice,
+      createAccountPayable.expirationDay
     );
 
     return Result.ok(registerAccountPayableResponse);

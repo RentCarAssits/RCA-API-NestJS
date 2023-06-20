@@ -6,13 +6,13 @@ import { Amount } from '../values/amount.value';
 
 @Entity('payment_payable')
 export class PaymentPayableAggregate extends AggregateRoot {
-  @PrimaryColumn('bigint', { name: 'payment_id' })
+  @PrimaryColumn('int', { name: 'payment_id' })
   private paymentId: PaymentIdFk;
 
-  @PrimaryColumn('bigint', { name: 'account_payable_id' })
+  @PrimaryColumn('int', { name: 'account_payable_id' })
   private accountPayableId: AccountPaybleIdFk;
 
-  @Column({ type:'double' , name: "amount" })
+  @Column({ type: 'double', name: "amount" })
   private amount: Amount;
 
   public constructor(
@@ -37,7 +37,7 @@ export class PaymentPayableAggregate extends AggregateRoot {
     return this.amount;
   }
 
-  public updateParcialPrice(){ //PARCIALPRICE=TOTALPRICE-AMOUNT
+  public updateParcialPrice() { //PARCIALPRICE=TOTALPRICE-AMOUNT
     //const accountPayable = await this.accountPayableRepository.findOne({ where: { id: this.accountPayableId } }); 
     //TotalPrice= accountPayable.findTotalPricebyAccountPayableId()
     //ParcialPrice=TotalPrice-this.amount

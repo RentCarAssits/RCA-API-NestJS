@@ -15,8 +15,20 @@ import * as ormconfig from './../../RCA-API-NestJS/ormconfig.js';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-
-    TypeOrmModule.forRoot(ormconfig),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: '21082002',
+      database: 'rca-db',
+      entities: [
+        process.env.ENVIRONMENT == 'prod'
+          ? '**/domain/entities/*.js'
+          : 'dist/**/domain/entities/*.js',
+      ],
+      synchronize: true,
+    }),
     RentingManagementModule,
     BillingManagementModule,
     SubscriptionManagementModule,
@@ -27,4 +39,4 @@ import * as ormconfig from './../../RCA-API-NestJS/ormconfig.js';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

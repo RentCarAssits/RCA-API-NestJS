@@ -1,4 +1,4 @@
-export class RegisterVehicleResponse {
+export class UpdateVehicleResponse {
   constructor(
     public id: number,
     public name: string,

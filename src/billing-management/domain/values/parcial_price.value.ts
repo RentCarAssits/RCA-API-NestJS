@@ -1,7 +1,7 @@
 import { Column } from "typeorm";
 
 export class ParcialPrice {
-    @Column('money', { name: 'parcial_price' })
+    @Column('decimal', { name: 'parcial_price' })
     private value: number;
 
     private constructor(value: number) {

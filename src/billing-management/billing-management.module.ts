@@ -9,11 +9,13 @@ import { PaymentPayableAggregate } from './domain/aggregates/payment-payable';
 import { AccountPayableAggregate } from './domain/aggregates/account-payable';
 import { PaymentPayableController } from './api/payment-payable.controller';
 import { PaymentPayableApplicationService } from './application/services/paymentPayable-application.service';
+import { ConfigModule } from '@nestjs/config';
 
 export const CommandHandlers=[CreateAccountPayableHandler];
 
 @Module({
     imports:[
+        ConfigModule,
         TypeOrmModule.forFeature([PaymentPayableAggregate,AccountPayableAggregate]),
         CqrsModule,
         BillingManagementModule

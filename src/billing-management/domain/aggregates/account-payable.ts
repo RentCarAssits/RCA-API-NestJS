@@ -5,7 +5,7 @@
   import { PayeeIdFk } from '../values/payee-id-fk.value';
   import { Price } from '../values/price.value';
 
-  @Entity()
+  @Entity('account_payable')
   export class AccountPayableAggregate extends AggregateRoot {
 
     @PrimaryGeneratedColumn({ name: 'id' })

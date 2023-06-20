@@ -10,7 +10,7 @@ export class PaymentId {
     }
 
     public getValue(): number {
-        return this.value;
+        return Number(this.value);
     }
 
 }

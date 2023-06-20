@@ -10,22 +10,29 @@ import { AccountPayableAggregate } from './domain/aggregates/account-payable';
 import { PaymentPayableController } from './api/payment-payable.controller';
 import { PaymentPayableApplicationService } from './application/services/paymentPayable-application.service';
 import { ConfigModule } from '@nestjs/config';
+import { PaymentAggregate } from './domain/aggregates/payment';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 
-export const CommandHandlers=[CreateAccountPayableHandler];
+export const CommandHandlers = [CreateAccountPayableHandler];
 
 @Module({
-    imports:[
-        ConfigModule,
-        TypeOrmModule.forFeature([PaymentPayableAggregate,AccountPayableAggregate]),
-        CqrsModule,
-        BillingManagementModule
-    ],
-    controllers:[
-        AccountPayableController, PaymentPayableController
-    ],
-    providers:[
-        AccountPayableApplicationService,PaymentPayableApplicationService,
-        ...CommandHandlers
-    ]
+  imports: [
+    ConfigModule,
+    TypeOrmModule.forFeature([
+      AccountPayableAggregate,
+      PaymentPayableAggregate,
+      PaymentAggregate,
+    ]),
+    CqrsModule,
+  ],
+  controllers: [AccountPayableController, PaymentPayableController],
+  providers: [
+    AccountPayableApplicationService,
+    PaymentPayableApplicationService,
+    ...CommandHandlers,
+    CommandBus,
+    QueryBus,
+  ],
+  exports: [TypeOrmModule],
 })
 export class BillingManagementModule {}

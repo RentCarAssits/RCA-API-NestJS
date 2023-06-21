@@ -15,12 +15,13 @@ export class PaymentPayableApplicationService {
 
     async register(registerPaymentPayableRequest: RegisterPaymentPayableRequest): Promise<Result<AppNotification, RegisterPaymentPayableResponse>> {
         const { paymentId, accountPayableId, amount } = registerPaymentPayableRequest;
-
         const createPaymentPayable: CreatePaymentPayable = new CreatePaymentPayable(
             registerPaymentPayableRequest.paymentId,
             registerPaymentPayableRequest.accountPayableId,
-            registerPaymentPayableRequest.amount);
+            registerPaymentPayableRequest.amount,
+        );
         const paymentPayableId: number = await this.commandBus.execute(createPaymentPayable);
+        
         const registerPaymentPayableResponse: RegisterPaymentPayableResponse = new RegisterPaymentPayableResponse(
             paymentPayableId,
             paymentId,

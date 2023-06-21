@@ -10,8 +10,9 @@ import { AccountPayableAggregate } from './domain/aggregates/account-payable';
 import { PaymentPayableController } from './api/payment-payable.controller';
 import { PaymentPayableApplicationService } from './application/services/paymentPayable-application.service';
 import { ConfigModule } from '@nestjs/config';
+import { CreatePaymentPayableHandler } from './application/handlers/register-paymentPayable.handler';
 
-export const CommandHandlers=[CreateAccountPayableHandler];
+export const CommandHandlers=[CreateAccountPayableHandler,CreatePaymentPayableHandler];
 
 @Module({
     imports:[

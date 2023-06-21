@@ -1,31 +1,33 @@
 import { Module } from '@nestjs/common';
 import { AccountPayableController } from './api/account-payable.controller';
-import { CreateAccountPayable } from './application/commands/register-accountPayable.command';
-import { CreateAccountPayableHandler } from './application/handlers/register-accountPayable.handlre';
 import { CqrsModule } from '@nestjs/cqrs';
-import { AccountPayableApplicationService } from './application/services/accountPayable-application.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PaymentPayableAggregate } from './domain/aggregates/payment-payable';
-import { AccountPayableAggregate } from './domain/aggregates/account-payable';
-import { PaymentPayableController } from './api/payment-payable.controller';
-import { PaymentPayableApplicationService } from './application/services/paymentPayable-application.service';
 import { ConfigModule } from '@nestjs/config';
+import { AccountPayable } from './domain/entities/account-payable.entity';
+import { AccountPayableRegisteredHandler } from './application/handlers/events/account-payable-registered.handler';
+import { CreateAccountPayableHandler } from './application/handlers/commands/create-account-payable.handler';
+import { AccountPayableService } from './application/services/account-payable.service';
+import { RegisterAccountPayableValidator } from './application/validators/register-account-payable.validator';
 
 export const CommandHandlers=[CreateAccountPayableHandler];
+export const EventHandlers=[AccountPayableRegisteredHandler];
 
 @Module({
     imports:[
         ConfigModule,
-        TypeOrmModule.forFeature([PaymentPayableAggregate,AccountPayableAggregate]),
+        TypeOrmModule.forFeature([AccountPayable]),
         CqrsModule,
         BillingManagementModule
     ],
     controllers:[
-        AccountPayableController, PaymentPayableController
+        AccountPayableController
     ],
+
     providers:[
-        AccountPayableApplicationService,PaymentPayableApplicationService,
-        ...CommandHandlers
+        AccountPayableService,
+        RegisterAccountPayableValidator,
+        ...CommandHandlers,
+        ...EventHandlers
     ]
 })
 export class BillingManagementModule {}

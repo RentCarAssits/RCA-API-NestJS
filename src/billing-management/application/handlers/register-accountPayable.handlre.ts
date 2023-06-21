@@ -17,10 +17,12 @@ export class CreateAccountPayableHandler
   ) {}
 
   async execute(command: CreateAccountPayable) {
+    const fecha = new Date();
+    const fecha2 = new Date(fecha.setDate(fecha.getDate() + 30));
     const payerId:PayerIdFk=PayerIdFk.create(command.payerId);
     const payeeId:PayeeIdFk=PayeeIdFk.create(command.payeeId);
     const totalPrice:Price=Price.create(command.totalPrice, command.totalPrice);
-    const expirationDay:Date= new Date;
+    const expirationDay:Date= fecha2;
     const accountPayable:AccountPayableAggregate = AccountPayableFactory.createFrom(
       payerId,
       payeeId,

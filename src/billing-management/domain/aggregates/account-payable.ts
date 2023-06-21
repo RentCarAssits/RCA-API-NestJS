@@ -33,7 +33,6 @@ export class AccountPayableAggregate extends AggregateRoot {
     this.payerId = payerIdValue;
     this.payeeId = payeeIdValue;
     this.price = price;
-
     this.expirationDay = expirationDay;
   }
 
@@ -56,6 +55,4 @@ export class AccountPayableAggregate extends AggregateRoot {
   public getExpirationDay(): Date {
     return this.expirationDay;
   }
-
-
 }

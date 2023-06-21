@@ -4,7 +4,8 @@ import { Amount } from "../values/amount.value";
 import { PaymentIdFk } from "../values/payment-id-fk.value";
 
 export class PaymentPayableFactory {
-    public static createFrom(paymentId: PaymentIdFk,
+    public static createFrom(
+        paymentId: PaymentIdFk,
         accountPayableId: AccountPaybleIdFk,
         amountValue: Amount
     ): PaymentPayableAggregate {

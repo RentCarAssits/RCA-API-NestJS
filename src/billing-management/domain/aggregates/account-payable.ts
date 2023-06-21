@@ -5,11 +5,11 @@ import { PayerIdFk } from '../values/payer-id-fk.value';
 import { PayeeIdFk } from '../values/payee-id-fk.value';
 import { Price } from '../values/price.value';
 
-@Entity('account_payable')
+@Entity('account_payables')
 export class AccountPayableAggregate extends AggregateRoot {
 
   @PrimaryGeneratedColumn({ name: 'id' })
-  private id: AccountPayableId;
+  id: AccountPayableId;
 
   @Column((type) => PayerIdFk, { prefix: false })
   private readonly payerId: PayerIdFk;

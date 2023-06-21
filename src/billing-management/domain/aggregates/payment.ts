@@ -1,16 +1,16 @@
 import { AggregateRoot } from '@nestjs/cqrs';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { PaymentId } from '../values/Payment-id.value';
 import { PaymentMethod } from '../enums/payment-method.enum';
 import { PayerIdFk } from '../values/payer-id-fk.value';
 
-@Entity()
+@Entity('payments')
 export class PaymentAggregate extends AggregateRoot {
-  @PrimaryColumn('bigint', { name: 'id' })
-  private paymentId: PaymentId;
+  @PrimaryGeneratedColumn()
+  id: PaymentId;
 
   @Column((type) => PayerIdFk, { prefix: false })
-  private payerId: PayerIdFk;
+  private readonly payerId: PayerIdFk;
 
   @Column({
     type: 'enum',
@@ -24,19 +24,17 @@ export class PaymentAggregate extends AggregateRoot {
   private paymentDay: Date;
 
   constructor(
-    idValue: number,
-    payerIdValue: number,
+    payerId: PayerIdFk,
     paymentMethod: PaymentMethod,
     paymentDay: Date) {
     super();
-    this.paymentId = PaymentId.create(idValue);
-    this.payerId = PayerIdFk.create(payerIdValue);
+    this.payerId = payerId;
     this.paymentMethod = paymentMethod;
     this.paymentDay = paymentDay;
   }
 
-  public getPaymentId(): PaymentId {
-    return this.paymentId;
+  public getId(): PaymentId {
+    return this.id;
   }
 
   public getPayerId(): PayerIdFk {

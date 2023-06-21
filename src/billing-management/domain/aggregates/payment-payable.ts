@@ -1,16 +1,21 @@
 import { AggregateRoot } from '@nestjs/cqrs';
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn, ValueTransformer } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { PaymentIdFk } from '../values/payment-id-fk.value';
 import { AccountPaybleIdFk } from '../values/account-payable-id-fk.value';
 import { Amount } from '../values/amount.value';
 
-@Entity('payment_payable')
+@Entity('payment_payables')
 export class PaymentPayableAggregate extends AggregateRoot {
-  @PrimaryColumn('int', { name: 'payment_id' })
-  private paymentId: PaymentIdFk;
 
-  @PrimaryColumn('int', { name: 'account_payable_id' })
-  private accountPayableId: AccountPaybleIdFk;
+  @PrimaryGeneratedColumn({ name: 'id' })
+  private id: number;
+
+  @Column((type) => PaymentIdFk, { prefix: false })
+
+  private readonly paymentId: PaymentIdFk;
+
+  @Column((type) => AccountPaybleIdFk, { prefix: false })
+  private readonly accountPayableId: AccountPaybleIdFk;
 
   @Column((type) => Amount, { prefix: false })
   private amount: Amount;
@@ -25,6 +30,9 @@ export class PaymentPayableAggregate extends AggregateRoot {
     this.amount = amountValue;
   }
 
+  public getId(): number {
+    return this.id;
+  }
   public getPaymentId(): PaymentIdFk {
     return this.paymentId;
   }
@@ -35,12 +43,5 @@ export class PaymentPayableAggregate extends AggregateRoot {
 
   public getAmount(): Amount {
     return this.amount;
-  }
-
-  public updateParcialPrice() { //PARCIALPRICE=TOTALPRICE-AMOUNT
-    //const accountPayable = await this.accountPayableRepository.findOne({ where: { id: this.accountPayableId } }); 
-    //TotalPrice= accountPayable.findTotalPricebyAccountPayableId()
-    //ParcialPrice=TotalPrice-this.amount
-    //updateParcialPrice(ParcialPrice)
   }
 }

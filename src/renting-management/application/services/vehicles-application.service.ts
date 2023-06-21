@@ -1,25 +1,30 @@
 import { RegisterVehicleValidator } from '../validators/register-vehicle.validator';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { AppNotification } from 'src/shared/application/app.notification';
 import { CommandBus } from '@nestjs/cqrs';
 import { Result } from 'typescript-result';
 import { RegisterVehicle } from '../commands/register-vehicle.command';
 import { RegisterVehicleRequest } from '../requests/register-vehicle.request';
 import { RegisterVehicleResponse } from '../responses/register-vehicle.response';
-import { Connection } from 'typeorm';
+import { Connection, FindOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { User } from '../../../iam-management/domain/entities/user.entity';
 import { UpdateVehicleResponse } from '../responses/update-vehicle.response';
 import { UpdateVehicle } from '../commands/update-vehicle.command';
 import { UpdateVehicleRequest } from '../requests/update-vehicle.request';
 import { UpdateVehicleValidator } from '../validators/update-vehicle.validator';
+import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
 
 @Injectable()
 export class VehiclesApplicationService {
   constructor(
+    @InjectRepository(Vehicle)
+    private vehicleRepository: Repository<Vehicle>,
     private connection: Connection,
     private commandBus: CommandBus,
     private registerVehicleValidator: RegisterVehicleValidator,
     private updateVehicleValidator: UpdateVehicleValidator,
+   
   ) {
     console.log('this.connection.isConnected: ', this.connection.isConnected);
   }
@@ -111,5 +116,11 @@ export class VehiclesApplicationService {
         updateVehicleRequest.categories,
       );
     return Result.ok(updateVehicleResponse);
+  }
+
+  async updateVehicleState(vehicleId: number, newState: number) {
+    const vehicle = await this.vehicleRepository.findOneBy({
+      id: vehicleId,
+    } as FindOptionsWhere<Vehicle>);
   }
 }

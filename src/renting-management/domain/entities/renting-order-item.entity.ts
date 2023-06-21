@@ -15,6 +15,7 @@ import { VehicleIdFk } from '../values/vehicle-id-fk.value';
 import { ApiProperty } from '@nestjs/swagger';
 import { RentingOrderItemState } from '../enums/renting-order-item-state.enum';
 import { User } from '../../../iam-management/domain/entities/user.entity';
+import { RentOrder } from './rent-order.entity';
 
 @Entity('renting_order_items')
 export class RentingOrderItem extends AggregateRoot {
@@ -51,6 +52,10 @@ export class RentingOrderItem extends AggregateRoot {
   @ManyToOne(() => User, (user) => user.vehicles)
   @JoinColumn({ name: 'requester_id' })
   requester: User;
+
+  @ManyToOne(() => RentOrder, (rentOrder) => rentOrder.rentingOrderItems)
+  @JoinColumn({ name: 'rent_order_id' })
+  rentOrder: RentOrder;
 
   public constructor(
     rentingPrice: Money,

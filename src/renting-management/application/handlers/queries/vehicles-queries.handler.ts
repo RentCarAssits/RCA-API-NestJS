@@ -38,13 +38,13 @@ export class GetAllVehiclesHandler
       vehicleDto.model = vehicle.getModel().getValue();
       vehicleDto.integrity = vehicle.getIntegrity().getValue();
       vehicleDto.state = vehicle.getState();
-      vehicleDto.year = vehicle.year;
+      vehicleDto.year = vehicle.getYear();
       vehicleDto.ownerId = vehicle.owner?.id;
-      vehicleDto.image = vehicle.image;
-      vehicleDto.stars = vehicle.stars;
-      vehicleDto.price = vehicle.price;
-      vehicleDto.currency = vehicle.currency;
-      vehicleDto.timeUnit = vehicle.timeUnit;
+      vehicleDto.image = vehicle.getImage();
+      vehicleDto.stars = vehicle.getStars();
+      vehicleDto.price = vehicle.getPrice();
+      vehicleDto.currency = vehicle.getCurrency();
+      vehicleDto.timeUnit = vehicle.getTimeUnit();
       vehicleDto.categories = vehicle.categories.map((category) =>
         category.getName().getValue(),
       );
@@ -217,7 +217,6 @@ export class GetAllVehiclesByByOwnerHandler
   ) {}
 
   async execute(query: GetVehiclesByOwnerIdQuery) {
-    console.log('asffssaafafasf');
     const manager = this.connection.manager;
     const sql = `
     SELECT vehicles.*, GROUP_CONCAT(categories.category) as categories

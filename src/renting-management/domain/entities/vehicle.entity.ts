@@ -46,22 +46,22 @@ export class Vehicle extends AggregateRoot {
 
   @ApiProperty()
   @Column({ nullable: false, type: 'date' })
-  year: Date;
+  private readonly year: Date;
 
   @Column()
-  image: string;
+  private readonly image: string;
 
   @Column()
-  stars: number;
+  private readonly stars: number;
 
   @Column()
-  price: number;
+  private readonly price: number;
 
   @Column()
-  currency: string;
+  private readonly currency: string;
 
   @Column()
-  timeUnit: string;
+  private readonly timeUnit: string;
 
   /*@ApiProperty()
   @Column({ name: 'owner_id' })
@@ -173,6 +173,18 @@ export class Vehicle extends AggregateRoot {
 
   public getStars(): number {
     return this.stars;
+  }
+
+  public getPrice(): number {
+    return this.price;
+  }
+
+  public getCurrency(): string {
+    return this.currency;
+  }
+
+  public getTimeUnit(): string {
+    return this.timeUnit;
   }
 
   public getCategories(): Category[] {

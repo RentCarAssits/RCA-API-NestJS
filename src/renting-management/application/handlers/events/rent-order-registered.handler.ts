@@ -6,20 +6,26 @@ import { Repository } from 'typeorm';
 import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
 import { RentingOrderItem } from 'src/renting-management/domain/entities/renting-order-item.entity';
 import { VehiclesApplicationService } from '../../services/vehicles-application.service';
+import { RentingOrderItemService } from '../../services/renting-order-item.service';
+
 @EventsHandler(RentOrderRegistered)
 export class RentOrderRegisteredHandler
   implements IEventHandler<RentOrderRegistered>
 {
-  constructor(private readonly vehicleService: VehiclesApplicationService) {}
+  constructor(
+    private readonly vehicleService: VehiclesApplicationService,
+    private readonly rentingOrderItemService: RentingOrderItemService,
+  ) {}
 
-  async  handle(event: RentOrderRegistered) {
+  async handle(event: RentOrderRegistered) {
     console.log('handle logic for RentOrderRegistered event');
     const result = event;
     const itemIds = result.items;
-    
+
     if (event.items) {
       try {
         await this.vehicleService.updateVehicleState(itemIds);
+        await this.rentingOrderItemService.updateAsAccepted(itemIds);
       } catch (error) {
         console.error(error);
       }

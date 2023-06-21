@@ -37,6 +37,9 @@ export class UpdateRentingOrderItemHandler
       case 'D':
         state = RentingOrderItemState.Denied;
         break;
+      case 'R':
+        state = RentingOrderItemState.Ordered;
+        break;
       default:
         // Handle the case when the input doesn't match any enum value
         break;
@@ -93,6 +96,9 @@ export class UpdateRentingOrderItemHandler
         break;
       case 'D':
         itemState = RentingOrderItemState.Denied;
+        break;
+      case 'R':
+        itemState = RentingOrderItemState.Ordered;
         break;
       default:
         // Handle the case when the input doesn't match any enum value

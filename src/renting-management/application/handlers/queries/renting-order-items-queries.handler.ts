@@ -7,6 +7,8 @@ import { RentingOrderItem } from '../../../domain/entities/renting-order-item.en
 import { GetRentingOrderItemByIdQuery } from '../../queries/get-renting-order-item-by-id.query';
 import { GetAllRentingItemsByVehicleQuery } from '../../queries/get-all-renting-items-by-vehicle.query';
 import { GetAllRentingItemsByRenterIdQuery } from '../../queries/get-all-renting-items-by-renter-id.query';
+import { GetAllAcceptedRentingItemsByRenterIdQuery } from '../../queries/get-all-accepted-renting-items-by-renter-id.query';
+import { RentingOrderItemState } from '../../../domain/enums/renting-order-item-state.enum';
 
 @QueryHandler(GetAllRentingOrderItemsQuery)
 export class RentingOrderItemsQueriesHandler
@@ -151,6 +153,50 @@ export class GetAllRentingItemsByRenterIdHandler
       where: { requester: { id: query.renterId } },
     });
     console.log('IDDDDDDDDD: ', query.renterId);
+    const rentingOrderItems: RentingOrderItemDto[] = ormRentingOrderItems.map(
+      (ormRentingOrderItem) => {
+        const rentingOrderItemDto = new RentingOrderItemDto();
+        rentingOrderItemDto.id = Number(ormRentingOrderItem.id);
+        rentingOrderItemDto.rentingPrice =
+          ormRentingOrderItem.rentingPrice.getAmount();
+        rentingOrderItemDto.rentingUnit = ormRentingOrderItem.rentingUnit;
+        rentingOrderItemDto.currency =
+          ormRentingOrderItem.rentingPrice.getCurrency();
+        rentingOrderItemDto.startDate =
+          ormRentingOrderItem.rentingPeriod.getStartDate();
+        rentingOrderItemDto.endDate =
+          ormRentingOrderItem.rentingPeriod.getEndDate();
+        rentingOrderItemDto.vehicleId =
+          ormRentingOrderItem.vehicleId.getValue();
+        rentingOrderItemDto.state = ormRentingOrderItem.state;
+        rentingOrderItemDto.requesterId = 0;
+        return rentingOrderItemDto;
+      },
+    );
+    return rentingOrderItems;
+  }
+}
+
+@QueryHandler(GetAllAcceptedRentingItemsByRenterIdQuery)
+export class GetAllAcceptedRentingItemsByRenterIdHandler
+  implements IQueryHandler<GetAllAcceptedRentingItemsByRenterIdQuery>
+{
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  constructor(
+    @InjectRepository(RentingOrderItem)
+    private readonly rentingOrderItemRepository: Repository<RentingOrderItem>,
+  ) {}
+
+  async execute(
+    query: GetAllRentingItemsByRenterIdQuery,
+  ): Promise<RentingOrderItemDto[]> {
+    const ormRentingOrderItems = await this.rentingOrderItemRepository.find({
+      where: {
+        requester: { id: query.renterId },
+        state: RentingOrderItemState.Accepted,
+      },
+    });
+    console.log('llego aqui', ormRentingOrderItems);
     const rentingOrderItems: RentingOrderItemDto[] = ormRentingOrderItems.map(
       (ormRentingOrderItem) => {
         const rentingOrderItemDto = new RentingOrderItemDto();

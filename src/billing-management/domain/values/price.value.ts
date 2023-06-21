@@ -1,9 +1,9 @@
 import { Column } from "typeorm"
 
 export class Price {
-    @Column('decimal', { name: 'total_price' })
+    @Column('float', { name: 'total_price' })
     private value: number;
-    @Column('decimal', { name: 'parcial_price' })
+    @Column('float', { name: 'parcial_price' })
     private parcial: number;
 
     private constructor(value: number, parcial:number) {

@@ -23,6 +23,7 @@ import {
   GetRentingOrderItemByIdHandler,
   GetRentingOrderItemByVehiclesIdHandler,
   GetAllRentingItemsByRenterIdHandler,
+  GetAllAcceptedRentingItemsByRenterIdHandler,
 } from './application/handlers/queries/renting-order-items-queries.handler';
 import { RentingOrderItemsController } from './api/rentingOrderItem/renting-order-items.controller';
 import { RentingOrderItem } from './domain/entities/renting-order-item.entity';
@@ -36,18 +37,28 @@ import { UpdateVehicleHandler } from './application/handlers/commands/update-veh
 import { VehicleUpdatedHandler } from './application/handlers/events/vehicle-updated.handler';
 import { UpdateVehicleValidator } from './application/validators/update-vehicle.validator';
 import { GetAllRentingItemsByRenterIdQuery } from './application/queries/get-all-renting-items-by-renter-id.query';
+import { RentOrder } from './domain/entities/rent-order.entity';
+import { RentOrderController } from './api/rent-order/rent-order.controller';
+import { RegisterRentOrderHandler } from './application/handlers/commands/register-rent-order.handler';
+import { RentOrderRegistered } from './domain/events/rent-order-registered.event';
+import { RentOrderRegisteredHandler } from './application/handlers/events/rent-order-registered.handler';
+import { RegisterRentOrderValidator } from './application/validators/register-rent-order.validator';
+import { RentOrderService } from './application/services/rent-order.service';
+import { GetRentOrderFullInfoHandler, GetRentOrderFullInfoRenterHandler } from './application/handlers/queries/rent-order-queries.handler';
 
 export const CommandHandlers = [
   RegisterVehicleHandler,
   CreateRentingOrderItemHandler,
   UpdateRentingOrderItemCommand,
   UpdateVehicleHandler,
+  RegisterRentOrderHandler,
 ];
 export const EventHandlers = [
   ProductRegisteredHandler,
   RentingOrderItemCreatedHandler,
   UpdateRentingOrderItemHandler,
   VehicleUpdatedHandler,
+  RentOrderRegisteredHandler,
 ];
 export const QueryHandlers = [
   GetAllVehiclesHandler,
@@ -56,19 +67,26 @@ export const QueryHandlers = [
   GetRentingOrderItemByIdHandler,
   GetRentingOrderItemByVehiclesIdHandler,
   GetAllRentingItemsByRenterIdHandler,
+  GetAllAcceptedRentingItemsByRenterIdHandler,
   GetAllVehiclesByStarsHandler,
   GetAllVehiclesByYearHandler,
   GetAllVehiclesByByOwnerHandler,
   Get20VehiclesMixedHandler,
+  GetRentOrderFullInfoHandler,
+  GetRentOrderFullInfoRenterHandler
 ];
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Category, Vehicle, RentingOrderItem]),
+    TypeOrmModule.forFeature([Category, Vehicle, RentingOrderItem, RentOrder]),
     CqrsModule,
     IamManagementModule,
   ],
-  controllers: [VehiclesController, RentingOrderItemsController],
+  controllers: [
+    VehiclesController,
+    RentingOrderItemsController,
+    RentOrderController,
+  ],
   providers: [
     VehiclesApplicationService,
     RegisterVehicleValidator,
@@ -76,6 +94,8 @@ export const QueryHandlers = [
     CreateRentingOrderItemValidator,
     UpdateRentingOrderItemValidator,
     UpdateVehicleValidator,
+    RegisterRentOrderValidator,
+    RentOrderService,
     ...CommandHandlers,
     ...EventHandlers,
     ...QueryHandlers,

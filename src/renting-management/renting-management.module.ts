@@ -44,6 +44,7 @@ import { RentOrderRegistered } from './domain/events/rent-order-registered.event
 import { RentOrderRegisteredHandler } from './application/handlers/events/rent-order-registered.handler';
 import { RegisterRentOrderValidator } from './application/validators/register-rent-order.validator';
 import { RentOrderService } from './application/services/rent-order.service';
+import { GetRentOrderFullInfoHandler, GetRentOrderFullInfoRenterHandler } from './application/handlers/queries/rent-order-queries.handler';
 
 export const CommandHandlers = [
   RegisterVehicleHandler,
@@ -71,6 +72,8 @@ export const QueryHandlers = [
   GetAllVehiclesByYearHandler,
   GetAllVehiclesByByOwnerHandler,
   Get20VehiclesMixedHandler,
+  GetRentOrderFullInfoHandler,
+  GetRentOrderFullInfoRenterHandler
 ];
 
 @Module({

@@ -11,9 +11,9 @@ import { VehicleIntegrity } from 'src/renting-management/domain/values/vehicle-i
 import { Model } from 'src/renting-management/domain/values/model.value';
 import { VehicleFactory } from 'src/renting-management/domain/factories/vehicle.factory';
 import { VehicleId } from 'src/renting-management/domain/values/vehicle-id.value';
+import { VehicleState } from 'src/renting-management/domain/enums/vehicle-state.enum';
 import { Category } from '../../../domain/entities/category.entity';
 import { CategoryName } from '../../../domain/values/category-name.value';
-import { User } from '../../../../iam-management/domain/entities/user.entity';
 
 @CommandHandler(RegisterVehicle)
 export class RegisterVehicleHandler
@@ -24,18 +24,18 @@ export class RegisterVehicleHandler
     private vehicleRepository: Repository<Vehicle>,
     @InjectRepository(Category)
     private categoryRepository: Repository<Category>,
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
     private publisher: EventPublisher,
   ) {}
 
+  private vehicle = Vehicle;
+
   async execute(command: RegisterVehicle) {
+    const categories = command.categories;
     let vehicleId = 0;
 
-    const nameResult: Result<AppNotification, VehicleName> = VehicleName.create(
-      command.name,
-    );
-    if (nameResult.isFailure()) return vehicleId;
+    const vehicleNameResult: Result<AppNotification, VehicleName> =
+      VehicleName.create(command.name);
+    if (vehicleNameResult.isFailure()) return vehicleId;
 
     const brandResult: Result<AppNotification, Brand> = Brand.create(
       command.brand,
@@ -50,48 +50,52 @@ export class RegisterVehicleHandler
     const vehicleIntegrityResult: Result<AppNotification, VehicleIntegrity> =
       VehicleIntegrity.create(command.integrity);
     if (vehicleIntegrityResult.isFailure()) return vehicleId;
-    const state = VehicleFactory.State(Number(command.state));
 
+    const vehicleState: VehicleState = Number(command.state);
     const year: Date = command.year;
-    const image: string = command.image;
-    const id: number = command.ownerId;
-    const stars: number = 0;
-    const user = await this.userRepository.findOne({ where: { id: id } });
 
-    let categoryEntities = command.categories.map((category) => {
-      const categoryNameResult = CategoryName.create(category);
-      if (!categoryNameResult.isSuccess()) return null;
-      else return new Category(categoryNameResult.value);
-    });
-
-    categoryEntities = categoryEntities.filter((category) => category !== null);
     const vehicleEntity: Vehicle = VehicleFactory.createFrom(
-      nameResult.value,
+      vehicleNameResult.value,
       brandResult.value,
       modelResult.value,
       vehicleIntegrityResult.value,
       year,
-      state,
-      image,
-      stars,
-      command.price,
-      command.currency,
-      command.timeUnit,
+      vehicleState,
     );
 
-    const vehicleWithCategoriesModel = {
-      ...vehicleEntity,
+    ///
+
+    let categoryEntities = categories.map((category) => {
+      const categoryNameResult = CategoryName.create(category);
+      if (!categoryNameResult.isSuccess()) {
+        // Handle error case
+        console.log('Error creating category name: ', categoryNameResult.error);
+        return null;
+      } else {
+        return new Category(categoryNameResult.value);
+      }
+    });
+    categoryEntities = categoryEntities.filter((category) => category !== null);
+
+    const aux = {
+      name: vehicleNameResult.value,
+      brand: brandResult.value,
+      model: modelResult.value,
+      integrity: vehicleIntegrityResult.value,
+      year: year,
+      vehicleSate: vehicleState,
       categories: categoryEntities,
-      owner: user,
     };
 
-    const vehicleAux = this.vehicleRepository.create(
-      vehicleWithCategoriesModel,
-    );
+    const vehicleAux = this.vehicleRepository.create(aux);
     let vehicle = await this.vehicleRepository.save(vehicleAux);
-    if (vehicle == null) return vehicleId;
+    if (vehicle == null) {
+      return vehicleId;
+    }
+    console.log('vehicle: ', vehicle);
 
     vehicleId = Number(vehicle.getId());
+    console.log('vehicleId:', vehicleId);
     vehicle.changeId(VehicleId.of(vehicleId));
     vehicle = this.publisher.mergeObjectContext(vehicle);
     vehicle.register();

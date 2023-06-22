@@ -39,6 +39,7 @@ import { IamManagementModule } from "./iam-management/iam-management.module";
         }
       }
     }),
+    TypeOrmModule.forRoot(ormconfig),
     RentingManagementModule,
     BillingManagementModule,
     SubscriptionManagementModule,
@@ -49,5 +50,5 @@ import { IamManagementModule } from "./iam-management/iam-management.module";
   controllers: [AppController],
   providers: [AppService]
 })
-export class AppModule {
-}
+
+export class AppModule {}

@@ -6,6 +6,7 @@ import { AppNotification } from 'src/shared/application/app.notification';
 import { RegisterAccountPayableRequest } from '../application/requests/register-accountPayable.request';
 import { ApiController } from 'src/shared/api/api.controller';
 import { Result } from 'typescript-result';
+import { GetAllAccountPayablesQuery } from '../application/queries/get-all-account-payables-query';
 
 
 @Controller('accountPayable')
@@ -28,6 +29,18 @@ export class AccountPayableController {
       }
       return ApiController.error(response, result.error.getErrors());
     } catch (error) {
+      return ApiController.serverError(response, error);
+    }
+  }
+
+  @Get()
+  async getAll(@Res({ passthrough: true }) response): Promise<object> {
+    try {
+      const accountPayables = await this.queryBus.execute(
+        new GetAllAccountPayablesQuery()
+      );
+      return ApiController.ok(response, accountPayables);
+    }catch(error){
       return ApiController.serverError(response, error);
     }
   }

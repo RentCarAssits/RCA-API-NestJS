@@ -15,22 +15,24 @@ import { PaymentAggregate } from './domain/aggregates/payment';
 import { CreatePaymentHandler } from './application/handlers/register-payment.handler';
 import { PaymentController } from './api/payment.controller';
 import { PaymentApplicationService } from './application/services/payment-application.service';
+import { AccountPayablesQueriesHandler } from './application/handlers/queries/account-payable-queries.handler';
 
-export const CommandHandlers=[CreateAccountPayableHandler,CreatePaymentPayableHandler,CreatePaymentHandler];
-
+export const CommandHandlers = [CreateAccountPayableHandler, CreatePaymentPayableHandler, CreatePaymentHandler];
+export const QueryHandlers = [AccountPayablesQueriesHandler];
 @Module({
-    imports:[
+    imports: [
         ConfigModule,
-        TypeOrmModule.forFeature([PaymentPayableAggregate,AccountPayableAggregate,PaymentAggregate]),
+        TypeOrmModule.forFeature([PaymentPayableAggregate, AccountPayableAggregate, PaymentAggregate]),
         CqrsModule,
         BillingManagementModule
     ],
-    controllers:[
-        AccountPayableController, PaymentPayableController,PaymentController
+    controllers: [
+        AccountPayableController, PaymentPayableController, PaymentController
     ],
-    providers:[
-        AccountPayableApplicationService,PaymentPayableApplicationService,PaymentApplicationService,
-        ...CommandHandlers
+    providers: [
+        AccountPayableApplicationService, PaymentPayableApplicationService, PaymentApplicationService,
+        ...CommandHandlers,
+        ...QueryHandlers
     ]
 })
-export class BillingManagementModule {}
+export class BillingManagementModule { }

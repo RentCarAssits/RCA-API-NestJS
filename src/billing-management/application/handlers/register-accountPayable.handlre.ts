@@ -8,6 +8,7 @@ import { PayeeIdFk } from 'src/billing-management/domain/values/payee-id-fk.valu
 import { Price } from 'src/billing-management/domain/values/price.value';
 import { AccountPayableFactory } from 'src/billing-management/domain/factories/account-payable.factory';
 import { PaymentStatus } from 'src/billing-management/domain/enums/payment-status.enum';
+import { ServiceType } from 'src/billing-management/domain/enums/service-type.enum';
 
 @CommandHandler(CreateAccountPayable)
 export class CreateAccountPayableHandler
@@ -27,18 +28,35 @@ export class CreateAccountPayableHandler
         state=PaymentStatus.PENDING;
         break;
     }
-    const fecha = new Date();
-    const fecha2 = new Date(fecha.setDate(fecha.getDate() + 30));
+
+    let tipoServicio:ServiceType|undefined;
+    switch (command.tipoServicio){
+      case 0:
+        tipoServicio=ServiceType.MECANICO;
+        break;
+      case 1:
+        tipoServicio=ServiceType.SUSCRIPCION;
+        break;
+      case 2:
+        tipoServicio=ServiceType.RENTA;
+        break
+    }
+   
     const payerId:PayerIdFk=PayerIdFk.create(command.payerId);
     const payeeId:PayeeIdFk=PayeeIdFk.create(command.payeeId);
+    const serviceId:number=command.serviceId
     const totalPrice:Price=Price.create(command.totalPrice, command.totalPrice);
-    const expirationDay:Date= fecha2;
+    const expirationDay:Date= command.expirationDay;
+    const currency:string = command.currency;
     const accountPayable:AccountPayableAggregate = AccountPayableFactory.createFrom(
       payerId,
       payeeId,
+      serviceId,
       totalPrice,
       state,
       expirationDay,
+      currency,
+      tipoServicio
     );
     let account=await this.accountPayableRepository.save(accountPayable);
     account.commit();

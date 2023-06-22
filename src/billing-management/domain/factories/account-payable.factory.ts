@@ -9,14 +9,17 @@ export class AccountPayableFactory {
     public static createFrom(
       payerId: PayerIdFk,
       payeeId: PayeeIdFk,
+      idService:number,
       TotalPrice: Price,
       state: number,
-      expirationDay: Date): AccountPayableAggregate {
+      expirationDay: Date,
+      currency:string,tipoService:number): AccountPayableAggregate {
       return new AccountPayableAggregate(
         payerId, 
         payeeId, 
+        idService,
         TotalPrice,
         state, 
-        expirationDay);
+        expirationDay, currency,tipoService);
     }
 }

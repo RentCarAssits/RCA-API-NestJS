@@ -6,4 +6,5 @@ export class AccountPayableDto {
     public parcialPrice:number;
     public state:number;
     public expirationDay: Date;
+    
 }

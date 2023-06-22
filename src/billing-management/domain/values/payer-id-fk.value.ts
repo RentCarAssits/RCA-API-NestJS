@@ -1,10 +1,10 @@
 import { Column } from "typeorm";
 export class PayerIdFk {
     @Column('int', { name: 'payer_id' })
-    protected readonly value: number;
+    private  value: number;
 
-    protected constructor(value: number) {
-        this.value = Number(value);
+    private constructor(value: number) {
+        this.value = value;
     }
 
     public static create(value: number): PayerIdFk {
@@ -12,6 +12,6 @@ export class PayerIdFk {
     }
 
     public getValue(): number {
-        return Number(this.value);
+        return this.value;
     }
 }

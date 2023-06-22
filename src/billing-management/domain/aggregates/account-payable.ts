@@ -4,6 +4,7 @@ import { AccountPayableId } from '../values/account-payable-id.value';
 import { PayerIdFk } from '../values/payer-id-fk.value';
 import { PayeeIdFk } from '../values/payee-id-fk.value';
 import { Price } from '../values/price.value';
+import { PaymentStatus } from '../enums/payment-status.enum';
 
 @Entity('account_payables')
 export class AccountPayableAggregate extends AggregateRoot {
@@ -12,10 +13,10 @@ export class AccountPayableAggregate extends AggregateRoot {
   id: AccountPayableId;
 
   @Column((type) => PayerIdFk, { prefix: false })
-  private readonly payerId: PayerIdFk;
+  payerId: PayerIdFk;
 
   @Column((type) => PayeeIdFk, { prefix: false })
-  private readonly payeeId: PayeeIdFk;
+  payeeId: PayeeIdFk;
 
   @Column((type) => Price, { prefix: false })
   private price: Price;
@@ -23,16 +24,21 @@ export class AccountPayableAggregate extends AggregateRoot {
   @Column({ type: 'date', name: 'expiration_day' })
   private expirationDay: Date;
 
+  @Column({ type: 'enum', enum: PaymentStatus, default: PaymentStatus.PENDING })
+  private readonly state: PaymentStatus;
+
   constructor(
-    payerIdValue: PayerIdFk,
-    payeeIdValue: PayeeIdFk,
+    payerId: PayerIdFk,
+    payeeId: PayeeIdFk,
     price: Price,
+    state: number,
     expirationDay: Date
   ) {
     super();
-    this.payerId = payerIdValue;
-    this.payeeId = payeeIdValue;
+    this.payerId = payerId;
+    this.payeeId = payeeId;
     this.price = price;
+    this.state = state;
     this.expirationDay = expirationDay;
   }
 
@@ -52,6 +58,10 @@ export class AccountPayableAggregate extends AggregateRoot {
     return this.price;
   }
 
+  public getState(): PaymentStatus {
+    return this.state;
+  }
+  
   public getExpirationDay(): Date {
     return this.expirationDay;
   }

@@ -1,9 +1,9 @@
 import { Column } from "typeorm";
 export class PayeeIdFk {
     @Column('int', { name: 'payee_id' })
-    protected readonly value: number;
+    private  value: number;
 
-    protected constructor(value: number) {
+    private constructor(value: number) {
         this.value = Number(value);
     }
 
@@ -12,6 +12,6 @@ export class PayeeIdFk {
     }
 
     public getValue(): number {
-        return Number(this.value);
+        return this.value;
     }
 }

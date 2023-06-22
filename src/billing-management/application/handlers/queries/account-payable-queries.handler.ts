@@ -17,21 +17,21 @@ export class AccountPayablesQueriesHandler
     async execute(
         query: GetAllAccountPayablesQuery
     ): Promise<AccountPayableDto[]> {
-        const ormAccountPayables = await this.accountPayableRepository.find({
-            relations: { id: true },
-        });
+        const ormAccountPayables = await this.accountPayableRepository.find();
         console.log(
             '🚀 ~ file: account-payaable-queries.handler.ts:18 ~ GetAllRentingItemsHandler ~ execute ~ rentingItems:',
             ormAccountPayables['result'],
         );
         const accountPayables: AccountPayableDto[] = ormAccountPayables.map(
-            function (ormAccountPayables) {
+          (ormAccountPayables)  => {
                 const accountPayableDto = new AccountPayableDto();
                 accountPayableDto.id = Number(ormAccountPayables.getId());
-                accountPayableDto.payerId = Number(ormAccountPayables.getPayerId());
-                accountPayableDto.payeeId = Number(ormAccountPayables.getPayeeId());
-                accountPayableDto.price = ormAccountPayables.getPrice().getParcial();
+                accountPayableDto.payerId = Number(ormAccountPayables.payerId?ormAccountPayables.payerId.getValue():null);
+                accountPayableDto.payeeId = Number(ormAccountPayables.payeeId?ormAccountPayables.payeeId.getValue():null);
+                accountPayableDto.totalPrice = ormAccountPayables.getPrice().getValue();
+                accountPayableDto.parcialPrice = ormAccountPayables.getPrice().getParcial();
                 accountPayableDto.expirationDay = ormAccountPayables.getExpirationDay();
+                accountPayableDto.state=ormAccountPayables.getState();
                 return accountPayableDto;
             },
         );

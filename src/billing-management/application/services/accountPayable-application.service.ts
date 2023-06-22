@@ -14,12 +14,13 @@ export class AccountPayableApplicationService {
   ) {}
 
   async register(registerAccountPayableRequest: RegisterAccountPayableRequest): Promise<Result<AppNotification, RegisterAccountPayableResponse>> {
-    const { payerId, payeeId, totalPrice, expirationDay } = registerAccountPayableRequest;
+    const { payerId, payeeId, totalPrice,state, expirationDay } = registerAccountPayableRequest;
 
     const createAccountPayable: CreateAccountPayable = new CreateAccountPayable(
       registerAccountPayableRequest.payerId,
       registerAccountPayableRequest.payeeId,
       registerAccountPayableRequest.totalPrice,
+      registerAccountPayableRequest.state,
       registerAccountPayableRequest.expirationDay,
     );      
     const accountId: number= await this.commandBus.execute(createAccountPayable);
@@ -28,6 +29,7 @@ export class AccountPayableApplicationService {
       createAccountPayable.payerId,
       createAccountPayable.payeeId,
       createAccountPayable.totalPrice,
+      createAccountPayable.state,
       createAccountPayable.expirationDay
     );
 

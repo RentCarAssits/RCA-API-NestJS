@@ -7,6 +7,7 @@ import { PayerIdFk } from 'src/billing-management/domain/values/payer-id-fk.valu
 import { PayeeIdFk } from 'src/billing-management/domain/values/payee-id-fk.value';
 import { Price } from 'src/billing-management/domain/values/price.value';
 import { AccountPayableFactory } from 'src/billing-management/domain/factories/account-payable.factory';
+import { PaymentStatus } from 'src/billing-management/domain/enums/payment-status.enum';
 
 @CommandHandler(CreateAccountPayable)
 export class CreateAccountPayableHandler
@@ -17,6 +18,15 @@ export class CreateAccountPayableHandler
   ) {}
 
   async execute(command: CreateAccountPayable) {
+    let state:PaymentStatus|undefined;
+    switch (command.state){
+      case 0:
+        state=PaymentStatus.CONFIRMED;
+        break;
+      case 1:
+        state=PaymentStatus.PENDING;
+        break;
+    }
     const fecha = new Date();
     const fecha2 = new Date(fecha.setDate(fecha.getDate() + 30));
     const payerId:PayerIdFk=PayerIdFk.create(command.payerId);
@@ -27,6 +37,7 @@ export class CreateAccountPayableHandler
       payerId,
       payeeId,
       totalPrice,
+      state,
       expirationDay,
     );
     let account=await this.accountPayableRepository.save(accountPayable);

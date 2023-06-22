@@ -15,10 +15,10 @@ import { PaymentAggregate } from './domain/aggregates/payment';
 import { CreatePaymentHandler } from './application/handlers/register-payment.handler';
 import { PaymentController } from './api/payment.controller';
 import { PaymentApplicationService } from './application/services/payment-application.service';
-import { AccountPayablesQueriesHandler } from './application/handlers/queries/account-payable-queries.handler';
+import { AccountPayablesQueriesHandler, GetAccountPayableByIdHandler } from './application/handlers/queries/account-payable-queries.handler';
 
 export const CommandHandlers = [CreateAccountPayableHandler, CreatePaymentPayableHandler, CreatePaymentHandler];
-export const QueryHandlers = [AccountPayablesQueriesHandler];
+export const QueryHandlers = [GetAccountPayableByIdHandler,AccountPayablesQueriesHandler];
 @Module({
     imports: [
         ConfigModule,

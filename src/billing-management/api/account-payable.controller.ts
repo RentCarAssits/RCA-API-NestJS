@@ -7,6 +7,7 @@ import { RegisterAccountPayableRequest } from '../application/requests/register-
 import { ApiController } from 'src/shared/api/api.controller';
 import { Result } from 'typescript-result';
 import { GetAllAccountPayablesQuery } from '../application/queries/get-all-account-payables-query';
+import { GetAccountPayableByIdQuery } from '../application/queries/get-account-payable-by-id.query';
 
 
 @Controller('accountPayable')
@@ -40,9 +41,27 @@ export class AccountPayableController {
         new GetAllAccountPayablesQuery()
       );
       return ApiController.ok(response, accountPayables);
-    }catch(error){
+    } catch (error) {
       return ApiController.serverError(response, error);
     }
   }
 
+  @Get('/:id')
+  async getById(
+    @Param('id') id: number,
+    @Res({ passthrough: true }) response: any
+  ) {
+    try{
+      const accountPayable = await this.queryBus.execute(
+        new GetAccountPayableByIdQuery(id)
+        );
+        return ApiController.ok(response, accountPayable);
+    }catch(error){
+      console.log(
+        '🚀 ~ file: accountPayable.controller.ts:77 ~ accountPayableController ~ error:',
+        error,
+      );
+      return ApiController.serverError(response, error);
+    };
+  }
 }

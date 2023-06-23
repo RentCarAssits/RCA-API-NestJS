@@ -29,10 +29,23 @@ export class RegisterSubscriptionHandler implements ICommandHandler<RegisterSubs
         const SubscriptionFrequencyResult: Result<AppNotification,SubscriptionFrequency> =
         SubscriptionFrequency.create(command.frequency);
         if(SubscriptionFrequencyResult.isFailure()){return subscriptionId;}
-
-        const currentDate = new Date();
-        const nextMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1);
         
+        const currentDate = new Date();
+        let nextMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth()); // aqui esta la logica debo colocar la frecuencia
+        
+        // ACA ENTRA LA FUNCION DE TIPO MENSUAL TRIMESTRAL SEMESTRAL
+        if(SubscriptionFrequencyResult.value.getValue() === "MENSUAL"){
+            nextMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1);
+        } else if(SubscriptionFrequencyResult.value.getValue() === "SEMESTRAL"){
+            nextMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 6);
+        }else if(SubscriptionFrequencyResult.value.getValue() === "ANUAL"){
+            nextMonthDate = new Date(currentDate.getFullYear() + 1, currentDate.getMonth());
+        }else{
+            nextMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth());
+        }
+
+
+
         const period = Period.from(currentDate,nextMonthDate);
         
         const subscriptionEntity:Subscription = SubscriptionFactory.createFrom(

@@ -1,5 +1,5 @@
 export enum ServiceType{
-    MECANICO = 0,
-    SUSCRIPCION = 1,
-    RENTA = 2
+    MECANICO = "MECANICO",
+    SUSCRIPCION = "SUSCRIPCION",
+    RENTA = "RENTA",
 }

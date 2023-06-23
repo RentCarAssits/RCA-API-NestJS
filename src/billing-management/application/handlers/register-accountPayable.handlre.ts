@@ -21,23 +21,23 @@ export class CreateAccountPayableHandler
   async execute(command: CreateAccountPayable) {
     let state:PaymentStatus|undefined;
     switch (command.state){
-      case 0:
+      case 'CONFIRMED':
         state=PaymentStatus.CONFIRMED;
         break;
-      case 1:
+      case 'PENDING':
         state=PaymentStatus.PENDING;
         break;
     }
 
     let tipoServicio:ServiceType|undefined;
     switch (command.tipoServicio){
-      case 0:
+      case 'MECANICO':
         tipoServicio=ServiceType.MECANICO;
         break;
-      case 1:
+      case 'SUSCRIPCION':
         tipoServicio=ServiceType.SUSCRIPCION;
         break;
-      case 2:
+      case 'RENTA':
         tipoServicio=ServiceType.RENTA;
         break
     }

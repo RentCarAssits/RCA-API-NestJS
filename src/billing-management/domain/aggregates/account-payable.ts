@@ -46,10 +46,10 @@ export class AccountPayableAggregate extends AggregateRoot {
     payeeId: PayeeIdFk,
     idService:number,
     price: Price,
-    state: number,
+    state: PaymentStatus,
     expirationDay: Date,
     currency:string,
-    tipoServicio:number
+    tipoServicio:ServiceType
   ) {
     super();
     this.payerId = payerId;

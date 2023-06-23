@@ -4,9 +4,9 @@ export class CreateAccountPayable {
       public readonly payeeId: number,
       public readonly serviceId:number,
       public readonly totalPrice: number,
-      public readonly state:number,
+      public readonly state:string,
       public readonly expirationDay: Date,
       public readonly currency:string,
-      public readonly tipoServicio:number
+      public readonly tipoServicio:string
     ) {}
   }

@@ -29,10 +29,13 @@ export class AccountPayablesQueriesHandler
                 accountPayableDto.id = Number(ormAccountPayables.getId());
                 accountPayableDto.payerId = Number(ormAccountPayables.payerId ? ormAccountPayables.payerId.getValue() : null);
                 accountPayableDto.payeeId = Number(ormAccountPayables.payeeId ? ormAccountPayables.payeeId.getValue() : null);
+                accountPayableDto.serviceId = Number(ormAccountPayables.getIdService()?ormAccountPayables.getIdService():null);
                 accountPayableDto.totalPrice = ormAccountPayables.getPrice().getValue();
                 accountPayableDto.parcialPrice = ormAccountPayables.getPrice().getParcial();
                 accountPayableDto.expirationDay = ormAccountPayables.getExpirationDay();
                 accountPayableDto.state = ormAccountPayables.getState();
+                accountPayableDto.currency = ormAccountPayables.getCurrency();
+                accountPayableDto.tipoServicio = ormAccountPayables.getTipoServicio();
                 return accountPayableDto;
             },
         );
@@ -53,6 +56,7 @@ export class GetAccountPayableByIdHandler
         const manager = this.connection.manager;
         const sql = `SELECT * FROM account_payables WHERE id = ${query.id}`
         const result = await manager.query(sql,[query.id]);
+        console.log(result)
 
         if(result.length == 0){
             return null;
@@ -62,10 +66,13 @@ export class GetAccountPayableByIdHandler
         accountPayableDto.id = Number(accountPayable.id);
         accountPayableDto.payerId = Number(accountPayable.payer_id);
         accountPayableDto.payeeId = Number(accountPayable.payee_id);
+        accountPayableDto.serviceId = Number(accountPayable.service_id);
         accountPayableDto.totalPrice = accountPayable.total_price;
         accountPayableDto.parcialPrice = accountPayable.parcial_price;
         accountPayableDto.expirationDay = accountPayable.expiration_day;
         accountPayableDto.state = accountPayable.state;
+        accountPayableDto.currency = accountPayable.currency;
+        accountPayableDto.tipoServicio = accountPayable.tipoServicio;
         return accountPayableDto;
     }
 }

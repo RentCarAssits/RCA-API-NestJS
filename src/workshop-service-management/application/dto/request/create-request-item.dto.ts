@@ -1,8 +1,9 @@
-export class CreateRequestItemEvent {
+export class CreateRequestItemDto {
   constructor(
-    public readonly id: number,
     public readonly quantityRequestItem: number,
     public readonly amount: number,
     public readonly currency: string,
+    public readonly productId: number,
+    public readonly serviceItemId: number,
   ) {}
 }

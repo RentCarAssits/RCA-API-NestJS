@@ -5,6 +5,6 @@ export class CreateWorkshopResponseDTO {
     public readonly country: string,
     public readonly district: string,
     public readonly addressDetail: string,
-    public readonly ownerId: number,
+    public readonly mechanicId: number,
   ) {}
 }

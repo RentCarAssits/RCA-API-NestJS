@@ -6,7 +6,7 @@ import { CreateProductValidator } from '../validators/create-product.validator';
 import { CreateProductDto } from '../dto/request/create-product.dto';
 import { CreateProductCommand } from '../commands/create-product.command';
 import { CreateProductResponseDto } from '../dto/response/create-product-response.dto';
-import { ProductDTO } from '../dto/Product.dto';
+import { ProductDTO } from '../dto/product.dto';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { Product } from 'src/workshop-service-management/domain/entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -31,7 +31,7 @@ export class ProductService {
     const createProductCommand: CreateProductCommand = new CreateProductCommand(
       createProductDto.productName,
       createProductDto.quantityProduct,
-      createProductDto.quantity,
+      createProductDto.amount,
       createProductDto.currency,
       createProductDto.inventoryId,
     );
@@ -41,7 +41,7 @@ export class ProductService {
         productId,
         createProductDto.productName,
         createProductDto.quantityProduct,
-        createProductDto.quantity,
+        createProductDto.amount,
         createProductDto.currency,
         createProductDto.inventoryId,
       );
@@ -58,7 +58,7 @@ export class ProductService {
       productDto.id = Number(product.getId());
       productDto.productName = product.getName();
       productDto.quantityProduct = product.getQuantityProduct();
-      productDto.quantity = product.getPrice().getQuantity();
+      productDto.amount = product.getPrice().getAmount();
       productDto.currency = product.getPrice().getCurrency();
       productDto.inventoryId = Number(product.getInventory().getId());
       return productDto;
@@ -80,7 +80,7 @@ export class ProductService {
     productDto.id = Number(product.getId());
     productDto.productName = product.getName();
     productDto.quantityProduct = product.getQuantityProduct();
-    productDto.quantity = product.getPrice().getQuantity();
+    productDto.amount = product.getPrice().getAmount();
     productDto.currency = product.getPrice().getCurrency();
     productDto.inventoryId = Number(product.getInventory().getId());
     return Result.ok(productDto);

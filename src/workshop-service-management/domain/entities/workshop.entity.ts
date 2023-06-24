@@ -1,11 +1,17 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { WorkshopId } from '../value-objects/workshop-id.value';
-import { type } from 'os';
 import { Address } from '../value-objects/address.value';
-import { OwnerIdFK } from '../value-objects/owner-id-fk.value';
 import { CreateWorkshopEvent } from '../events/create-workshop.event';
 import { AggregateRoot } from '@nestjs/cqrs';
 import { ServiceRequest } from './service-request.entity';
+import { MechanicId } from '../value-objects/mechanic-id.value';
 
 @Entity('workshop')
 export class Workshop extends AggregateRoot {
@@ -18,8 +24,8 @@ export class Workshop extends AggregateRoot {
   @Column((type) => Address, { prefix: false })
   private address: Address;
 
-  @Column((type) => OwnerIdFK, { prefix: false })
-  private owner: OwnerIdFK;
+  @Column((type) => MechanicId, { prefix: false })
+  private mechanic: MechanicId;
 
   @OneToMany(() => ServiceRequest, (serviceRequest) => serviceRequest)
   private serviceRequests: ServiceRequest[];
@@ -53,8 +59,12 @@ export class Workshop extends AggregateRoot {
     return this.address;
   }
 
-  public getOwner(): OwnerIdFK {
-    return this.owner;
+  public getMechanic(): MechanicId {
+    return this.mechanic;
+  }
+
+  public getAddress(): Address {
+    return this.address;
   }
 
   public changeId(id: WorkshopId) {

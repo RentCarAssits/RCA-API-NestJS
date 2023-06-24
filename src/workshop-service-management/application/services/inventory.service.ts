@@ -8,7 +8,7 @@ import { CreateInventoryCommand } from '../commands/create-inventory.command';
 import { CreateInventoryResponseDTO } from '../dto/response/create-inventory-response.dto';
 import { Repository, FindOptionsWhere } from 'typeorm';
 import { Inventory } from 'src/workshop-service-management/domain/entities/inventory.entity';
-import { InventoryDTO } from '../dto/Inventory.dto';
+import { InventoryDTO } from '../dto/inventory.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()

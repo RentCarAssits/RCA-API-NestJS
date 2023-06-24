@@ -12,6 +12,7 @@ import { WorkshopFactory } from 'src/workshop-service-management/domain/factorie
 import { WorkshopId } from '../../../domain/value-objects/workshop-id.value';
 import { User } from 'src/iam-management/domain/entities/user.entity';
 import { NotFoundException } from '@nestjs/common';
+import { MechanicId } from 'src/workshop-service-management/domain/value-objects/mechanic-id.value';
 
 @CommandHandler(CreateWorkshopCommand)
 export class CreateWorkshopHandler
@@ -35,18 +36,18 @@ export class CreateWorkshopHandler
       command.district,
       command.addressDetail,
     );
-    const ownerId: number = command.ownerId;
-    const owner = await this.userRepository
+    const mechanicId: number = command.mechanicId;
+    const mechanic = await this.userRepository
       .createQueryBuilder()
-      .where('user.id = :id', { id: ownerId })
+      .where('user.id = :id', { id: mechanicId })
       .getOne();
-    if (!owner) {
-      throw new NotFoundException('Owner not found');
+    if (!mechanic) {
+      throw new NotFoundException('Mechanic not found');
     }
     let workshop: Workshop = WorkshopFactory.createFrom(name, address);
     const aux = {
       ...workshop,
-      owner: owner,
+      mechanic: MechanicId.of(mechanicId),
     };
     const workshopAux = this.workshopRepository.create(aux);
     let workshopTypeORM = await this.workshopRepository.save(workshopAux);

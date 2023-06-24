@@ -24,7 +24,7 @@ export class InventoryTransaction {
     () => ServiceItemOrder,
     (ServiceItemOrder) => ServiceItemOrder.getInventoryTransactions,
   )
-  @JoinColumn({ name: 'service_itemOrder_id' })
+  @JoinColumn({ name: 'service_item_order_id' })
   private serviceITemOrder: ServiceItemOrder;
 
   public constructor(

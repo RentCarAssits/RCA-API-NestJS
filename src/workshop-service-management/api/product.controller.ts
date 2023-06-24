@@ -1,11 +1,11 @@
 import { Body, Controller, Post, Res, Get, Param } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { QueryBus } from '@nestjs/cqrs';
 import { Result } from 'typescript-result';
 import { AppNotification } from 'src/shared/application/app.notification';
 import { ApiController } from 'src/shared/api/api.controller';
 import { ProductService } from '../application/services/product.service';
-import { ProductDTO } from '../application/dto/Product.dto';
+import { ProductDTO } from '../application/dto/product.dto';
 import { CreateProductDto } from '../application/dto/request/create-product.dto';
 
 @ApiTags('Product')
@@ -18,6 +18,7 @@ export class ProductController {
 
   @Post()
   @ApiOperation({ summary: 'Create Product' })
+  @ApiBody({ type: [CreateProductDto] })
   async create(
     @Body() createProductDto: CreateProductDto,
     @Res({ passthrough: true }) response,

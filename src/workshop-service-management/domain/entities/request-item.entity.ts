@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   JoinColumn,
   OneToOne,
+  OneToMany,
 } from 'typeorm';
 import { Price } from '../value-objects/price.value';
 import { InventoryTransaction } from './inventory-transaction.entity';
@@ -19,7 +20,7 @@ export class RequestItem extends AggregateRoot {
   @PrimaryGeneratedColumn()
   private id: RequestItemId;
 
-  @OneToOne(() => Product)
+  @ManyToOne(() => Product)
   @JoinColumn({ name: 'product_id' })
   private product: Product;
 
@@ -33,13 +34,8 @@ export class RequestItem extends AggregateRoot {
   @JoinColumn({ name: 'service_item_id' })
   private serviceItem: ServiceItem;
 
-  public constructor(
-    id: RequestItemId,
-    quantityRequestItem: number,
-    price: Price,
-  ) {
+  public constructor(quantityRequestItem: number, price: Price) {
     super();
-    this.id = id;
     this.quantityRequestItem = quantityRequestItem;
     this.price = price;
   }
@@ -47,7 +43,7 @@ export class RequestItem extends AggregateRoot {
     const event = new CreateRequestItemEvent(
       this.id.getValue(),
       this.quantityRequestItem,
-      this.price.getQuantity(),
+      this.price.getAmount(),
       this.price.getCurrency(),
     );
     this.apply(event);
@@ -70,5 +66,8 @@ export class RequestItem extends AggregateRoot {
   }
   public getProduct(): Product {
     return this.product;
+  }
+  public changeId(id: RequestItemId) {
+    this.id = id;
   }
 }

@@ -3,13 +3,15 @@ import { CreateServiceRequest } from '../../commands/create-service-request.comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { ServiceRequest } from 'src/workshop-service-management/domain/entities/service-request.entity';
 import { Repository } from 'typeorm';
-import { VehicleIdFK } from 'src/workshop-service-management/domain/value-objects/vehicle-id-fk.value';
+import { VehicleId } from 'src/workshop-service-management/domain/value-objects/vehicle-id.value';
 import { ServiceRequestFactory } from 'src/workshop-service-management/domain/factories/service-request.factory';
 import { ServiceRequestId } from '../../../domain/value-objects/service-request-id.value';
 import { User } from 'src/iam-management/domain/entities/user.entity';
 import { NotFoundException } from '@nestjs/common';
 import { Workshop } from 'src/workshop-service-management/domain/entities/workshop.entity';
 import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
+import { OwnerId } from '../../../domain/value-objects/owner-id.value';
+import { WorkshopIdFK } from '../../../domain/value-objects/workshop-id-fk.value';
 
 @CommandHandler(CreateServiceRequest)
 export class CreateServiceRequestHandler
@@ -53,7 +55,7 @@ export class CreateServiceRequestHandler
       throw new NotFoundException('Workshop not found');
     }
 
-    const vehicleId: number = command.workshopId;
+    const vehicleId: number = command.vehicleId;
     const vehicle = await this.vehicleRepository
       .createQueryBuilder()
       .where('vehicle.id = :id', { id: vehicleId })
@@ -67,9 +69,9 @@ export class CreateServiceRequestHandler
 
     const aux = {
       ...serviceRequestEntity,
-      workshop: workshop,
-      owner: owner,
-      vehicle: vehicle,
+      workshopId: WorkshopIdFK.of(workshopId),
+      owner: OwnerId.of(ownerId),
+      vehicle: VehicleId.of(vehicleId),
     };
 
     const serviceRequestAux = await this.serviceRequestRepository.create(aux);

@@ -23,14 +23,16 @@ export class Subscription extends AggregateRoot {
 
   // acounts id
   @ApiProperty()
-  @ManyToOne(()=> Account, (account)=> account.subscriptions)
-  account: Account;
+  @ManyToOne(()=> Account)
+  @JoinColumn({name:'id'})
+  accountId: number;
   
 
   //planes
   @ApiProperty()
-  @ManyToOne(()=>Plan, plan=>plan.subscriptions)
-  public plan:Plan;
+  @ManyToOne(()=>Plan)
+  @JoinColumn({name:'id'})
+  public plan:number;
 
   @ApiProperty()
   @Column()
@@ -44,12 +46,15 @@ export class Subscription extends AggregateRoot {
   @Column(() => Period, { prefix: false })
   private readonly period: Period;
 
-  public constructor(
+  public constructor(accountId: number,
+    planId:number,
     UnitPrice: number,
     Frequency: SubscriptionFrequency,
     Period: Period,
   ) {
     super();
+    this.accountId = accountId;
+    this.plan = planId;
     this.unitPrice = UnitPrice;
     this.frequency = Frequency;
     this.period = Period;
@@ -59,8 +64,8 @@ export class Subscription extends AggregateRoot {
   public register(){
       const event = new SubscriptionRegistered(
         this.id.getValue(),
-        this.account.id,
-        this.plan.getId().getValue(),
+        this.accountId,
+        this.plan,
         this.unitPrice,
         this.frequency.getValue(),
         this.period.getStartDate(),
@@ -85,8 +90,8 @@ export class Subscription extends AggregateRoot {
     return this.period;
   }
 
-  public getAccount(): Account {
-    return this.account;
+  public getAccount(): number {
+    return this.accountId;
   }
 
   public changeId(id: SubscriptionId) {

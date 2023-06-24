@@ -29,7 +29,7 @@ export class subscriptionApplicationService {
       RegisterSubscriptionRequest.endDate,
     );
 
-    console.log("AQUI -->: ", registerSubscription);
+    console.log("AQUI -->: datos NULLL ", registerSubscription);
 
     console.log("POR QUE MRD BACKEND CTMRE");
 
@@ -37,10 +37,10 @@ export class subscriptionApplicationService {
     const registerSubscriptionResponse: RegisterSubscriptionResponse =
       new RegisterSubscriptionResponse(
         subscriptionId,
-        registerSubscription.unitPrice,
-        registerSubscription.accountId,
-        registerSubscription.planId,
-        registerSubscription.frequency,
+        registerSubscription.AccountId,
+        registerSubscription.PlanId,
+        registerSubscription.UnitPrice,
+        registerSubscription.Frequency,
         registerSubscription.startDate,
         registerSubscription.endDate,
       );

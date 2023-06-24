@@ -14,6 +14,12 @@ export class RegisterSubscriptionValidator{
     public async validate(RegisterSubscriptionRequest: RegisterSubscriptionRequest): Promise<AppNotification>{
         const notification: AppNotification = new AppNotification();
         
+        
+        const accountId:number = RegisterSubscriptionRequest.AccountId;
+        if(accountId==null){
+            notification.addError('Is necesary an account to register one subscription',null);
+        }
+
         const unitPrice:number = RegisterSubscriptionRequest.UnitPrice;
         if( unitPrice < 0 ){
             notification.addError('UnitPrice is required and must be a valid price', null);

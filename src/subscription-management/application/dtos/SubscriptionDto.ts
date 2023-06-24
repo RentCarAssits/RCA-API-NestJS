@@ -1,5 +1,5 @@
 export class SubscriptionDto {
-  public id: number;
+  public SubscriptionId: number;
   public AccountId: number; // accountId Recently
   public PlanId: number;
   public UnitPrice: number;
@@ -7,3 +7,4 @@ export class SubscriptionDto {
   public startDate: Date;
   public endDate: Date;
 }
+ 

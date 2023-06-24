@@ -30,7 +30,6 @@ export class SubscriptionController{
       @Body() registerSubscriptionRequest: RegisterSubscriptionRequest,
        @Res({ passthrough: true }) response:any,) {
         try {
-          //console.log("HERE -->>>-dasD-sa<dSA");
           const result: Result<AppNotification, RegisterSubscriptionResponse> =
           await this.subscriptionApplicationService.register(registerSubscriptionRequest);
           if (result.isSuccess()) {

@@ -37,9 +37,9 @@ export class subscriptionApplicationService {
     const registerSubscriptionResponse: RegisterSubscriptionResponse =
       new RegisterSubscriptionResponse(
         subscriptionId,
+        registerSubscription.UnitPrice,
         registerSubscription.AccountId,
         registerSubscription.PlanId,
-        registerSubscription.UnitPrice,
         registerSubscription.Frequency,
         registerSubscription.startDate,
         registerSubscription.endDate,

@@ -21,7 +21,7 @@ export class Plan extends AggregateRoot {
   private readonly Benefits: string;
   
   //Subscripcion relations
-  @OneToMany(()=> Subscription, subscription => subscription.plan)
+  @OneToMany(()=> Subscription, subscription => subscription.planId)
   public subscriptions: Subscription[];
 
   public constructor(PlanName: PlanName, benefits: string) {

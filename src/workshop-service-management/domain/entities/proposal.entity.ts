@@ -34,7 +34,7 @@ export class Proposal extends AggregateRoot {
     const event = new CreateProposalEvent(
       this.id.getValue(),
       this.humanResources,
-      this.price.getQuantity(),
+      this.price.getAmount(),
       this.price.getCurrency(),
       this.period.getStart(),
       this.period.getEnd(),

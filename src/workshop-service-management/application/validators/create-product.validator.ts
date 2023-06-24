@@ -23,9 +23,9 @@ export class CreateProductValidator {
     if (productName == null) {
       notification.addError('Product Name is required', null);
     }
-    const quantity: number = createProductDto.quantity;
-    if (quantity == null) {
-      notification.addError('Quantity of price is required', null);
+    const amount: number = createProductDto.amount;
+    if (amount == null) {
+      notification.addError('Amount of price is required', null);
     }
     const quantityProduct: number = createProductDto.quantityProduct;
     if (quantityProduct == null) {

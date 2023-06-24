@@ -37,7 +37,7 @@ export class CreateWorkshopValidator {
       notification.addError('Address Detail is required', null);
     }
 
-    const ownerId: number = createWorkshopDto.ownerId;
+    const ownerId: number = createWorkshopDto.mechanicId;
     if (ownerId == null) {
       notification.addError('OwnerId is required', null);
     } else if (ownerId <= 0) {

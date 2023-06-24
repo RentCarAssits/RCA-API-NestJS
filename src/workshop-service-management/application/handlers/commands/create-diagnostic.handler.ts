@@ -9,6 +9,9 @@ import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
 import { DiagnosticFactory } from 'src/workshop-service-management/domain/factories/diagnostic.factory';
 import { DiagnosticId } from 'src/workshop-service-management/domain/value-objects/diagnostic-id.value';
 import { CreateDiagnosticCommand } from '../../commands/create-diagnostic.command';
+import { OwnerId } from '../../../domain/value-objects/owner-id.value';
+import { VehicleId } from '../../../domain/value-objects/vehicle-id.value';
+import { MechanicId } from '../../../domain/value-objects/mechanic-id.value';
 
 @CommandHandler(CreateDiagnosticCommand)
 export class CreateDiagnostictHandler
@@ -45,7 +48,7 @@ export class CreateDiagnostictHandler
       .createQueryBuilder()
       .where('user.id = :id', { id: mechanicId })
       .getOne();
-    if (!owner) {
+    if (!mechanic) {
       throw new NotFoundException('Mechanic not found');
     }
 
@@ -64,9 +67,9 @@ export class CreateDiagnostictHandler
 
     const aux = {
       ...diagnosticEntity,
-      owner: owner,
-      vehicle: vehicle,
-      mechanic: mechanic,
+      owner: OwnerId.of(ownerId),
+      vehicle: VehicleId.of(vehicleId),
+      mechanic: MechanicId.of(mechanicId),
     };
 
     const diagnosticAux = await this.diagnosticRepository.create(aux);

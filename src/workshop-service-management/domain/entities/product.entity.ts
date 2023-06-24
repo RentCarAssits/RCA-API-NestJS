@@ -45,7 +45,7 @@ export class Product extends AggregateRoot {
       this.id.getValue(),
       this.productName,
       this.quantityProduct,
-      this.price.getQuantity(),
+      this.price.getAmount(),
       this.price.getCurrency(),
     );
     this.apply(event);

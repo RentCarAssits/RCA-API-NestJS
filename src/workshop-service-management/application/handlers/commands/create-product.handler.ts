@@ -29,7 +29,7 @@ export class CreateProductHandler
     let productId: number = 0;
     const productName = command.productName;
     const quantityProduct = command.quantityProduct;
-    const price = Price.create(command.quantity, command.currency);
+    const price = Price.create(command.amount, command.currency);
     let product: Product = ProdcutFactory.createFrom(
       productName,
       quantityProduct,
@@ -45,7 +45,7 @@ export class CreateProductHandler
     }
     const aux = {
       ...product,
-      inventory,
+      inventory: inventory,
     };
 
     const productAux = this.productRepository.create(aux);

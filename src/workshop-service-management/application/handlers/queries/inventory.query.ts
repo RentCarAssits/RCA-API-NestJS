@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetAllInventoryQuery } from '../../queries/get-all-inventory.query';
 import { DataSource, getManager } from 'typeorm';
-import { InventoryDTO } from '../../dto/Inventory.dto';
+import { InventoryDTO } from '../../dto/inventory.dto';
 import { GetInventoryByIdQuery } from '../../queries/get-inventory-by-id.query';
 
 @QueryHandler(GetAllInventoryQuery)

@@ -7,7 +7,7 @@ import { ApiController } from 'src/shared/api/api.controller';
 import { CreateInventoryDTO } from '../application/dto/request/create-inventory.dto';
 import { InventoryService } from '../application/services/inventory.service';
 import { GetInventoryByIdQuery } from '../application/queries/get-inventory-by-id.query';
-import { InventoryDTO } from '../application/dto/Inventory.dto';
+import { InventoryDTO } from '../application/dto/inventory.dto';
 
 @ApiTags('Inventory')
 @Controller('inventory')

@@ -1,6 +1,6 @@
 import { Column } from 'typeorm';
 
-export class OwnerIdFK {
+export class OwnerId {
   @Column('bigint', { name: 'owner_id' })
   protected readonly id: number;
 
@@ -8,8 +8,8 @@ export class OwnerIdFK {
     this.id = Number(id);
   }
 
-  public static of(value: number): OwnerIdFK {
-    return new OwnerIdFK(value);
+  public static of(value: number): OwnerId {
+    return new OwnerId(value);
   }
 
   public getValue(): number {

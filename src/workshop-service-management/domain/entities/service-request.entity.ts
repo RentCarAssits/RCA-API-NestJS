@@ -11,9 +11,10 @@ import {
 import { ServiceRequestId } from '../value-objects/service-request-id.value';
 import { ServiceRequestCreated } from '../events/service-request-created.event';
 import { Workshop } from './workshop.entity';
-import { User } from 'src/iam-management/domain/entities/user.entity';
-import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
-import { VehicleIdFK } from '../value-objects/vehicle-id-fk.value';
+import { VehicleId } from '../value-objects/vehicle-id.value';
+import { OwnerId } from '../value-objects/owner-id.value';
+import { WorkshopId } from '../value-objects/workshop-id.value';
+import { WorkshopIdFK } from '../value-objects/workshop-id-fk.value';
 
 @Entity('service_request')
 export class ServiceRequest extends AggregateRoot {
@@ -23,17 +24,14 @@ export class ServiceRequest extends AggregateRoot {
   @Column('varchar', { name: 'description_problems' })
   private descriptionProblems: string;
 
-  @ManyToOne(() => Workshop, (Workshop) => Workshop.getServiceRequests)
-  @JoinColumn({ name: 'workshop_id' })
-  private workshop: Workshop;
+  @Column((type) => WorkshopIdFK, { prefix: false })
+  private workshopId: WorkshopIdFK;
 
-  @ManyToOne(() => Vehicle)
-  @JoinColumn({ name: 'vehicle_id' })
-  private vehicle: Vehicle;
+  @Column((type) => VehicleId, { prefix: false })
+  private vehicle: VehicleId;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'user_id' })
-  private owner: User;
+  @Column((type) => OwnerId, { prefix: false })
+  private owner: OwnerId;
 
   public constructor(descriptionProblems: string) {
     super();
@@ -55,15 +53,15 @@ export class ServiceRequest extends AggregateRoot {
     return this.descriptionProblems;
   }
 
-  public getWorkshop(): Workshop {
-    return this.workshop;
+  public getWorkshop(): WorkshopIdFK {
+    return this.workshopId;
   }
 
-  public getVehicle(): Vehicle {
+  public getVehicle(): VehicleId {
     return this.vehicle;
   }
 
-  public getOwner(): User {
+  public getOwner(): OwnerId {
     return this.owner;
   }
 

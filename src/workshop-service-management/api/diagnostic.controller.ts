@@ -7,7 +7,7 @@ import { ApiController } from 'src/shared/api/api.controller';
 import { GetInventoryByIdQuery } from '../application/queries/get-inventory-by-id.query';
 import { DiagnosticService } from '../application/services/diagnostic.service';
 import { CreateDiagnosticDTO } from '../application/dto/request/create-diagnostic.dto';
-import { DiagnosticDTO } from '../application/dto/Diagnostic.dto';
+import { DiagnosticDTO } from '../application/dto/diagnostic.dto';
 
 @ApiTags('Diagnostic')
 @Controller('diagnostic')

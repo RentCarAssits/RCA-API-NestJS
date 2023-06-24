@@ -7,37 +7,37 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { ProposalId } from '../value-objects/proposal-id.value';
-import { Price } from '../value-objects/price.value';
-import { ServiceItem } from './service-item.entity';
-import { Period } from '../value-objects/period.value';
 import { AggregateRoot } from '@nestjs/cqrs';
-import { CreateProposalCommand } from 'src/workshop-service-management/application/commands/create-proposal.command';
-import { CreateProposalEvent } from '../events/create-proposal.event';
 import { DiagnosticId } from '../value-objects/diagnostic-id.value';
 import { User } from 'src/iam-management/domain/entities/user.entity';
 import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
 import { CreateDiagnosticEvent } from '../events/create-diagnostic.event';
+import { ApiProperty } from '@nestjs/swagger';
+import { OwnerId } from '../value-objects/owner-id.value';
+import { VehicleId } from '../value-objects/vehicle-id.value';
+import { MechanicId } from '../value-objects/mechanic-id.value';
 
 @Entity('diagnostic')
 export class Diagnostic extends AggregateRoot {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   private id: DiagnosticId;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'user_id' })
-  private owner: User;
+  @ApiProperty()
+  @Column((type) => OwnerId, { prefix: false })
+  private owner: OwnerId;
 
-  @ManyToOne(() => Vehicle)
-  @JoinColumn({ name: 'vechicle_id' })
-  private vehicle: Vehicle;
+  @ApiProperty()
+  @Column((type) => VehicleId, { prefix: false })
+  private vehicle: VehicleId;
 
+  @ApiProperty()
   @Column('varchar', { name: 'diagnostic_description' })
   private diagnosticDescription: string;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'mechanic_id' })
-  private mechanic: User;
+  @ApiProperty()
+  @Column((type) => MechanicId, { prefix: false })
+  private mechanic: MechanicId;
 
   public constructor(diagnosticDescription: string) {
     super();
@@ -56,11 +56,11 @@ export class Diagnostic extends AggregateRoot {
     return this.id;
   }
 
-  public getOwner(): User {
+  public getOwner(): OwnerId {
     return this.owner;
   }
 
-  public getVehicle(): Vehicle {
+  public getVehicle(): VehicleId {
     return this.vehicle;
   }
 
@@ -68,7 +68,7 @@ export class Diagnostic extends AggregateRoot {
     return this.diagnosticDescription;
   }
 
-  public getMechanic(): User {
+  public getMechanic(): MechanicId {
     return this.mechanic;
   }
 

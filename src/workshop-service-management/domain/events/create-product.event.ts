@@ -3,7 +3,7 @@ export class CreateProductEvent {
     public readonly id: number,
     public readonly productName: string,
     public readonly quantityProduct: number,
-    public readonly price: number,
+    public readonly amount: number,
     public readonly currency: string,
   ) {}
 }

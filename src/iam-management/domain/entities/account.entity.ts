@@ -26,7 +26,7 @@ export class Account {
   roles: string[];
   
   // subscription Bondex
-  @OneToMany(()=> Subscription,(Subscription) => Subscription.accountId,{
+  @OneToMany(()=> Subscription,(Subscription) => Subscription.account,{
     onDelete:'CASCADE',
     eager:true,
   })

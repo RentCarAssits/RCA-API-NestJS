@@ -31,8 +31,6 @@ export class subscriptionApplicationService {
 
     console.log("AQUI -->: datos NULLL ", registerSubscription);
 
-    console.log("POR QUE MRD BACKEND CTMRE");
-
     const subscriptionId: number = await this.commandBus.execute(registerSubscription);
     const registerSubscriptionResponse: RegisterSubscriptionResponse =
       new RegisterSubscriptionResponse(

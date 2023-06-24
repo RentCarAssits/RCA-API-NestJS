@@ -6,6 +6,7 @@ import { Connection, Repository } from "typeorm";
 import { SubscriptionDto } from "../../dtos/SubscriptionDto";
 import { getSubscriptionByIdQuery } from "../../queries/get-subscription-id.query";
 
+//AQUI REVISAR QUE ESTA FALLANDO CON MI SQL
 @QueryHandler(getAllSubscriptionQuery)
 export class GetAllSubscriptionHandler implements IQueryHandler<getAllSubscriptionQuery>{
   constructor(@InjectRepository(Subscription) private readonly subscriptionRepository: Repository<Subscription>,private readonly connection: Connection,) {}
@@ -23,14 +24,16 @@ export class GetAllSubscriptionHandler implements IQueryHandler<getAllSubscripti
     const subscriptionsDto: SubscriptionDto[] = result.map((subscriptions)=>{
       const subscriptionDto = new SubscriptionDto();
       subscriptionDto.SubscriptionId = subscriptions.id;
-      subscriptionDto.PlanId = subscriptions.planId;   
-      subscriptionDto.AccountId = subscriptions.accountId; 
+      subscriptionDto.PlanId = subscriptions.planIdId;   
+      subscriptionDto.AccountId = subscriptions.accountIdId; 
       subscriptionDto.Frequency = subscriptions.frequency;
       subscriptionDto.UnitPrice = subscriptions.unitPrice;
       subscriptionDto.startDate = subscriptions.startDate;
       subscriptionDto.endDate = subscriptions.endDate;
       return subscriptionDto;
     })
+    console.log("ACA DTO");
+    console.log(SubscriptionDto);
     return subscriptionsDto;
   }    
 }

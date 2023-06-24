@@ -47,9 +47,6 @@ export class RegisterSubscriptionHandler implements ICommandHandler<RegisterSubs
             nextMonthDate = new Date(currentDate.getFullYear(), currentDate.getMonth());
         }
 
-
-
-
         const period = Period.from(currentDate,nextMonthDate);
         
         const subscriptionEntity:Subscription = SubscriptionFactory.createFrom(

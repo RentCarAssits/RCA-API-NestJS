@@ -27,6 +27,7 @@ export class subscriptionApplicationService {
       RegisterSubscriptionRequest.Frequency,
       RegisterSubscriptionRequest.startDate,
       RegisterSubscriptionRequest.endDate,
+      RegisterSubscriptionRequest.discount,
     );
 
     console.log("AQUI -->: datos NULLL ", registerSubscription);
@@ -36,6 +37,7 @@ export class subscriptionApplicationService {
       new RegisterSubscriptionResponse(
         subscriptionId,
         registerSubscription.UnitPrice,
+        registerSubscription.discount,
         registerSubscription.AccountId,
         registerSubscription.PlanId,
         registerSubscription.Frequency,

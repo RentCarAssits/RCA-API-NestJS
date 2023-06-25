@@ -6,5 +6,6 @@ export class SubscriptionDto {
   public Frequency: string;
   public startDate: Date;
   public endDate: Date;
+  public discount: number;
 }
  

@@ -24,6 +24,7 @@ export class GetAllSubscriptionHandler implements IQueryHandler<getAllSubscripti
     const subscriptionsDto: SubscriptionDto[] = result.map((subscriptions)=>{
       const subscriptionDto = new SubscriptionDto();
       subscriptionDto.SubscriptionId = subscriptions.id;
+      subscriptionDto.discount = subscriptions.Subscriptiondiscount;
       subscriptionDto.PlanId = subscriptions.planId;   
       subscriptionDto.AccountId = subscriptions.accountId; 
       subscriptionDto.Frequency = subscriptions.frequency;

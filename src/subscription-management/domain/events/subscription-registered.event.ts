@@ -7,5 +7,6 @@ export class SubscriptionRegistered {
     public readonly frequency: string,
     public readonly startDate: Date,
     public readonly endDate: Date,
+    public readonly discount: number,
     ) {}
 }

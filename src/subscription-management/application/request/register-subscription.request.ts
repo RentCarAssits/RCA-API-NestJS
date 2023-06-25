@@ -6,6 +6,7 @@ export class RegisterSubscriptionRequest {
         public readonly Frequency: string,
         public readonly startDate: Date,
         public readonly endDate: Date,
+        public readonly discount: number,
         ) {
 
         }

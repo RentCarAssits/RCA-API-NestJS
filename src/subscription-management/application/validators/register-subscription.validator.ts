@@ -38,6 +38,11 @@ export class RegisterSubscriptionValidator{
         const Frequency:string = RegisterSubscriptionRequest.Frequency;
         if(Frequency.length <= 0){notification.addError('Frequency is required', null);}
     
+        const discount: number = RegisterSubscriptionRequest.discount;
+        if(discount == null){
+            notification.addError('Discount is required althoug is 0%', null);
+        }
+        
         if (notification.hasErrors()) {return notification;}
         
         /*

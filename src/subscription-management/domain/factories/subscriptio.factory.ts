@@ -13,8 +13,9 @@ export class SubscriptionFactory{
         UnitPrice:number,
         Frequency: SubscriptionFrequency,
         Period: Period,
+        Discount: number,
     ): Subscription{
-        return new Subscription(accountId,Plan,UnitPrice,Frequency,Period);
+        return new Subscription(accountId,Plan,UnitPrice,Frequency,Period,Discount);
     }
 
     public static withId(
@@ -24,6 +25,7 @@ export class SubscriptionFactory{
         unitPrice:number,
         frequency: SubscriptionFrequency,
         period: Period,
+        Discount: number,
     ):Subscription{
         const subscription: Subscription = new Subscription(
             accountId,
@@ -31,6 +33,7 @@ export class SubscriptionFactory{
             unitPrice,
             frequency,
             period,
+            Discount,
         );
         subscription.changeId(id);
         return subscription;

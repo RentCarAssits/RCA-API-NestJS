@@ -44,11 +44,16 @@ export class Subscription extends AggregateRoot {
   @Column(() => Period, { prefix: false })
   private readonly period: Period;
 
+  @ApiProperty()
+  @Column()
+  private readonly Subscriptiondiscount: number;
+
   public constructor(accountId: number,
     planId:number,
     UnitPrice: number,
     Frequency: SubscriptionFrequency,
     Period: Period,
+    Discount: number,
   ) {
     super();
     this.account = accountId;
@@ -56,6 +61,7 @@ export class Subscription extends AggregateRoot {
     this.unitPrice = UnitPrice;
     this.frequency = Frequency;
     this.period = Period;
+    this.Subscriptiondiscount = Discount;
   }
 
   
@@ -68,6 +74,7 @@ export class Subscription extends AggregateRoot {
         this.frequency.getValue(),
         this.period.getStartDate(),
         this.period.getEndDate(),
+        this.Subscriptiondiscount,
       )
   }
   
@@ -87,7 +94,9 @@ export class Subscription extends AggregateRoot {
   public getPeriod(): Period {
     return this.period;
   }
-
+  public getDiscount(): number{
+    return this.Subscriptiondiscount;
+  }
   public getAccount(): number {
     return this.account;
   }

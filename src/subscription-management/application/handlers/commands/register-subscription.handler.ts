@@ -26,8 +26,11 @@ export class RegisterSubscriptionHandler implements ICommandHandler<RegisterSubs
         
         const account_id: number = Number(command.AccountId); //nuevo
         const plan_id: number = Number(command.PlanId); // nuevo
+        const discount: number = Number(command.discount);
 
-        const subscriptionUnitPrice: number = Number(command.UnitPrice);
+        let subscriptionUnitPrice: number = Number(command.UnitPrice);
+        subscriptionUnitPrice = subscriptionUnitPrice - (subscriptionUnitPrice * (discount*0.01));
+
 
         const SubscriptionFrequencyResult: Result<AppNotification,SubscriptionFrequency> =
         SubscriptionFrequency.create(command.Frequency);
@@ -54,7 +57,8 @@ export class RegisterSubscriptionHandler implements ICommandHandler<RegisterSubs
             plan_id,
             subscriptionUnitPrice,
             SubscriptionFrequencyResult.value,
-            period
+            period,
+            discount,
         )
          
         const aux = {
@@ -65,7 +69,7 @@ export class RegisterSubscriptionHandler implements ICommandHandler<RegisterSubs
         };
         
         const subscriptionAux = this.SubscriptionRepository.create(
-            new Subscription(account_id,plan_id,subscriptionUnitPrice,SubscriptionFrequencyResult.value,period)
+            new Subscription(account_id,plan_id,subscriptionUnitPrice,SubscriptionFrequencyResult.value,period,discount)
         );
         
         let subscription = await this.SubscriptionRepository.save(subscriptionAux);

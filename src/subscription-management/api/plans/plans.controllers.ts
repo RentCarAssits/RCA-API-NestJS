@@ -10,6 +10,9 @@ import { PlanApplicationService } from 'src/subscription-management/application/
 import { Plan } from 'src/subscription-management/domain/entity/plan.entity';
 import { Result } from 'typescript-result';
 import { RegisterPlanResponse } from '../../application/response/register-plan.response';
+import { response } from 'express';
+import { Console } from 'console';
+import { getCurrentPlanQuery } from 'src/subscription-management/application/queries/get-current-plan.query';
 
 @ApiTags('Plans')
 @Controller('Plans')
@@ -64,6 +67,7 @@ export class PlanController {
     @Res({ passthrough: true }) response: any,
   ) {
     try {
+      console.log("ACA1");
       const plan = await this.queryBus.execute(new getPlanByIdQuery(planId));
       return ApiController.ok(response, plan);
     } catch (error) {
@@ -74,4 +78,17 @@ export class PlanController {
       return ApiController.serverError(response, error);
     }
   }
+
+  @Get('/By/:id')
+  async getCurrentPlan(@Param('id') userId: number, @Res({ passthrough: true }) response: any) {
+    try {
+      const currentPlan = await this.queryBus.execute(new getCurrentPlanQuery(userId));
+      return ApiController.ok(response, currentPlan);
+    } catch (error) {
+      console.log("ACA GET CURRENT PLAN");
+      return ApiController.serverError(response, error);
+    }
+  }
+  
+
 }

@@ -6,7 +6,7 @@ import { PlanName } from '../values/plan-name.value';
 import { PlanRegistered } from '../events/plan-registered.event';
 import { Subscription } from './Subscription.entity';
 
-@Entity('Plans')
+@Entity('plans')
 export class Plan extends AggregateRoot {
   @ApiProperty()
   @PrimaryGeneratedColumn()

@@ -15,7 +15,7 @@ import { SubscriptionFrequency } from '../values/subscription-frequency.value';
 import { SubscriptionRegistered } from '../events/subscription-registered.event';
 import { Account } from 'src/iam-management/domain/entities/account.entity';
 
-@Entity('Subscriptions')
+@Entity('subscriptions')
 export class Subscription extends AggregateRoot {
   @ApiProperty()
   @PrimaryGeneratedColumn()

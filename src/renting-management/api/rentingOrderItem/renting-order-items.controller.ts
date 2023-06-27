@@ -18,6 +18,7 @@ import { GetRentingItemsByVehiclesRequest } from '../../application/requests/get
 import { GetAllRentingItemsByVehicleQuery } from '../../application/queries/get-all-renting-items-by-vehicle.query';
 import { GetAllRentingItemsByRenterIdQuery } from '../../application/queries/get-all-renting-items-by-renter-id.query';
 import { GetAllAcceptedRentingItemsByRenterIdQuery } from '../../application/queries/get-all-accepted-renting-items-by-renter-id.query';
+import { ValidRoles } from 'src/iam-management/domain/interfaces/valid-roles';
 
 @ApiTags('Renting-Order-Items')
 @Controller('Renting-Order-Items')
@@ -28,7 +29,7 @@ export class RentingOrderItemsController {
   ) {}
 
   @Post()
-  @Auth()
+  @Auth(ValidRoles.renter)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token Related' })

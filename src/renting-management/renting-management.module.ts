@@ -12,6 +12,7 @@ import {
   GetAllVehiclesByYearHandler,
   GetAllVehiclesHandler,
   GetVehicleByIdHandler,
+  GetVehiclesInMaintenanceHandler,
 } from './application/handlers/queries/vehicles-queries.handler';
 import { RegisterVehicleValidator } from './application/validators/register-vehicle.validator';
 import { RegisterVehicleHandler } from './application/handlers/commands/register-vehicle.handler';
@@ -73,7 +74,8 @@ export const QueryHandlers = [
   GetAllVehiclesByByOwnerHandler,
   Get20VehiclesMixedHandler,
   GetRentOrderFullInfoHandler,
-  GetRentOrderFullInfoRenterHandler
+  GetRentOrderFullInfoRenterHandler,
+  GetVehiclesInMaintenanceHandler
 ];
 
 @Module({

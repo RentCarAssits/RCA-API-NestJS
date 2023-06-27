@@ -12,6 +12,11 @@ import { UpdateRentingOrderItemRequest } from '../requests/update-renting-order-
 import { UpdateRentingOrderItemCommand } from '../commands/update-renting-order-item.command';
 import { UpdateRentingOrderItemResponse } from '../responses/update-renting-order-item.response';
 import { User } from '../../../iam-management/domain/entities/user.entity';
+import { RentingOrderItemId } from '../../domain/values/renting-order-id.value';
+import { InjectRepository } from '@nestjs/typeorm';
+import { RentingOrderItem } from '../../domain/entities/renting-order-item.entity';
+import { Repository } from 'typeorm';
+import { RentingOrderItemState } from '../../domain/enums/renting-order-item-state.enum';
 
 @Injectable()
 export class RentingOrderItemService {
@@ -19,6 +24,8 @@ export class RentingOrderItemService {
     private commandBus: CommandBus,
     private createRentingOrderItemValidator: CreateRentingOrderItemValidator,
     private updateRentingOrderItemValidator: UpdateRentingOrderItemValidator,
+    @InjectRepository(RentingOrderItem)
+    private readonly rentingOrderItemRepository: Repository<RentingOrderItem>,
   ) {}
 
   async register(
@@ -86,5 +93,17 @@ export class RentingOrderItemService {
         updateRentingOrderItemCommand.state,
       );
     return Result.ok(updateRentingOrderItemResponse);
+  }
+
+  async updateAsAccepted(itemIds: RentingOrderItemId[]): Promise<void> {
+    for (const itemId of itemIds) {
+      await this.rentingOrderItemRepository
+        .createQueryBuilder()
+        .update(RentingOrderItem)
+        .set({ state: RentingOrderItemState.Ordered })
+        .where('id = :id', { id: itemId })
+        .execute();
+    }
+    console.log('renting items updated');
   }
 }

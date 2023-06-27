@@ -45,10 +45,10 @@ export class VehicleFactory {
     year: Date,
     state: number,
     image: string,
-    stars,
-    price,
-    currency,
-    timeUnit,
+    stars: number,
+    price: number,
+    currency: string,
+    timeUnit: string,
   ): Vehicle {
     const vehicle: Vehicle = new Vehicle(
       name,

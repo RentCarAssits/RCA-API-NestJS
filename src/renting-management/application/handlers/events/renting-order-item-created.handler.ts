@@ -1,6 +1,9 @@
 import { IEventHandler } from '@nestjs/cqrs';
 import { EventsHandler } from '@nestjs/cqrs/dist/decorators/events-handler.decorator';
 import { RentingOrderItemCreated } from '../../../domain/events/renting-order-item-created.event';
+import { InjectRepository } from '@nestjs/typeorm';
+import { RentingOrderItem } from '../../../domain/entities/renting-order-item.entity';
+import { Repository } from 'typeorm';
 
 @EventsHandler(RentingOrderItemCreated)
 export class RentingOrderItemCreatedHandler

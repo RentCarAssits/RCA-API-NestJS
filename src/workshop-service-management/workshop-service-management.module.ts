@@ -59,6 +59,10 @@ import { RequestItemCreatedHandler } from './application/handlers/events/request
 import { RequestItemController } from './api/request-item.controller';
 import { RequestItemService } from './application/services/request-item.service';
 import { CreateRequestItemValidator } from './application/validators/create-request-item.validator';
+import { ChatController } from './api/chat/chat.controller';
+import { MessageFacade } from './infrastructure/openIA/messageFacade.service';
+import { OpenAIService } from './application/service/openAI-chatbot.service';
+
 
 export const CommandHandlers = [
   CreateProposalHandler,
@@ -111,6 +115,7 @@ export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
     DiagnosticController,
     ProductController,
     RequestItemController,
+    ChatController
   ],
   providers: [
     ProposalService,
@@ -129,6 +134,8 @@ export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
     CreateProductValidator,
     RequestItemService,
     CreateRequestItemValidator,
+    MessageFacade, 
+    OpenAIService,
     ...CommandHandlers,
     ...EventHandlers,
     ...QueryHandlers,

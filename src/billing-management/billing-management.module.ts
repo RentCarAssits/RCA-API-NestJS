@@ -17,21 +17,25 @@ import { PaymentController } from './api/payment.controller';
 import { PaymentApplicationService } from './application/services/payment-application.service';
 import { AccountPayablesQueriesHandler, GetAccountPayableByIdHandler } from './application/handlers/queries/account-payable-queries.handler';
 import { AccountPayableAggregateDeleteHandler } from './application/handlers/delete-accountPayable.handler';
+import { InvoiceController } from './api/invoice.controller';
+import { CreateInvoiceHandler } from './application/handlers/register-invoice.handler';
+import { invoice } from './domain/entities/invoice.entity';
+import { InvoiceApplicationService } from './application/services/invoice-application.service';
 
-export const CommandHandlers = [CreateAccountPayableHandler, CreatePaymentPayableHandler, CreatePaymentHandler,AccountPayableAggregateDeleteHandler];
-export const QueryHandlers = [GetAccountPayableByIdHandler,AccountPayablesQueriesHandler];
+export const CommandHandlers = [CreateAccountPayableHandler, CreatePaymentPayableHandler, CreatePaymentHandler, AccountPayableAggregateDeleteHandler, CreateInvoiceHandler];
+export const QueryHandlers = [GetAccountPayableByIdHandler, AccountPayablesQueriesHandler];
 @Module({
     imports: [
         ConfigModule,
-        TypeOrmModule.forFeature([PaymentPayableAggregate, AccountPayableAggregate, PaymentAggregate]),
+        TypeOrmModule.forFeature([PaymentPayableAggregate, AccountPayableAggregate, PaymentAggregate,invoice]),
         CqrsModule,
         BillingManagementModule
     ],
     controllers: [
-        AccountPayableController, PaymentPayableController, PaymentController
+        AccountPayableController, PaymentPayableController, PaymentController, InvoiceController
     ],
     providers: [
-        AccountPayableApplicationService, PaymentPayableApplicationService, PaymentApplicationService,
+        AccountPayableApplicationService, PaymentPayableApplicationService, PaymentApplicationService,InvoiceApplicationService,
         ...CommandHandlers,
         ...QueryHandlers
     ]

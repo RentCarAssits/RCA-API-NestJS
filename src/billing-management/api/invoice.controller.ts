@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res } from "@nestjs/common";
+import { Body, Controller, Get, Post, Res } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { InvoiceApplicationService } from "../application/services/invoice-application.service";
 import { RegisterInvoiceRequest } from "../application/requests/register-invoice.request";
@@ -6,6 +6,7 @@ import { Result } from "typescript-result";
 import { AppNotification } from "src/shared/application/app.notification";
 import { RegisterInvoiceResponse } from "../application/reponses/register-invoice.response";
 import { ApiController } from "src/shared/api/api.controller";
+import { GetAllInvoiceQuery } from "../application/queries/get-all-invoice-query";
 
 @Controller('invoice')
 export class InvoiceController {
@@ -30,6 +31,17 @@ export class InvoiceController {
         } catch (error) {
             return ApiController.serverError(response, error);
         }
-     }
+    }
 
+    @Get()
+    async getAll(@Res({ passthrough: true }) response): Promise<object> {
+        try {
+            const invoices = await this.queryBus.execute(
+                new GetAllInvoiceQuery()
+            );
+            return ApiController.ok(response, invoices);
+        } catch (error) {
+            return ApiController.serverError(response, error);
+        }
+    }
 }

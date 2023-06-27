@@ -3,12 +3,15 @@ import {
   BeforeUpdate,
   Column,
   Entity,
-  JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-  Unique,
 } from 'typeorm';
+import { Profile } from './profile.entity';
 import { Account } from './account.entity';
+import { Vehicle } from '../../../renting-management/domain/entities/vehicle.entity';
+import { RentingOrderItem } from '../../../renting-management/domain/entities/renting-order-item.entity';
+import { RentOrder } from 'src/renting-management/domain/entities/rent-order.entity';
 
 @Entity('users')
 export class User {
@@ -16,31 +19,39 @@ export class User {
   id: number;
 
   @Column('text')
-  fullName: string;
-
-  @Column('text')
-  address: string;
+  userName: string;
 
   @Column('text')
   email: string;
 
-  @Column('text')
-  phone: string;
-
-  @Column('text')
-  dni: string;
-
-  @Column('bool', {
-    default: true,
+  @Column('text', {
+    select: false,
   })
-  isActive: boolean;
+  password: string;
 
-  @OneToOne(() => Account, (cuenta) => cuenta.user, {
+  @Column('simple-array')
+  roles: string[];
+
+  @OneToOne(() => Profile, (profile) => profile.user, {
     cascade: true,
     eager: true,
   })
-  @JoinColumn()
+  profile: Profile;
+
+  @OneToOne(() => Account, (account) => account.user, {
+    cascade: true,
+    eager: true,
+  })
   account: Account;
+
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.owner)
+  vehicles: Vehicle[];
+
+  @OneToMany(() => RentingOrderItem, (rentingItem) => rentingItem.requester)
+  rentingOrderItems: RentingOrderItem[];
+
+  @OneToMany(() => RentOrder, (rentOrder) => rentOrder.renter)
+  rentedItems: RentOrder[];
 
   @BeforeInsert()
   checkFieldsBeforeInsert() {

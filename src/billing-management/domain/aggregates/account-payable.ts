@@ -14,7 +14,7 @@ export class AccountPayableAggregate extends AggregateRoot {
   id: AccountPayableId;
 
   @Column({ type: 'int', name: 'id_Service' })
-  private readonly idService:number
+  idService:number
 
   @Column((type) => PayerIdFk, { prefix: false })
   payerId: PayerIdFk;

@@ -1,26 +1,26 @@
 module.exports = {
   type: 'mysql',
+
   url: process.env.RCA_DB_MYSQL,
   host: 'localhost',
   port: 3306,
   username: 'root',
-  password: '123456789',
-  database: 'rca_db',
+  password: '21082002',
+  database: 'rca-db',
   autoLoadEntities: true,
-  synchronize: false, // sincronizacion
+  synchronize: true,
   ssl: true,
   migrationsRun: true,
-  logging: true,
-  //timezone: '+0',
+  logging: false,
   bigNumberStrings: false,
+  entities: [
+    process.env.ENVIRONMENT == 'prod'
+      ? '*/domain/entities/.js'
+      : 'dist/*/domain/entities/.js',
+  ],
   extra: {
     ssl: {
       rejectUnauthorized: false,
     },
   },
-  entities: [
-    process.env.ENVIRONMENT == 'prod'
-      ? '**/domain/entities/*.js'
-      : 'dist/**/domain/entities/*.js',
-  ],
 };

@@ -10,23 +10,28 @@ export class ApiController {
   }
 
   static created(response: Response, result: object): Envelope {
-      response.status(HttpStatus.CREATED);
-      return Envelope.ok(result);
+    response.status(HttpStatus.CREATED);
+    return Envelope.ok(result);
+  }
+
+  static updated(response: Response, result: object): Envelope {
+    response.status(HttpStatus.OK);
+    return Envelope.ok(result);
   }
 
   static error(response: Response, errors: AppError[]): Envelope {
-      response.status(HttpStatus.BAD_REQUEST);
-      return Envelope.error(errors);
+    response.status(HttpStatus.BAD_REQUEST);
+    return Envelope.error(errors);
   }
 
   static serverError(response: Response, error): Envelope {
-      console.log(error);
-      response.status(HttpStatus.INTERNAL_SERVER_ERROR);
-      return Envelope.serverError();
+    console.log(error);
+    response.status(HttpStatus.INTERNAL_SERVER_ERROR);
+    return Envelope.serverError();
   }
 
   static notFound(response: Response): Envelope {
-      response.status(HttpStatus.NOT_FOUND);
+    response.status(HttpStatus.NOT_FOUND);
     return Envelope.notFound();
   }
 }

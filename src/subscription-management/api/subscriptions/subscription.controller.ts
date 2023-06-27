@@ -1,10 +1,13 @@
 import { Body, Controller, Get, Param, Post, Res } from "@nestjs/common";
 import { QueryBus } from "@nestjs/cqrs";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { throws } from "assert";
+import { response } from "express";
 import { authorize } from "passport";
 import { Subscription } from "rxjs";
 import { ApiController } from "src/shared/api/api.controller";
 import { AppNotification } from "src/shared/application/app.notification";
+import { getUserSubscriptionQuery } from "src/subscription-management/application/queries/get-User-Subscription.query";
 import { getAllSubscriptionQuery } from "src/subscription-management/application/queries/get-all-subscription.query";
 import { getSubscriptionByIdQuery } from "src/subscription-management/application/queries/get-subscription-id.query";
 import { RegisterSubscriptionRequest } from "src/subscription-management/application/request/register-subscription.request";
@@ -63,7 +66,6 @@ export class SubscriptionController{
     @Get('/:id')
     async getById(@Param('id') subscriptionId: number,@Res({ passthrough: true }) response:any,) {
         try {
-            console.log("AQUI ENTRO EL APU");
             const subscription = await this.queryBus.execute(new getSubscriptionByIdQuery(subscriptionId));
             console.log("API --> ",subscription);
             return ApiController.ok(response, subscription);
@@ -75,5 +77,18 @@ export class SubscriptionController{
         return ApiController.serverError(response, error);
         }
     }
+
+    @Get('/:userId')
+    async getCurrentUserPlan(@Param('userId') userId: number,@Res({passthrough:true}) response:any,){
+      try{
+         
+        
+      }catch(error){
+        
+      
+      }
+    }
+
+
 
 }

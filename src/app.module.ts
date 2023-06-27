@@ -39,7 +39,6 @@ import { IamManagementModule } from "./iam-management/iam-management.module";
         }
       }
     }),
-    TypeOrmModule.forRoot(ormconfig),
     RentingManagementModule,
     BillingManagementModule,
     SubscriptionManagementModule,

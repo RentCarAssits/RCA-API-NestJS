@@ -1,5 +1,12 @@
 import { AggregateRoot } from '@nestjs/cqrs';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { VehicleId } from '../values/vehicle-id.value';
 import { VehicleName } from '../values/vehicle-name.value';
 import { Brand } from '../values/brand.value';
@@ -9,6 +16,8 @@ import { Model } from '../values/model.value';
 import { ApiProperty } from '@nestjs/swagger';
 import { Category } from './category.entity';
 import { VehicleRegistered } from '../events/vehicle-registered.event';
+import { User } from '../../../iam-management/domain/entities/user.entity';
+import { VehicleUpdated } from '../events/vehicle-updated.event';
 
 @Entity('vehicles')
 export class Vehicle extends AggregateRoot {
@@ -32,18 +41,31 @@ export class Vehicle extends AggregateRoot {
   @Column(() => VehicleIntegrity, { prefix: false })
   private readonly integrity: VehicleIntegrity;
 
-  @ApiProperty()
-  @Column({
-    type: 'enum',
-    enum: VehicleState,
-    default: VehicleState.UNAVAILABLE,
-    nullable: false,
-  })
+  @Column({ type: 'enum', enum: VehicleState, default: VehicleState.AVAILABLE })
   private readonly state: VehicleState;
 
   @ApiProperty()
   @Column({ nullable: false, type: 'date' })
-  year: Date;
+  private readonly year: Date;
+
+  @Column()
+  private readonly image: string;
+
+  @Column()
+  private readonly stars: number;
+
+  @Column()
+  private readonly price: number;
+
+  @Column()
+  private readonly currency: string;
+
+  @Column()
+  private readonly timeUnit: string;
+
+  /*@ApiProperty()
+  @Column({ name: 'owner_id' })
+  ownerId: number;*/
 
   @ApiProperty()
   @OneToMany(() => Category, (category) => category.vehicle, {
@@ -52,13 +74,23 @@ export class Vehicle extends AggregateRoot {
   })
   categories?: Category[];
 
+  @ApiProperty()
+  @ManyToOne(() => User, (user) => user.vehicles)
+  @JoinColumn({ name: 'owner_id' })
+  owner: User;
+
   public constructor(
     name: VehicleName,
     brand: Brand,
     model: Model,
     integrity: VehicleIntegrity,
     year: Date,
-    state: VehicleState,
+    state: number,
+    image: string,
+    stars: number,
+    price: number,
+    currency: string,
+    timeUnit: string,
   ) {
     super();
     this.name = name;
@@ -67,6 +99,11 @@ export class Vehicle extends AggregateRoot {
     this.state = state;
     this.year = year;
     this.model = model;
+    this.image = image;
+    this.stars = stars;
+    this.price = price;
+    this.currency = currency;
+    this.timeUnit = timeUnit;
   }
 
   public register() {
@@ -78,6 +115,22 @@ export class Vehicle extends AggregateRoot {
       this.integrity.getValue(),
       this.state,
       this.year,
+    );
+    this.apply(event);
+  }
+
+  public updated() {
+    const event = new VehicleUpdated(
+      this.id.getValue(),
+      this.name.getValue(),
+      this.brand.getValue(),
+      this.model.getValue(),
+      this.integrity.getValue(),
+      this.state,
+      this.year,
+      this.price,
+      this.currency,
+      this.timeUnit,
     );
     this.apply(event);
   }
@@ -112,6 +165,26 @@ export class Vehicle extends AggregateRoot {
 
   public getState(): VehicleState {
     return this.state;
+  }
+
+  public getImage(): string {
+    return this.image;
+  }
+
+  public getStars(): number {
+    return this.stars;
+  }
+
+  public getPrice(): number {
+    return this.price;
+  }
+
+  public getCurrency(): string {
+    return this.currency;
+  }
+
+  public getTimeUnit(): string {
+    return this.timeUnit;
   }
 
   public getCategories(): Category[] {

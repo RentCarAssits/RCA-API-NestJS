@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany } from 'typeorm';
+
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Subscription } from 'src/subscription-management/domain/entity/Subscription.entity';
@@ -9,17 +16,10 @@ export class Account {
   public id: number;
 
   @Column('text')
-  username: string;
-
-  @Column('text')
-  email: string;
-
-  @Column('text', {
-    select: false,
-  })
-  password: string;
+  name: string;
 
   @OneToOne(() => User, (user) => user.account)
+  @JoinColumn()
   user: User;
 
   @Column('simple-array')
@@ -37,5 +37,3 @@ export class Account {
   }
 
 }
-
-//AÑADIR REALACIONES PARA LOS DEMÁS BOUNDED CONTEXT

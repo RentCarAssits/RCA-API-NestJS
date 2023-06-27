@@ -14,7 +14,7 @@ export class AccountPayableAggregate extends AggregateRoot {
   id: AccountPayableId;
 
   @Column({ type: 'int', name: 'id_Service' })
-  idService:number
+  idService: number
 
   @Column((type) => PayerIdFk, { prefix: false })
   payerId: PayerIdFk;
@@ -29,27 +29,23 @@ export class AccountPayableAggregate extends AggregateRoot {
   private expirationDay: Date;
 
   @Column({ type: 'enum', enum: PaymentStatus, default: PaymentStatus.PENDING })
-  private  state: PaymentStatus;
+  private state: PaymentStatus;
 
   @Column({ type: 'varchar', name: 'currency' })
-  private  currency: string;
+  private currency: string;
 
   @Column({ type: 'enum', enum: ServiceType, default: ServiceType.SUSCRIPCION })
-  private  tipoServicio: ServiceType;
-  
-  
-
-
+  private tipoServicio: ServiceType;
 
   constructor(
     payerId: PayerIdFk,
     payeeId: PayeeIdFk,
-    idService:number,
+    idService: number,
     price: Price,
     state: PaymentStatus,
     expirationDay: Date,
-    currency:string,
-    tipoServicio:ServiceType
+    currency: string,
+    tipoServicio: ServiceType
   ) {
     super();
     this.payerId = payerId;
@@ -66,15 +62,15 @@ export class AccountPayableAggregate extends AggregateRoot {
     return this.id;
   }
 
-  public getIdService(): number{
+  public getIdService(): number {
     return this.idService;
   }
 
-  public getTipoServicio():ServiceType{
+  public getTipoServicio(): ServiceType {
     return this.tipoServicio;
   }
 
-  public getCurrency(): string{
+  public getCurrency(): string {
     return this.currency;
   }
 
@@ -93,7 +89,7 @@ export class AccountPayableAggregate extends AggregateRoot {
   public getState(): PaymentStatus {
     return this.state;
   }
-  
+
   public getExpirationDay(): Date {
     return this.expirationDay;
   }

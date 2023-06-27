@@ -16,8 +16,9 @@ import { CreatePaymentHandler } from './application/handlers/register-payment.ha
 import { PaymentController } from './api/payment.controller';
 import { PaymentApplicationService } from './application/services/payment-application.service';
 import { AccountPayablesQueriesHandler, GetAccountPayableByIdHandler } from './application/handlers/queries/account-payable-queries.handler';
+import { AccountPayableAggregateDeleteHandler } from './application/handlers/delete-accountPayable.handler';
 
-export const CommandHandlers = [CreateAccountPayableHandler, CreatePaymentPayableHandler, CreatePaymentHandler];
+export const CommandHandlers = [CreateAccountPayableHandler, CreatePaymentPayableHandler, CreatePaymentHandler,AccountPayableAggregateDeleteHandler];
 export const QueryHandlers = [GetAccountPayableByIdHandler,AccountPayablesQueriesHandler];
 @Module({
     imports: [

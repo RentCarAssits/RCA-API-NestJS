@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UsersController } from './api/users/users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
+import { User } from './domain/entities/user.entity';
 import { AuthController } from './api/auth/auth.controller';
 import { AuthService } from './application/services/auth/auth.service';
 import { PassportModule } from '@nestjs/passport';

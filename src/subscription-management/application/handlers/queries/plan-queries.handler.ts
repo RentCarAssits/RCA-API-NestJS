@@ -21,7 +21,7 @@ export class GetAllPlanHandler implements IQueryHandler<GetAllPlanQuerys>{
           );
           const planDtos: PlanDto[] = plans.map((plans) => {
             const planDto = new PlanDto();
-            planDto.PlanName = plans.getPlanName().getValue(),
+            planDto.planName = plans.getPlanName().getValue(),
             planDto.Benefits = plans.getBenefits();
             
             return planDto;
@@ -59,7 +59,7 @@ export class GetPlanByIdHandler implements IQueryHandler<getPlanByIdQuery>{
       console.log("PLAN: ",plan); // plan si almacena las variables 
 
       const planDto = new PlanDto();
-      planDto.PlanName = plan.name;
+      planDto.planName = plan.name;
       planDto.Benefits = plan.Benefits;
       return planDto;
     }

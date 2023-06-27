@@ -20,7 +20,7 @@ export class AccountPayableController {
 
   ) { }
 
-  @Post('register')
+  @Post()
   async register(
     @Body() registerAccountPayableRequest: RegisterAccountPayableRequest,
     @Res({ passthrough: true }) response

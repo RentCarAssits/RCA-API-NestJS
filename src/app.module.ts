@@ -20,7 +20,7 @@ import { IamManagementModule } from "./iam-management/iam-management.module";
       host: "localhost",
       port: 3306,
       username: "root",
-      password: "1234",
+      password: "21082002",
       database: "rca-db",
       autoLoadEntities: true,
       synchronize: true,

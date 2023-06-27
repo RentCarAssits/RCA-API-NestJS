@@ -1,6 +1,5 @@
 module.exports = {
   type: 'mysql',
-
   url: process.env.RCA_DB_MYSQL,
   host: 'localhost',
   port: 3306,

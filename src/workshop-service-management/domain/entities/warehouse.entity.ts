@@ -6,6 +6,7 @@ import { WarehouseId } from '../value-objects/warehouse-id.value';
 import { Inventory } from './inventory.entity';
 import { CreateWarehouseEvent } from '../events/create-warehouse.event';
 import { AggregateRoot } from '@nestjs/cqrs';
+import { WorkshopIdFK } from '../value-objects/workshop-id-fk.value';
 
 @Entity('warehouse')
 export class Warehouse extends AggregateRoot {
@@ -20,6 +21,9 @@ export class Warehouse extends AggregateRoot {
 
   @OneToMany(() => Inventory, (Inventory) => Inventory.getWarehouse)
   private inventories: Inventory[];
+
+  @Column((type) => WorkshopIdFK, { prefix: false })
+  private workshop: WorkshopIdFK;
 
   public constructor(name: string, address: Address) {
     super();
@@ -53,7 +57,9 @@ export class Warehouse extends AggregateRoot {
   public getInventories(): Inventory[] {
     return this.inventories;
   }
-
+  public getWorkshop(): WorkshopIdFK {
+    return this.workshop;
+  }
   public changeId(id: WarehouseId) {
     this.id = id;
   }

@@ -10,9 +10,11 @@ import { Price } from '../value-objects/price.value';
 import { ServiceItemId } from '../value-objects/service-item-id.value';
 import { RequestItem } from './request-item.entity';
 import { Proposal } from './proposal.entity';
+import { CreateServiceItemEvent } from '../events/create-service-item.event';
+import { AggregateRoot } from '@nestjs/cqrs';
 
 @Entity('service_item')
-export class ServiceItem {
+export class ServiceItem extends AggregateRoot {
   @PrimaryGeneratedColumn()
   private id: ServiceItemId;
 
@@ -22,6 +24,9 @@ export class ServiceItem {
   @Column((type) => Price, { prefix: false })
   private price: Price;
 
+  @Column('bigint', { name: 'resources' })
+  private resources: number;
+
   @OneToMany(() => RequestItem, (RequestItem) => RequestItem)
   private requestItems: RequestItem[];
 
@@ -29,16 +34,22 @@ export class ServiceItem {
   @JoinColumn({ name: 'proposal_id' })
   private proposal: Proposal;
 
-  public constructor(
-    serviceName: string,
-    price: Price,
-    requestItems: RequestItem[],
-  ) {
+  public constructor(serviceName: string, price: Price, resources: number) {
+    super();
     this.serviceName = serviceName;
     this.price = price;
-    this.requestItems = requestItems;
+    this.resources = resources;
   }
-
+  public create() {
+    const event = new CreateServiceItemEvent(
+      this.id.getValue(),
+      this.serviceName,
+      this.price.getAmount(),
+      this.price.getCurrency(),
+      this.resources,
+    );
+    this.apply(event);
+  }
   public getId(): ServiceItemId {
     return this.id;
   }
@@ -57,5 +68,12 @@ export class ServiceItem {
 
   public getProposal(): Proposal {
     return this.proposal;
+  }
+
+  public getResources(): number {
+    return this.resources;
+  }
+  public changeId(id: ServiceItemId) {
+    this.id = id;
   }
 }

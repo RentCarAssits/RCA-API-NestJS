@@ -14,6 +14,9 @@ export class ServiceItemOrder {
   @Column((type) => Price, { prefix: false })
   private price: Price;
 
+  @Column('bigint', { name: 'resoruces' })
+  private resources: number;
+
   @OneToMany(
     () => InventoryTransaction,
     (inventoryTransaction) => inventoryTransaction.getServiceItemOrder,

@@ -59,6 +59,11 @@ import { RequestItemCreatedHandler } from './application/handlers/events/request
 import { RequestItemController } from './api/request-item.controller';
 import { RequestItemService } from './application/services/request-item.service';
 import { CreateRequestItemValidator } from './application/validators/create-request-item.validator';
+import { ServiceItemService } from './application/services/service-item.service';
+import { CreateServicetItemValidator } from './application/validators/create-service-item.validator';
+import { ServiceItemController } from './api/service-item.controller';
+import { CreateServiceItemHandler } from './application/handlers/commands/create-service-item.handler';
+import { ServiceItemCreatedHandler } from './application/handlers/events/service-item-reated.handler';
 
 export const CommandHandlers = [
   CreateProposalHandler,
@@ -69,6 +74,7 @@ export const CommandHandlers = [
   CreateDiagnostictHandler,
   CreateProductHandler,
   CreateRequestItemHandler,
+  CreateServiceItemHandler,
 ];
 export const EventHandlers = [
   ProposalCreatedHandler,
@@ -79,6 +85,7 @@ export const EventHandlers = [
   DiagnosticCreatedHandler,
   ProductCreatedHandler,
   RequestItemCreatedHandler,
+  ServiceItemCreatedHandler,
 ];
 export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
 
@@ -111,6 +118,7 @@ export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
     DiagnosticController,
     ProductController,
     RequestItemController,
+    ServiceItemController,
   ],
   providers: [
     ProposalService,
@@ -129,6 +137,8 @@ export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
     CreateProductValidator,
     RequestItemService,
     CreateRequestItemValidator,
+    ServiceItemService,
+    CreateServicetItemValidator,
     ...CommandHandlers,
     ...EventHandlers,
     ...QueryHandlers,

@@ -1,7 +1,7 @@
-import { PrimaryColumn } from 'typeorm';
+import { Column } from 'typeorm';
 
 export class WorkshopIdFK {
-  @PrimaryColumn('bigint', { name: 'workshop_id' })
+  @Column('bigint', { name: 'workshop_id' })
   protected readonly id: number;
 
   protected constructor(id: number) {

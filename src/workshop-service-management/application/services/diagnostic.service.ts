@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { Result } from 'typescript-result';
 import { AppNotification } from 'src/shared/application/app.notification';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateDiagnosticValidator } from '../validators/create-diagnostic.validator';
 import { CreateDiagnosticDTO } from '../dto/request/create-diagnostic.dto';
@@ -61,5 +61,22 @@ export class DiagnosticService {
       return diagnosticDto;
     });
     return Result.ok(diagnosticDtos);
+  }
+
+  async findbyId(
+    diagnosticId,
+  ): Promise<Result<AppNotification, DiagnosticDTO>> {
+    const diagnostic = await this.diagnosticRepository.findOne({
+      where: {
+        id: diagnosticId,
+      } as FindOptionsWhere<Diagnostic>,
+    });
+    const diagnosticDto = new DiagnosticDTO();
+    diagnosticDto.id = Number(diagnostic.getId());
+    diagnosticDto.diagnosticDescription = diagnostic.getDiagnosticDescription();
+    diagnosticDto.ownerId = Number(diagnostic.getOwner().getValue());
+    diagnosticDto.vehicleId = Number(diagnostic.getVehicle().getValue());
+    diagnosticDto.mechanicId = Number(diagnostic.getMechanic().getValue());
+    return Result.ok(diagnosticDto);
   }
 }

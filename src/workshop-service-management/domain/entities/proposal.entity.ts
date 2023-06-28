@@ -58,6 +58,10 @@ export class Proposal extends AggregateRoot {
     return this.serviceItems;
   }
 
+  public getPeriod(): Period {
+    return this.period;
+  }
+
   public changeId(id: ProposalId) {
     this.id = id;
   }

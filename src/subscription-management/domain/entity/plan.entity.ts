@@ -20,14 +20,19 @@ export class Plan extends AggregateRoot {
   @Column()
   private readonly Benefits: string;
   
+  @ApiProperty()
+  @Column()
+  private readonly Price: number;
+  
   //Subscripcion relations
   @OneToMany(()=> Subscription, subscription => subscription.plan)
   public subscriptions: Subscription[];
 
-  public constructor(PlanName: PlanName, benefits: string) {
+  public constructor(PlanName: PlanName, benefits: string, price:number) {
     super();
     this.PlanName = PlanName;
     this.Benefits = benefits;
+    this.Price = price;
   }
 
   public register() {
@@ -35,6 +40,7 @@ export class Plan extends AggregateRoot {
       this.id.getValue(),
       this.PlanName.getValue(),
       this.Benefits,
+      this.Price,
     );
   }
 
@@ -48,6 +54,10 @@ export class Plan extends AggregateRoot {
 
   public getBenefits() {
     return this.Benefits;
+  }
+
+  public getPirce() {
+    return this.Price;
   }
 
   public changeId(id: PlanId) {

@@ -25,7 +25,7 @@ export class GetAllPlanHandler implements IQueryHandler<GetAllPlanQuerys>{
             const planDto = new PlanDto();
             planDto.PlanName = plans.getPlanName().getValue(),
             planDto.Benefits = plans.getBenefits();
-            
+            planDto.Price = plans.getPirce();
             return planDto;
           });
           return planDtos;

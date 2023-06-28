@@ -17,6 +17,12 @@ export class RegisterPlanValidator{
         const notification: AppNotification = new AppNotification();
         const planName: string = RegisterPlanRequest.PlanName.trim();
         const planBenefits:string = RegisterPlanRequest.Benefits.trim();
+        const price:number = RegisterPlanRequest.Price;
+
+        if (price < 0) {
+            notification.addError('A Price is required', null);
+        }
+
         if (planBenefits.length <= 0) {
             notification.addError('Plan benefits is required', null);
         }

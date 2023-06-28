@@ -29,6 +29,7 @@ export class PlanApplicationService {
     const registerPlan: RegisterPlans = new RegisterPlans(
       registerPlanRequest.PlanName,
       registerPlanRequest.Benefits,
+      registerPlanRequest.Price,
     );
 
     const PlanId: number = await this.commandBus.execute(registerPlan);
@@ -36,6 +37,7 @@ export class PlanApplicationService {
       PlanId,
       registerPlan.PlanName,
       registerPlan.Benefits,
+      registerPlan.Price,
     );
     return Result.ok(registerPlanResponse);
   }

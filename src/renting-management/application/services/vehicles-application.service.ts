@@ -1,21 +1,31 @@
 import { RegisterVehicleValidator } from '../validators/register-vehicle.validator';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { AppNotification } from 'src/shared/application/app.notification';
 import { CommandBus } from '@nestjs/cqrs';
 import { Result } from 'typescript-result';
 import { RegisterVehicle } from '../commands/register-vehicle.command';
 import { RegisterVehicleRequest } from '../requests/register-vehicle.request';
 import { RegisterVehicleResponse } from '../responses/register-vehicle.response';
-import { Connection } from 'typeorm';
+import { Connection, FindOptions, FindOptionsWhere, Repository } from 'typeorm';
 import { User } from '../../../iam-management/domain/entities/user.entity';
 import { UpdateVehicleResponse } from '../responses/update-vehicle.response';
 import { UpdateVehicle } from '../commands/update-vehicle.command';
 import { UpdateVehicleRequest } from '../requests/update-vehicle.request';
 import { UpdateVehicleValidator } from '../validators/update-vehicle.validator';
+import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
+import { RentingOrderItem } from 'src/renting-management/domain/entities/renting-order-item.entity';
+import { VehicleFactory } from 'src/renting-management/domain/factories/vehicle.factory';
+import { VehicleState } from 'src/renting-management/domain/enums/vehicle-state.enum';
+import { RentingOrderItemId } from 'src/renting-management/domain/values/renting-order-id.value';
 
 @Injectable()
 export class VehiclesApplicationService {
   constructor(
+    @InjectRepository(Vehicle)
+    private vehicleRepository: Repository<Vehicle>,
+    @InjectRepository(RentingOrderItem)
+    private rentingOrderItemRepository: Repository<RentingOrderItem>,
     private connection: Connection,
     private commandBus: CommandBus,
     private registerVehicleValidator: RegisterVehicleValidator,
@@ -111,5 +121,35 @@ export class VehiclesApplicationService {
         updateVehicleRequest.categories,
       );
     return Result.ok(updateVehicleResponse);
+  }
+
+  async updateVehicleState(itemIds: RentingOrderItemId[]): Promise<void> {
+    for (const itemId of itemIds) {
+      const item = await this.rentingOrderItemRepository.findOneBy({
+        id: itemId,
+      } as FindOptionsWhere<any>);
+      if (item && item.vehicleId) {
+        const vehicle = await this.vehicleRepository.findOneBy({
+          id: item.vehicleId.getValue(),
+        } as FindOptionsWhere<Vehicle>);
+        if (vehicle) {
+          let vehicleEntity = VehicleFactory.withId(
+            vehicle.getId(),
+            vehicle.getName(),
+            vehicle.getBrand(),
+            vehicle.getModel(),
+            vehicle.getIntegrity(),
+            vehicle.getYear(),
+            VehicleState.RENTED,
+            vehicle.getImage(),
+            vehicle.getStars(),
+            vehicle.getPrice(),
+            vehicle.getCurrency(),
+            vehicle.getTimeUnit(),
+          );
+          await this.vehicleRepository.save(vehicleEntity);
+        }
+      }
+    }
   }
 }

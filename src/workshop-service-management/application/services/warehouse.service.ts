@@ -6,12 +6,24 @@ import { CreateWarehouseValidator } from '../validators/create-warehouse.validat
 import { CreateWarehouseDTO } from '../dto/request/create-warehouse.dto';
 import { CreateWarehouseCommand } from '../commands/create-warehouse.command';
 import { CreateWarehouseResponseDTO } from '../dto/response/create-warehouse-response.dto';
+import { WarehouseDTO } from '../dto/warehouse.dto';
+import { FindOptionsWhere, Repository } from 'typeorm';
+import { Warehouse } from 'src/workshop-service-management/domain/entities/warehouse.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Workshop } from '../../domain/entities/workshop.entity';
+import { WorkshopIdFK } from '../../domain/value-objects/workshop-id-fk.value';
 
 @Injectable()
 export class WarehouseService {
   constructor(
     private commandBus: CommandBus,
     private createWarehouseValidator: CreateWarehouseValidator,
+
+    @InjectRepository(Warehouse)
+    private warehouseRepository: Repository<Warehouse>,
+
+    @InjectRepository(Workshop)
+    private workshopRepository: Repository<Workshop>,
   ) {}
   async create(
     createWarehouseDto: CreateWarehouseDTO,
@@ -27,6 +39,7 @@ export class WarehouseService {
         createWarehouseDto.country,
         createWarehouseDto.district,
         createWarehouseDto.addressDetail,
+        createWarehouseDto.workshopId,
       );
     const warehouselId = await this.commandBus.execute(createWarehouseCommand);
     const createWarehouseResponseDto: CreateWarehouseResponseDTO =
@@ -36,7 +49,47 @@ export class WarehouseService {
         createWarehouseDto.country,
         createWarehouseDto.district,
         createWarehouseDto.addressDetail,
+        createWarehouseDto.workshopId,
       );
     return Result.ok(createWarehouseResponseDto);
+  }
+  async findById(
+    warehouseId: Number,
+  ): Promise<Result<AppNotification, WarehouseDTO>> {
+    const warehouse = await this.warehouseRepository.findOne({
+      where: {
+        id: warehouseId,
+      } as FindOptionsWhere<Warehouse>,
+    });
+
+    const warehouseDto = new WarehouseDTO();
+    warehouseDto.id = Number(warehouse.getId());
+    warehouseDto.name = warehouse.getName();
+    warehouseDto.country = warehouse.getAdress().getCountry();
+    warehouseDto.district = warehouse.getAdress().getDitrict();
+    warehouseDto.addressDetail = warehouse.getAdress().getAddressDetail();
+
+    return Result.ok(warehouseDto);
+  }
+
+  async findAllWarehouseByWorkshopId(
+    workshopId: number,
+  ): Promise<Result<AppNotification, WarehouseDTO[]>> {
+    const warehouses = await this.warehouseRepository.find({
+      where: {
+        workshop: WorkshopIdFK.of(workshopId),
+      } as FindOptionsWhere<Warehouse>,
+    });
+    const warehouseDtos: WarehouseDTO[] = warehouses.map((warehouse) => {
+      const warehouseDto = new WarehouseDTO();
+      warehouseDto.id = Number(warehouse.getId());
+      warehouseDto.name = warehouse.getName();
+      warehouseDto.country = warehouse.getAdress().getCountry();
+      warehouseDto.district = warehouse.getAdress().getDitrict();
+      warehouseDto.addressDetail = warehouse.getAdress().getAddressDetail();
+      warehouseDto.workshopId = warehouse.getWorkshop().getValue();
+      return warehouseDto;
+    });
+    return Result.ok(warehouseDtos);
   }
 }

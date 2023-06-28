@@ -7,12 +7,15 @@ import { response } from 'express';
 import { Result } from 'typescript-result';
 import { AppNotification } from 'src/shared/application/app.notification';
 import { ApiController } from 'src/shared/api/api.controller';
+import { ServiceItemService } from '../application/services/service-item.service';
+import { CreateServiceItemDto } from '../application/dto/request/create-service-item.dto';
 
 @ApiTags('Proposal')
 @Controller('proposal')
 export class ProposalController {
   constructor(
     private readonly proposalService: ProposalService,
+    private readonly serviceItemService: ServiceItemService,
     private readonly queryBus: QueryBus,
   ) {}
 

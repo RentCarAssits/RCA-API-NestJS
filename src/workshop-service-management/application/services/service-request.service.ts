@@ -11,6 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ServiceRequestDto } from '../dto/service-request.dto';
 import { CreateServiceRequestDto } from '../dto/request/service-request.dto';
 import { GetServiceRequestVehiclesResponseDto } from '../dto/response/get-service-request-vehicles-response.dto';
+import { OwnerId } from '../../domain/value-objects/owner-id.value';
 
 @Injectable()
 export class ServiceRequestService {
@@ -60,8 +61,14 @@ export class ServiceRequestService {
 
     return Result.ok(serviceRequestResponseDto);
   }
-  async findAll(): Promise<Result<AppNotification, ServiceRequestDto[]>> {
-    const serviceRequests = await this.serviceRequestRepository.find();
+  async findAll(
+    ownerId: number,
+  ): Promise<Result<AppNotification, ServiceRequestDto[]>> {
+    const serviceRequests = await this.serviceRequestRepository.find({
+      where: {
+        owner: OwnerId.of(ownerId),
+      } as FindOptionsWhere<ServiceRequest>,
+    });
 
     const serviceRequestDtos: ServiceRequestDto[] = serviceRequests.map(
       (serviceRequest) => {

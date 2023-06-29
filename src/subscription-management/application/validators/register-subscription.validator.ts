@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Subscription } from "src/subscription-management/domain/entity/Subscription.entity";
-import { Repository } from "typeorm";
+import { FindOptionsWhere, Repository } from "typeorm";
 import { RegisterSubscriptionRequest } from "../request/register-subscription.request";
 import { AppNotification } from "src/shared/application/app.notification";
 
@@ -44,7 +44,6 @@ export class RegisterSubscriptionValidator{
         }
         
         if (notification.hasErrors()) {return notification;}
-        
         /*
         const Subscription: Subscription = await 
         this.subscriptionRepository.createQueryBuilder().where('Frequency =: Frequency',{Frequency}).getOne();

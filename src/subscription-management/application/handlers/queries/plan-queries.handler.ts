@@ -79,13 +79,15 @@ export class getCurrentPlanHandler implements IQueryHandler<getCurrentPlanQuery>
   async execute(query: getCurrentPlanQuery): Promise<any> {
     const manager = this.connection.manager;
           const sql = `
-          select MAX(S.startDate) as 'startDate' ,S.endDate,P.name, P.Benefits
-          from Subscriptions as S
-          Inner Join accounts as A on A.id = S.accountId
-          Inner Join users as U on U.accountId = A.id
-          Inner Join plans as P on P.id = S.planId
-          where A.id = ?
-          group by S.endDate,P.name, P.Benefits`;
+          SELECT S.startDate, S.endDate, P.name, P.Benefits
+          FROM Subscriptions as S
+          INNER JOIN accounts as A ON A.id = S.accountId
+          INNER JOIN users as U ON U.id = A.userId
+          INNER JOIN plans as P ON P.id = S.planId
+          WHERE A.id = ?
+          ORDER BY S.startDate DESC
+          LIMIT 1;
+          `;
       
       const result = await manager.query(sql,[query.id]);
       console.log("result: ", query.id);  // result si almacena las variables

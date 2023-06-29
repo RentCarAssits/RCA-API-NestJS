@@ -11,6 +11,7 @@ import { Profile } from './profile.entity';
 import { Account } from './account.entity';
 import { Vehicle } from '../../../renting-management/domain/entities/vehicle.entity';
 import { RentingOrderItem } from '../../../renting-management/domain/entities/renting-order-item.entity';
+import { RentOrder } from 'src/renting-management/domain/entities/rent-order.entity';
 
 @Entity('users')
 export class User {
@@ -28,9 +29,7 @@ export class User {
   })
   password: string;
 
-  @Column('text', {
-    select: false,
-  })
+  @Column('simple-array')
   roles: string[];
 
   @OneToOne(() => Profile, (profile) => profile.user, {
@@ -50,6 +49,9 @@ export class User {
 
   @OneToMany(() => RentingOrderItem, (rentingItem) => rentingItem.requester)
   rentingOrderItems: RentingOrderItem[];
+
+  @OneToMany(() => RentOrder, (rentOrder) => rentOrder.renter)
+  rentedItems: RentOrder[];
 
   @BeforeInsert()
   checkFieldsBeforeInsert() {

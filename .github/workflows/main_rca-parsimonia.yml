@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy Node.js app to Azure Web App - rca-parsimonia
+name: Build and deploy Node.js app to Azure Web App - rca
 
 on:
   push:
@@ -30,7 +27,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'rca-parsimonia'
+          app-name: 'rca'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DC6305F2473940CBB0C6770A65D56852 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F0AFD00789E74A90BB54CC9347A3E858 }}
           package: .

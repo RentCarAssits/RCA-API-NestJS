@@ -34,11 +34,14 @@ export class ServiceRequestController {
       return ApiController.serverError(response, error);
     }
   }
-  @Get()
-  async getAll(@Res({ passthrough: true }) response: any) {
+  @Get('/owner/:id')
+  async getAll(
+    @Param('id') ownerId: number,
+    @Res({ passthrough: true }) response: any,
+  ) {
     try {
       const result: Result<AppNotification, ServiceRequestDto[]> =
-        await this.serviceRequestService.findAll();
+        await this.serviceRequestService.findAll(ownerId);
       if (result.isSuccess()) {
         return ApiController.ok(response, result.value);
       }

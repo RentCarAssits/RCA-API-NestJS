@@ -67,8 +67,11 @@ import { ServiceItemCreatedHandler } from './application/handlers/events/service
 import { ChatController } from './api/chat/chat.controller';
 import { MessageFacade } from './infrastructure/openIA/messageFacade.service';
 import { OpenAIService } from './application/service/openAI-chatbot.service';
-
-
+import { ServiceOrder } from './domain/entities/service-order.entity';
+import { CreateServiceItemOrderCommand } from './application/commands/create-service-item-order.command';
+import { CreateServiceOrderCommand } from './application/commands/create-service-order.command';
+import { CreateServiceOrderHandler } from './application/handlers/commands/create-service-order.handlet';
+import { CreateServiceItemOrderHandler } from './application/handlers/commands/create-service-item-order.handler';
 
 export const CommandHandlers = [
   CreateProposalHandler,
@@ -80,6 +83,8 @@ export const CommandHandlers = [
   CreateProductHandler,
   CreateRequestItemHandler,
   CreateServiceItemHandler,
+  CreateServiceOrderHandler,
+  CreateServiceItemOrderHandler,
 ];
 export const EventHandlers = [
   ProposalCreatedHandler,
@@ -110,6 +115,7 @@ export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
       Diagnostic,
       ServiceRequest,
       Vehicle,
+      ServiceOrder,
     ]),
     CqrsModule,
     IamManagementModule,
@@ -124,7 +130,7 @@ export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
     ProductController,
     RequestItemController,
     ServiceItemController,
-    ChatController
+    ChatController,
   ],
   providers: [
     ProposalService,
@@ -145,7 +151,7 @@ export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
     CreateRequestItemValidator,
     ServiceItemService,
     CreateServicetItemValidator,
-    MessageFacade, 
+    MessageFacade,
     OpenAIService,
     ...CommandHandlers,
     ...EventHandlers,

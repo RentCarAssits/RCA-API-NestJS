@@ -8,6 +8,7 @@ import { AppNotification } from 'src/shared/application/app.notification';
 import { PlanName } from 'src/subscription-management/domain/values/plan-name.value';
 import { PlanFactory } from 'src/subscription-management/domain/factories/plan.factory';
 import { PlanId } from 'src/subscription-management/domain/values/plan-id.value';
+import { Price } from 'src/billing-management/domain/values/price.value';
 
 @CommandHandler(RegisterPlans)
 export class RegisterPlanHanlder implements ICommandHandler<RegisterPlans> {
@@ -22,6 +23,8 @@ export class RegisterPlanHanlder implements ICommandHandler<RegisterPlans> {
     const PlanNameResult: Result<AppNotification, PlanName> = PlanName.create(
       command.PlanName,
     );
+    
+    const price:number = command.Price;
 
     if (PlanNameResult.isFailure()) return planId;
 
@@ -32,6 +35,7 @@ export class RegisterPlanHanlder implements ICommandHandler<RegisterPlans> {
     const PlanEntity: Plan = PlanFactory.createFrom(
       PlanNameResult.value,
       PlanBenefitsResult,
+      price,  
     );
 
     const aux = {
@@ -40,7 +44,7 @@ export class RegisterPlanHanlder implements ICommandHandler<RegisterPlans> {
     };
 
     const PlanAux = this.PlanRepository.create(
-      new Plan(PlanNameResult.value, PlanBenefitsResult),
+      new Plan(PlanNameResult.value, PlanBenefitsResult,price),
     );
     let PlanSave = await this.PlanRepository.save(PlanEntity);
     if (PlanSave == null) {

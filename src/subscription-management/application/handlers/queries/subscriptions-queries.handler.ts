@@ -5,6 +5,9 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Connection, Repository } from "typeorm";
 import { SubscriptionDto } from "../../dtos/SubscriptionDto";
 import { getSubscriptionByIdQuery } from "../../queries/get-subscription-id.query";
+import { getUserSubscriptionQuery } from "../../queries/get-User-Subscription.query";
+import { CurrentUserPlanDto } from "../../dtos/CurrentUserPlan";
+import { User } from "src/iam-management/domain/entities/user.entity";
 
 //AQUI REVISAR QUE ESTA FALLANDO CON MI SQL
 @QueryHandler(getAllSubscriptionQuery)
@@ -38,18 +41,18 @@ export class GetAllSubscriptionHandler implements IQueryHandler<getAllSubscripti
     return subscriptionsDto;
   }    
 }
-
-
-
 @QueryHandler(getSubscriptionByIdQuery)
 export class GetSubscriptionByIdHanlder implements IQueryHandler<getSubscriptionByIdQuery>{
     constructor(@InjectRepository(Subscription) private readonly subscriptionRepository: Repository<Subscription>,private readonly connection: Connection,) {}
 
     async execute(query: getSubscriptionByIdQuery){
         const manager = this.connection.manager;
+        
         const sql=`SELECT *   
           FROM Subscriptions as S
           WHERE S.id = ?`;
+        
+
         const result = await manager.query(sql, [query.SubscriptionId]);
 
         if(result.length === 0){
@@ -67,9 +70,52 @@ export class GetSubscriptionByIdHanlder implements IQueryHandler<getSubscription
         subscriptionDto.Frequency = subscription.frequency;
         subscriptionDto.startDate = subscription.startDate;
         subscriptionDto.endDate = subscription.endDate;
-        
+        subscriptionDto.discount = subscription.Subscriptiondiscount;
+
         console.log("accountId dto: --> ",subscriptionDto.AccountId, "accountId --> normal", subscription.accountId);
         return subscriptionDto;
     }
     
+}
+
+
+@QueryHandler(getUserSubscriptionQuery)
+export class GetUserSubscriptionHandler implements IQueryHandler<getUserSubscriptionQuery>{
+  constructor(@InjectRepository(Subscription) private readonly subscriptionRepository: Repository<Subscription>, private readonly connection: Connection,){} 
+  
+  async execute(query: getUserSubscriptionQuery): Promise<any> {
+    const manager = this.connection.manager;
+    
+    const sql = 
+    `select MAX(S.startDate),S.endDate,P.name, P.Benefits
+    from Subscriptions as S
+    Inner Join accounts as A on A.id = S.accountId
+    Inner Join users as U on U.id = A.id
+    Inner Join plans as P on P.id = S.planId
+    where A.id = 1
+    group by S.endDate,P.name, P.Benefits`;
+   
+   
+    const result = await manager.query(sql,[query.userId]);
+
+    if(result.length === 0){
+      console.log('Not result in repository now. Sorry come back in other moment please');
+      return null;
+    }
+
+    const UserPlan = result[0];
+    console.log("UserPlan: ",UserPlan);
+ 
+
+    const currentUserPlanDto = new CurrentUserPlanDto();
+    currentUserPlanDto.PlanName = UserPlan.name;
+    currentUserPlanDto.Benefits = UserPlan.Benefits;
+    currentUserPlanDto.startDate = UserPlan.startDate;
+    currentUserPlanDto.endDate = UserPlan.endDate;
+
+    return currentUserPlanDto;
+  }
+
+
+ 
 }

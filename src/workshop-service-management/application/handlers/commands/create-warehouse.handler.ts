@@ -6,6 +6,7 @@ import { Warehouse } from 'src/workshop-service-management/domain/entities/wareh
 import { Address } from '../../../domain/value-objects/address.value';
 import { WarehouseFactory } from 'src/workshop-service-management/domain/factories/warehouse.factory';
 import { WarehouseId } from 'src/workshop-service-management/domain/value-objects/warehouse-id.value';
+import { WorkshopIdFK } from '../../../domain/value-objects/workshop-id-fk.value';
 
 @CommandHandler(CreateWarehouseCommand)
 export class CreateWarehouseHandler
@@ -26,7 +27,10 @@ export class CreateWarehouseHandler
       command.addressDetail,
     );
     let warehouse: Warehouse = WarehouseFactory.createFrom(name, address);
-    const aux = warehouse;
+    const aux = {
+      ...warehouse,
+      workshop: WorkshopIdFK.of(command.workshopId),
+    };
     const warehouseAux = this.warehouseRepository.create(aux);
     let warehouseTypeORM = await this.warehouseRepository.save(warehouseAux);
     if (warehouseTypeORM == null) {

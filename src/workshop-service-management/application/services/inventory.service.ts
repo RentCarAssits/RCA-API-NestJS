@@ -10,6 +10,8 @@ import { Repository, FindOptionsWhere } from 'typeorm';
 import { Inventory } from 'src/workshop-service-management/domain/entities/inventory.entity';
 import { InventoryDTO } from '../dto/inventory.dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Warehouse } from 'src/workshop-service-management/domain/entities/warehouse.entity';
+import { WarehouseId } from '../../domain/value-objects/warehouse-id.value';
 
 @Injectable()
 export class InventoryService {
@@ -19,6 +21,9 @@ export class InventoryService {
 
     @InjectRepository(Inventory)
     private inventoryRepository: Repository<Inventory>,
+
+    @InjectRepository(Warehouse)
+    private warehouseRepository: Repository<Warehouse>,
   ) {}
   async create(
     createInventoryDto: CreateInventoryDTO,
@@ -56,7 +61,6 @@ export class InventoryService {
 
     const inventoryDtos: InventoryDTO[] = inventory.map((inventory) => {
       const inventoryDto = new InventoryDTO();
-      console.log(inventory);
       inventoryDto.id = Number(inventory.getId());
       inventoryDto.description = inventory.getDescription();
       inventoryDto.country = inventory.getAddress().getCountry();
@@ -86,5 +90,32 @@ export class InventoryService {
     inventoryDto.warehouse = inventory.getWarehouse();
 
     return Result.ok(inventoryDto);
+  }
+  async findAllInventoriesByWarehouseId(
+    warehouseId: number,
+  ): Promise<Result<AppNotification, InventoryDTO[]>> {
+    const warehouse = await this.warehouseRepository.findOne({
+      where: {
+        id: warehouseId,
+      } as FindOptionsWhere<Warehouse>,
+    });
+
+    const inventory = await this.inventoryRepository.find({
+      where: {
+        warehouse: warehouse,
+      } as FindOptionsWhere<Inventory>,
+    });
+
+    const inventoryDtos: InventoryDTO[] = inventory.map((inventory) => {
+      const inventoryDto = new InventoryDTO();
+      inventoryDto.id = Number(inventory.getId());
+      inventoryDto.description = inventory.getDescription();
+      inventoryDto.country = inventory.getAddress().getCountry();
+      inventoryDto.district = inventory.getAddress().getDitrict();
+      inventoryDto.addressDetail = inventory.getAddress().getAddressDetail();
+      inventoryDto.warehouse = inventory.getWarehouse();
+      return inventoryDto;
+    });
+    return Result.ok(inventoryDtos);
   }
 }

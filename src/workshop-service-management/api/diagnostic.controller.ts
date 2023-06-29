@@ -47,4 +47,20 @@ export class DiagnosticController {
       return ApiController.serverError(response, error);
     }
   }
+
+  @Get('/:id')
+  async getById(
+    @Param('id') diagnosticId: number,
+    @Res({ passthrough: true }) response: any,
+  ) {
+    try {
+      const result: Result<AppNotification, DiagnosticDTO> =
+        await this.diagnosticService.findbyId(diagnosticId);
+      if (result.isSuccess()) {
+        return ApiController.ok(response, result.value);
+      }
+    } catch (error) {
+      return ApiController.serverError(response, error);
+    }
+  }
 }

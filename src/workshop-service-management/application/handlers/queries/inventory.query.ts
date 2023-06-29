@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetAllInventoryQuery } from '../../queries/get-all-inventory.query';
 import { DataSource, getManager } from 'typeorm';
-import { InventoryDTO } from '../../dto/inventory.dto';
+import { InventoryDto } from '../../dto/inventory.dto';
 import { GetInventoryByIdQuery } from '../../queries/get-inventory-by-id.query';
 
 @QueryHandler(GetAllInventoryQuery)
@@ -29,10 +29,10 @@ export class GetAllInventoryHandler
       return [];
     }
 
-    const inventories: InventoryDTO[] = ormInventories.map(function (
+    const inventories: InventoryDto[] = ormInventories.map(function (
       ormInventories,
     ) {
-      const inventoriesDto = new InventoryDTO();
+      const inventoriesDto = new InventoryDto();
       inventoriesDto.id = Number(ormInventories.id);
       inventoriesDto.description = ormInventories.description;
       inventoriesDto.country = ormInventories.country;
@@ -72,8 +72,8 @@ export class GetInventoryByIdHandler
       return [];
     }
 
-    const inventories: InventoryDTO = ormInventories[0];
-    const inventoriesDto = new InventoryDTO();
+    const inventories: InventoryDto = ormInventories[0];
+    const inventoriesDto = new InventoryDto();
     inventoriesDto.id = Number(inventories.id);
     inventoriesDto.description = inventories.description;
     inventoriesDto.country = inventories.country;

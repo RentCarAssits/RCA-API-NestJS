@@ -7,9 +7,9 @@ import { ApiController } from 'src/shared/api/api.controller';
 import { CreateInventoryDTO } from '../application/dto/request/create-inventory.dto';
 import { InventoryService } from '../application/services/inventory.service';
 import { GetInventoryByIdQuery } from '../application/queries/get-inventory-by-id.query';
-import { InventoryDTO } from '../application/dto/inventory.dto';
+import { InventoryDto } from '../application/dto/inventory.dto';
 import { ProductService } from '../application/services/product.service';
-import { ProductDTO } from '../application/dto/product.dto';
+import { ProductDto } from '../application/dto/product.dto';
 
 @ApiTags('Inventory')
 @Controller('inventory')
@@ -41,7 +41,7 @@ export class InventoryController {
   @Get()
   async getAll(@Res({ passthrough: true }) response: any) {
     try {
-      const result: Result<AppNotification, InventoryDTO[]> =
+      const result: Result<AppNotification, InventoryDto[]> =
         await this.inventoryService.findAll();
       if (result.isSuccess()) {
         return ApiController.ok(response, result.value);
@@ -57,7 +57,7 @@ export class InventoryController {
     @Res({ passthrough: true }) response: any,
   ) {
     try {
-      const result: Result<AppNotification, InventoryDTO> =
+      const result: Result<AppNotification, InventoryDto> =
         await this.inventoryService.findById(inventoryId);
       if (result.isSuccess()) {
         return ApiController.ok(response, result.value);
@@ -73,7 +73,7 @@ export class InventoryController {
     @Res({ passthrough: true }) response: any,
   ) {
     try {
-      const result: Result<AppNotification, ProductDTO[]> =
+      const result: Result<AppNotification, ProductDto[]> =
         await this.productService.findAllProductsByInventoryId(inventoryId);
       if (result.isSuccess()) {
         return ApiController.ok(response, result.value);

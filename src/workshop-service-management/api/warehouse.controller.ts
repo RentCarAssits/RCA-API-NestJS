@@ -6,7 +6,7 @@ import { AppNotification } from 'src/shared/application/app.notification';
 import { ApiController } from 'src/shared/api/api.controller';
 import { WarehouseService } from '../application/services/warehouse.service';
 import { CreateWarehouseDTO } from '../application/dto/request/create-warehouse.dto';
-import { InventoryDTO } from '../application/dto/inventory.dto';
+import { InventoryDto } from '../application/dto/inventory.dto';
 import { InventoryService } from '../application/services/inventory.service';
 
 @ApiTags('Warehouse')
@@ -41,7 +41,7 @@ export class WarehouseController {
     @Res({ passthrough: true }) response: any,
   ) {
     try {
-      const result: Result<AppNotification, InventoryDTO[]> =
+      const result: Result<AppNotification, InventoryDto[]> =
         await this.inventoryService.findAllInventoriesByWarehouseId(
           warehouseId,
         );

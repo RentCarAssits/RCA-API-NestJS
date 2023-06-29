@@ -1,6 +1,6 @@
 import { Warehouse } from 'src/workshop-service-management/domain/entities/warehouse.entity';
 
-export class InventoryDTO {
+export class InventoryDto {
   public id: number;
   public description: string;
   public country: string;

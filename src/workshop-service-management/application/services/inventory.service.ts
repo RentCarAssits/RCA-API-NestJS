@@ -8,7 +8,7 @@ import { CreateInventoryCommand } from '../commands/create-inventory.command';
 import { CreateInventoryResponseDTO } from '../dto/response/create-inventory-response.dto';
 import { Repository, FindOptionsWhere } from 'typeorm';
 import { Inventory } from 'src/workshop-service-management/domain/entities/inventory.entity';
-import { InventoryDTO } from '../dto/inventory.dto';
+import { InventoryDto } from '../dto/inventory.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Warehouse } from 'src/workshop-service-management/domain/entities/warehouse.entity';
 import { WarehouseId } from '../../domain/value-objects/warehouse-id.value';
@@ -54,13 +54,13 @@ export class InventoryService {
     return Result.ok(createInventoryResponseDto);
   }
 
-  async findAll(): Promise<Result<AppNotification, InventoryDTO[]>> {
+  async findAll(): Promise<Result<AppNotification, InventoryDto[]>> {
     const inventory = await this.inventoryRepository.find({
       relations: ['warehouse'],
     });
 
-    const inventoryDtos: InventoryDTO[] = inventory.map((inventory) => {
-      const inventoryDto = new InventoryDTO();
+    const inventoryDtos: InventoryDto[] = inventory.map((inventory) => {
+      const inventoryDto = new InventoryDto();
       inventoryDto.id = Number(inventory.getId());
       inventoryDto.description = inventory.getDescription();
       inventoryDto.country = inventory.getAddress().getCountry();
@@ -73,7 +73,7 @@ export class InventoryService {
   }
   async findById(
     inventoryId: Number,
-  ): Promise<Result<AppNotification, InventoryDTO>> {
+  ): Promise<Result<AppNotification, InventoryDto>> {
     const inventory = await this.inventoryRepository.findOne({
       relations: ['warehouse'],
       where: {
@@ -81,7 +81,7 @@ export class InventoryService {
       } as FindOptionsWhere<Inventory>,
     });
 
-    const inventoryDto = new InventoryDTO();
+    const inventoryDto = new InventoryDto();
     inventoryDto.id = Number(inventory.getId());
     inventoryDto.description = inventory.getDescription();
     inventoryDto.country = inventory.getAddress().getCountry();
@@ -93,7 +93,7 @@ export class InventoryService {
   }
   async findAllInventoriesByWarehouseId(
     warehouseId: number,
-  ): Promise<Result<AppNotification, InventoryDTO[]>> {
+  ): Promise<Result<AppNotification, InventoryDto[]>> {
     const warehouse = await this.warehouseRepository.findOne({
       where: {
         id: warehouseId,
@@ -106,8 +106,8 @@ export class InventoryService {
       } as FindOptionsWhere<Inventory>,
     });
 
-    const inventoryDtos: InventoryDTO[] = inventory.map((inventory) => {
-      const inventoryDto = new InventoryDTO();
+    const inventoryDtos: InventoryDto[] = inventory.map((inventory) => {
+      const inventoryDto = new InventoryDto();
       inventoryDto.id = Number(inventory.getId());
       inventoryDto.description = inventory.getDescription();
       inventoryDto.country = inventory.getAddress().getCountry();

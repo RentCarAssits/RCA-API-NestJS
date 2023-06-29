@@ -18,6 +18,7 @@ import { GetAllVehiclesByYearQuery } from '../../application/queries/get-all-veh
 import { GetAllVehiclesByStarsQuery } from '../../application/queries/get-all-vehicles-by-stars.query';
 import { GetVehiclesByOwnerIdQuery } from '../../application/queries/get-vehicles-by-ownerId.query';
 import { Get20VehiclesMixedQuery } from '../../application/queries/get-20-vehicles-mixed.query';
+import { GetVehiclesInMaintenanceStateQuery } from 'src/renting-management/application/queries/get-vehicles-in-maintenance-state.query';
 
 @ApiTags('Vehicles')
 @Controller('vehicles')
@@ -184,6 +185,25 @@ export class VehiclesController {
     try {
       const vehicle = await this.queryBus.execute(
         new GetVehiclesByOwnerIdQuery(owner),
+      );
+      return ApiController.ok(response, vehicle);
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: vehicles.controller.ts:77 ~ VehiclesController ~ error:',
+        error,
+      );
+      return ApiController.serverError(response, error);
+    }
+  }
+
+  @Get('/state/maintenance')
+  @Auth()
+  async getVehiclesInMaintenanceState(
+    @Res({ passthrough: true }) response: any,
+  ) {
+    try {
+      const vehicle = await this.queryBus.execute(
+        new GetVehiclesInMaintenanceStateQuery(),
       );
       return ApiController.ok(response, vehicle);
     } catch (error) {

@@ -1,20 +1,21 @@
 module.exports = {
   type: 'mysql',
-  host: 'rca-parsimonia-server.mysql.database.azure.com',
+  url: process.env.RCA_DB_MYSQL,
+  host: 'localhost',
   port: 3306,
-  username: 'rca123parsimonia',
-  password: 'edco-password1',
-  database: 'rca-db',
+  username: 'root',
+  password: '123456789',
+  database: 'rca_db',
   autoLoadEntities: true,
-  synchronize: true,
+  synchronize: false,
   ssl: true,
   migrationsRun: true,
   logging: false,
   bigNumberStrings: false,
   entities: [
     process.env.ENVIRONMENT == 'prod'
-      ? '**/domain/entities/*.js'
-      : 'dist/**/domain/entities/*.js',
+      ? '*/domain/entities/.js'
+      : 'dist/*/domain/entities/.js',
   ],
   extra: {
     ssl: {
@@ -22,3 +23,4 @@ module.exports = {
     },
   },
 };
+

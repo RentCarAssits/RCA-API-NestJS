@@ -17,6 +17,8 @@ import { User } from '../../../iam-management/domain/entities/user.entity';
 import { GetRentingItemsByVehiclesRequest } from '../../application/requests/get-renting-items-by-vehicles.request';
 import { GetAllRentingItemsByVehicleQuery } from '../../application/queries/get-all-renting-items-by-vehicle.query';
 import { GetAllRentingItemsByRenterIdQuery } from '../../application/queries/get-all-renting-items-by-renter-id.query';
+import { GetAllAcceptedRentingItemsByRenterIdQuery } from '../../application/queries/get-all-accepted-renting-items-by-renter-id.query';
+import { ValidRoles } from 'src/iam-management/domain/interfaces/valid-roles';
 
 @ApiTags('Renting-Order-Items')
 @Controller('Renting-Order-Items')
@@ -27,7 +29,7 @@ export class RentingOrderItemsController {
   ) {}
 
   @Post()
-  @Auth()
+  @Auth(ValidRoles.renter)
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 403, description: 'Forbidden. Token Related' })
@@ -69,6 +71,10 @@ export class RentingOrderItemsController {
   }
 
   @Get('/:id')
+  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 403, description: 'Forbidden. Token Related' })
+  @ApiResponse({ status: 500, description: 'Ups! Something Bad Happened' })
   async getById(
     @Param('id') rentingOrderItemId: number,
     @Res({ passthrough: true }) response: any,
@@ -87,6 +93,10 @@ export class RentingOrderItemsController {
     }
   }
   @Get('get-by-renter-id/:id')
+  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 403, description: 'Forbidden. Token Related' })
+  @ApiResponse({ status: 500, description: 'Ups! Something Bad Happened' })
   async getByRenterId(
     @Param('id') renterId: number,
     @Res({ passthrough: true }) response: any,
@@ -104,7 +114,33 @@ export class RentingOrderItemsController {
       return ApiController.serverError(response, error);
     }
   }
+  @Get('get-all-accepted-by-renter-id/:id')
+  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 403, description: 'Forbidden. Token Related' })
+  @ApiResponse({ status: 500, description: 'Ups! Something Bad Happened' })
+  async getAllAcceptedByRenterId(
+    @Param('id') renterId: number,
+    @Res({ passthrough: true }) response: any,
+  ) {
+    try {
+      const vehicle = await this.queryBus.execute(
+        new GetAllAcceptedRentingItemsByRenterIdQuery(renterId),
+      );
+      return ApiController.ok(response, vehicle);
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: rentingOrderItems.controller.ts:77 ~ rentingOrderItems ~ error:',
+        error,
+      );
+      return ApiController.serverError(response, error);
+    }
+  }
   @Post('/get-by-vehicles')
+  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 403, description: 'Forbidden. Token Related' })
+  @ApiResponse({ status: 500, description: 'Ups! Something Bad Happened' })
   async GetByVehicles(
     @Body() vehiclesIdRequest: GetRentingItemsByVehiclesRequest,
     @Res({ passthrough: true }) response,
@@ -124,6 +160,10 @@ export class RentingOrderItemsController {
   }
 
   @Put('/:id')
+  @ApiResponse({ status: 200, description: 'OK' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 403, description: 'Forbidden. Token Related' })
+  @ApiResponse({ status: 500, description: 'Ups! Something Bad Happened' })
   async Update(
     @Body() updateRentingOrderItemRequest: UpdateRentingOrderItemRequest,
     @Res({ passthrough: true }) response,

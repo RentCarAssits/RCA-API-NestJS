@@ -22,8 +22,9 @@ import { CreateInvoiceHandler } from './application/handlers/register-invoice.ha
 import { invoice } from './domain/entities/invoice.entity';
 import { InvoiceApplicationService } from './application/services/invoice-application.service';
 import { InvoiceQueriesHandler } from './application/handlers/queries/invoice-queries.handler';
+import { UpdateAccountPayableHandler } from './application/handlers/update-accountPayable.handler';
 
-export const CommandHandlers = [CreateAccountPayableHandler, CreatePaymentPayableHandler, CreatePaymentHandler, AccountPayableAggregateDeleteHandler, CreateInvoiceHandler];
+export const CommandHandlers = [CreateAccountPayableHandler, CreatePaymentPayableHandler, CreatePaymentHandler, AccountPayableAggregateDeleteHandler, CreateInvoiceHandler,UpdateAccountPayableHandler];
 export const QueryHandlers = [GetAccountPayableByIdHandler, AccountPayablesQueriesHandler,InvoiceQueriesHandler];
 @Module({
     imports: [

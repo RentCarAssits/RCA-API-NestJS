@@ -18,6 +18,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ValidRoles } from 'src/iam-management/domain/interfaces/valid-roles';
 import { UserRoleGuard } from 'src/iam-management/infrastructure/guards/user-role-guard';
 import { User } from '../../domain/entities/user.entity';
+import { ApiTags } from '@nestjs/swagger';
 
 @UsePipes(
   new ValidationPipe({
@@ -25,6 +26,7 @@ import { User } from '../../domain/entities/user.entity';
     forbidNonWhitelisted: true,
   }),
 )
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

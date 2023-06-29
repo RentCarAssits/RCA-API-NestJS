@@ -19,18 +19,24 @@ export class AccountPayableApplicationService {
     const createAccountPayable: CreateAccountPayable = new CreateAccountPayable(
       registerAccountPayableRequest.payerId,
       registerAccountPayableRequest.payeeId,
+      registerAccountPayableRequest.serviceId,
       registerAccountPayableRequest.totalPrice,
       registerAccountPayableRequest.state,
       registerAccountPayableRequest.expirationDay,
+      registerAccountPayableRequest.currency,
+      registerAccountPayableRequest.tipoServicio
     );      
     const accountId: number= await this.commandBus.execute(createAccountPayable);
     const registerAccountPayableResponse: RegisterAccountPayableResponse = new RegisterAccountPayableResponse(
       accountId,
       createAccountPayable.payerId,
       createAccountPayable.payeeId,
+      createAccountPayable.serviceId,
       createAccountPayable.totalPrice,
       createAccountPayable.state,
-      createAccountPayable.expirationDay
+      createAccountPayable.expirationDay,
+      createAccountPayable.currency,
+      createAccountPayable.tipoServicio
     );
 
     return Result.ok(registerAccountPayableResponse);

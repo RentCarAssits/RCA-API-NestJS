@@ -1,6 +1,6 @@
-import { Controller, Post, Body, Res, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, Res, Get, Param, Delete, NotFoundException } from '@nestjs/common';
 import { AccountPayableApplicationService } from '../application/services/accountPayable-application.service';
-import { QueryBus } from '@nestjs/cqrs';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { RegisterAccountPayableResponse } from '../application/reponses/register-accountPayable.response';
 import { AppNotification } from 'src/shared/application/app.notification';
 import { RegisterAccountPayableRequest } from '../application/requests/register-accountPayable.request';
@@ -8,16 +8,19 @@ import { ApiController } from 'src/shared/api/api.controller';
 import { Result } from 'typescript-result';
 import { GetAllAccountPayablesQuery } from '../application/queries/get-all-account-payables-query';
 import { GetAccountPayableByIdQuery } from '../application/queries/get-account-payable-by-id.query';
+import { AccountPayableAggregateDeleteCommand } from '../application/commands/delete-accountPayable.command';
 
 
 @Controller('accountPayable')
 export class AccountPayableController {
   constructor(
     private readonly accountPayableService: AccountPayableApplicationService,
-    private readonly queryBus: QueryBus
+    private readonly queryBus: QueryBus,
+    private readonly commandBus: CommandBus
+
   ) { }
 
-  @Post('register')
+  @Post()
   async register(
     @Body() registerAccountPayableRequest: RegisterAccountPayableRequest,
     @Res({ passthrough: true }) response
@@ -51,12 +54,26 @@ export class AccountPayableController {
     @Param('id') id: number,
     @Res({ passthrough: true }) response: any
   ) {
-    try{
+    try {
       const accountPayable = await this.queryBus.execute(
         new GetAccountPayableByIdQuery(id)
-        );
-        return ApiController.ok(response, accountPayable);
-    }catch(error){
+      );
+      return ApiController.ok(response, accountPayable);
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: accountPayable.controller.ts:77 ~ accountPayableController ~ error:',
+        error,
+      );
+      return ApiController.serverError(response, error);
+    };
+  }
+
+  @Delete('/:id')
+  async deleteById(@Param('id') id: number, @Res({ passthrough: true }) response: any
+  ) {
+    try {
+      await this.commandBus.execute(new AccountPayableAggregateDeleteCommand(id));
+    } catch (error) {
       console.log(
         '🚀 ~ file: accountPayable.controller.ts:77 ~ accountPayableController ~ error:',
         error,

@@ -1,13 +1,13 @@
 export class RegisterAccountPayableResponse {
-    constructor(
-      public readonly accountPayableId: number,
-      public readonly payerId: number,
-      public readonly payeeId: number,
-      public readonly serviceId:number,
-      public readonly totalPrice: number,
-      public readonly state: string,
-      public readonly expirationDay: Date,
-      public readonly currency:string,
-      public readonly tipoServicio:string
-    ) {}
-  }
+  constructor(
+    public accountPayableId: number,
+    public payerId: number,
+    public payeeId: number,
+    public serviceId: number,
+    public totalPrice: number,
+    public state: string,
+    public expirationDay: Date,
+    public currency: string,
+    public tipoServicio: string
+  ) { }
+}

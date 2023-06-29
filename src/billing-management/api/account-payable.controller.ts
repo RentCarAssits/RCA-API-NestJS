@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, Get, Param, Delete, NotFoundException } from '@nestjs/common';
+import { Controller, Post, Body, Res, Get, Param, Delete, Put } from '@nestjs/common';
 import { AccountPayableApplicationService } from '../application/services/accountPayable-application.service';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { RegisterAccountPayableResponse } from '../application/reponses/register-accountPayable.response';
@@ -9,6 +9,7 @@ import { Result } from 'typescript-result';
 import { GetAllAccountPayablesQuery } from '../application/queries/get-all-account-payables-query';
 import { GetAccountPayableByIdQuery } from '../application/queries/get-account-payable-by-id.query';
 import { AccountPayableAggregateDeleteCommand } from '../application/commands/delete-accountPayable.command';
+import { UpdateAccountPayableRequest } from '../application/requests/update-accountPayable.request';
 
 
 @Controller('accountPayable')
@@ -80,5 +81,22 @@ export class AccountPayableController {
       );
       return ApiController.serverError(response, error);
     };
+  }
+  @Put('/:id')
+  async updateById(
+    @Param('id') id: number,
+    @Body() updateAccountPayableRequest: UpdateAccountPayableRequest,
+    @Res({ passthrough: true }) response: any
+  ) {
+    try {
+      const result = await this.accountPayableService.update(id, updateAccountPayableRequest);
+      if (result.isSuccess()) {
+        return ApiController.updated(response, result.value);
+      }
+      return ApiController.error(response, result.error.getErrors());
+    } catch (error) {
+      console.log('🚀 ~ file: AccountPayable.controller.ts:44 ~ AccountPayableController ~ error:', error);
+      return ApiController.serverError(response, error);
+    }
   }
 }

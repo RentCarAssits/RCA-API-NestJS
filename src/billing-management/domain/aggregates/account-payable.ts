@@ -6,6 +6,7 @@ import { PayeeIdFk } from '../values/payee-id-fk.value';
 import { Price } from '../values/price.value';
 import { PaymentStatus } from '../enums/payment-status.enum';
 import { ServiceType } from '../enums/service-type.enum';
+import { AccountPayabelUpdated } from '../events/account-payable-updated.event';
 
 @Entity('account_payables')
 export class AccountPayableAggregate extends AggregateRoot {
@@ -58,6 +59,21 @@ export class AccountPayableAggregate extends AggregateRoot {
     this.tipoServicio = tipoServicio
   }
 
+  public updated() {
+    const event = new AccountPayabelUpdated(
+      this.id.getValue(),
+      this.idService,
+      this.payerId.getValue(),
+      this.payeeId.getValue(),
+      this.price.getValue(),
+      this.price.getParcial(),
+      this.expirationDay,
+      this.state,
+      this.currency,
+      this.tipoServicio
+    )
+  }
+
   public getId(): AccountPayableId {
     return this.id;
   }
@@ -92,5 +108,8 @@ export class AccountPayableAggregate extends AggregateRoot {
 
   public getExpirationDay(): Date {
     return this.expirationDay;
+  }
+  public changeId(id: AccountPayableId) {
+    this.id = id;
   }
 }

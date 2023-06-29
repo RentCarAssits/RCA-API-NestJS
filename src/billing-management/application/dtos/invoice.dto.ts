@@ -3,5 +3,6 @@ export class InvoiceDto{
     public date:Date;
     public payerId:number;
     public serviceId:number;
+    public address:string;
     public totalPrice:number;
 }

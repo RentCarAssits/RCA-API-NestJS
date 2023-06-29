@@ -29,6 +29,7 @@ export class InvoiceQueriesHandler
                 invoiceDto.totalPrice = ormInvoices.getTotalPrice();
                 invoiceDto.payerId = Number(ormInvoices.getPayerId());
                 invoiceDto.serviceId = Number(ormInvoices.getServiceId());
+                invoiceDto.address = ormInvoices.getPayerAddress();
                 return invoiceDto;
             },
         );

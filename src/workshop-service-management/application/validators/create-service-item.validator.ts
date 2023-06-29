@@ -2,14 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ServiceRequest } from 'src/workshop-service-management/domain/entities/service-request.entity';
 import { Repository } from 'typeorm';
-import { ServiceRequestDto } from '../dto/request/service-request.dto';
 import { AppNotification } from 'src/shared/application/app.notification';
-import { User } from 'src/iam-management/domain/entities/user.entity';
-import { Workshop } from 'src/workshop-service-management/domain/entities/workshop.entity';
-import { Vehicle } from 'src/renting-management/domain/entities/vehicle.entity';
-import { CreateRequestItemDto } from '../dto/request/create-request-item.dto';
-import { ServiceItem } from 'src/workshop-service-management/domain/entities/service-item.entity';
-import { Product } from 'src/workshop-service-management/domain/entities/product.entity';
 import { CreateServiceItemDto } from '../dto/request/create-service-item.dto';
 import { Proposal } from '../../domain/entities/proposal.entity';
 

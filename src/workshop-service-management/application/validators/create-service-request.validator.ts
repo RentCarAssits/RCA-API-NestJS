@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ServiceRequest } from 'src/workshop-service-management/domain/entities/service-request.entity';
 import { Repository } from 'typeorm';
-import { ServiceRequestDto } from '../dto/request/service-request.dto';
+import { CreateServiceRequestDto } from '../dto/request/service-request.dto';
 import { AppNotification } from 'src/shared/application/app.notification';
 import { User } from 'src/iam-management/domain/entities/user.entity';
 import { Workshop } from 'src/workshop-service-management/domain/entities/workshop.entity';
@@ -25,12 +25,24 @@ export class CreateServiceRequestValidator {
   ) {}
 
   public async validate(
-    serviceRequestDto: ServiceRequestDto,
+    serviceRequestDto: CreateServiceRequestDto,
   ): Promise<AppNotification> {
     const notification: AppNotification = new AppNotification();
     const descriptionProblems: string = serviceRequestDto.descriptionProblems;
     if (descriptionProblems === null) {
       notification.addError('Description Problem is required', null);
+    }
+    const vehicleName: string = serviceRequestDto.vehicleName;
+    if (vehicleName === null) {
+      notification.addError('Vehicle Name is required', null);
+    }
+    const year: string = serviceRequestDto.year;
+    if (year === null) {
+      notification.addError('Year is required', null);
+    }
+    const vehicleIntegrity: string = serviceRequestDto.vehicleIntegrity;
+    if (vehicleIntegrity === null) {
+      notification.addError('Vehicle Integrity is required', null);
     }
 
     const workshopId: number = serviceRequestDto.workshopId;

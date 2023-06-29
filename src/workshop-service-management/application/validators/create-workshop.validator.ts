@@ -39,9 +39,9 @@ export class CreateWorkshopValidator {
 
     const ownerId: number = createWorkshopDto.mechanicId;
     if (ownerId == null) {
-      notification.addError('OwnerId is required', null);
+      notification.addError('Mechanic Id is required', null);
     } else if (ownerId <= 0) {
-      notification.addError('OwnerId is invalid ', null);
+      notification.addError('Mechanic Id  is invalid ', null);
     } else {
       const owner: User = await this.userRepository
         .createQueryBuilder()
@@ -50,7 +50,7 @@ export class CreateWorkshopValidator {
       console.log(owner);
       if (owner == null) {
         notification.addError(
-          'User with the specified owner Id does not exist',
+          'Mechanic  with the specified owner Id does not exist',
           null,
         );
       }

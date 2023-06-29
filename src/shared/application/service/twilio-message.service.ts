@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 
 @Injectable()
 export class TwilioMessageService {
-  accountSid = 'ACc5948f60a62cbe835a278bf2cbe0ffa2';
-  authToken = 'a66a47d949716aeee96a87ecd08c9f3e';
+  constructor(private configService: ConfigService) {}
+  accountSid = this.configService.get<string>('ACCOUNTSID');
+  authToken = this.configService.get<string>('AUTHTOKEN')
+  
   client = require('twilio')(this.accountSid, this.authToken);
 
   async sendWsp(req: any): Promise<string> {

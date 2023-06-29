@@ -96,9 +96,10 @@ export class InventoryService {
   ): Promise<Result<AppNotification, InventoryDTO[]>> {
     const warehouse = await this.warehouseRepository.findOne({
       where: {
-        id: WarehouseId.of(warehouseId),
+        id: warehouseId,
       } as FindOptionsWhere<Warehouse>,
     });
+
     const inventory = await this.inventoryRepository.find({
       where: {
         warehouse: warehouse,

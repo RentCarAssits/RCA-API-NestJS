@@ -6,10 +6,12 @@ import { CreateProductValidator } from '../validators/create-product.validator';
 import { CreateProductDto } from '../dto/request/create-product.dto';
 import { CreateProductCommand } from '../commands/create-product.command';
 import { CreateProductResponseDto } from '../dto/response/create-product-response.dto';
-import { ProductDTO } from '../dto/product.dto';
+import { ProductDto } from '../dto/product.dto';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { Product } from 'src/workshop-service-management/domain/entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Inventory } from '../../domain/entities/inventory.entity';
+import { InventoryId } from '../../domain/value-objects/inventory-id.value';
 
 @Injectable()
 export class ProductService {
@@ -19,6 +21,9 @@ export class ProductService {
 
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
+
+    @InjectRepository(Inventory)
+    private inventoryRepository: Repository<Inventory>,
   ) {}
   async create(
     createProductDto: CreateProductDto,
@@ -48,13 +53,13 @@ export class ProductService {
     return Result.ok(createProductResponseDto);
   }
 
-  async findAll(): Promise<Result<AppNotification, ProductDTO[]>> {
+  async findAll(): Promise<Result<AppNotification, ProductDto[]>> {
     const products = await this.productRepository.find({
       relations: ['inventory'],
     });
 
-    const productDtos: ProductDTO[] = products.map((product) => {
-      const productDto = new ProductDTO();
+    const productDtos: ProductDto[] = products.map((product) => {
+      const productDto = new ProductDto();
       productDto.id = Number(product.getId());
       productDto.productName = product.getName();
       productDto.quantityProduct = product.getQuantityProduct();
@@ -68,7 +73,7 @@ export class ProductService {
 
   async findById(
     productId: Number,
-  ): Promise<Result<AppNotification, ProductDTO>> {
+  ): Promise<Result<AppNotification, ProductDto>> {
     const product = await this.productRepository.findOne({
       relations: ['inventory'],
       where: {
@@ -76,7 +81,7 @@ export class ProductService {
       } as FindOptionsWhere<Product>,
     });
 
-    const productDto = new ProductDTO();
+    const productDto = new ProductDto();
     productDto.id = Number(product.getId());
     productDto.productName = product.getName();
     productDto.quantityProduct = product.getQuantityProduct();
@@ -84,5 +89,32 @@ export class ProductService {
     productDto.currency = product.getPrice().getCurrency();
     productDto.inventoryId = Number(product.getInventory().getId());
     return Result.ok(productDto);
+  }
+  async findAllProductsByInventoryId(
+    inventoryId: number,
+  ): Promise<Result<AppNotification, ProductDto[]>> {
+    const inventory = await this.inventoryRepository.findOne({
+      where: {
+        id: InventoryId.create(inventoryId),
+      } as FindOptionsWhere<Inventory>,
+    });
+    const products = await this.productRepository.find({
+      relations: ['inventory'],
+      where: {
+        inventory: inventory,
+      } as FindOptionsWhere<Product>,
+    });
+
+    const productDtos: ProductDto[] = products.map((product) => {
+      const productDto = new ProductDto();
+      productDto.id = Number(product.getId());
+      productDto.productName = product.getName();
+      productDto.quantityProduct = product.getQuantityProduct();
+      productDto.amount = product.getPrice().getAmount();
+      productDto.currency = product.getPrice().getCurrency();
+      productDto.inventoryId = Number(product.getInventory().getId());
+      return productDto;
+    });
+    return Result.ok(productDtos);
   }
 }

@@ -1,4 +1,4 @@
-export class ProductDTO {
+export class ProductDto {
   public id: number;
   public productName: string;
   public quantityProduct: number;

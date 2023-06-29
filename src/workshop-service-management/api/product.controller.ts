@@ -5,7 +5,7 @@ import { Result } from 'typescript-result';
 import { AppNotification } from 'src/shared/application/app.notification';
 import { ApiController } from 'src/shared/api/api.controller';
 import { ProductService } from '../application/services/product.service';
-import { ProductDTO } from '../application/dto/product.dto';
+import { ProductDto } from '../application/dto/product.dto';
 import { CreateProductDto } from '../application/dto/request/create-product.dto';
 
 @ApiTags('Product')
@@ -38,7 +38,7 @@ export class ProductController {
   @Get()
   async getAll(@Res({ passthrough: true }) response: any) {
     try {
-      const result: Result<AppNotification, ProductDTO[]> =
+      const result: Result<AppNotification, ProductDto[]> =
         await this.productService.findAll();
       if (result.isSuccess()) {
         return ApiController.ok(response, result.value);
@@ -54,7 +54,7 @@ export class ProductController {
     @Res({ passthrough: true }) response: any,
   ) {
     try {
-      const result: Result<AppNotification, ProductDTO> =
+      const result: Result<AppNotification, ProductDto> =
         await this.productService.findById(productId);
       if (result.isSuccess()) {
         return ApiController.ok(response, result.value);

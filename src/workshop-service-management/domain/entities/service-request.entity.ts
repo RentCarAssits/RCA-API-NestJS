@@ -33,6 +33,15 @@ export class ServiceRequest extends AggregateRoot {
   @Column((type) => OwnerId, { prefix: false })
   private owner: OwnerId;
 
+  @Column('varchar', { name: 'vehicle_name' })
+  private vehicleName: string;
+
+  @Column('varchar', { name: 'vehicle_year' })
+  private year: string;
+
+  @Column('varchar', { name: 'vehicle_integrity' })
+  private vehicleIntegrity: string;
+
   public constructor(descriptionProblems: string) {
     super();
     this.descriptionProblems = descriptionProblems;
@@ -67,5 +76,17 @@ export class ServiceRequest extends AggregateRoot {
 
   public changeId(id: ServiceRequestId) {
     this.id = id;
+  }
+
+  public geteVehicleName(): string {
+    return this.vehicleName;
+  }
+
+  public getYear(): string {
+    return this.year;
+  }
+
+  public getVehicleIntegrity(): string {
+    return this.vehicleIntegrity;
   }
 }

@@ -36,7 +36,9 @@ export class CreateServiceRequestHandler
   async execute(command: CreateServiceRequest): Promise<any> {
     let serviceRequestId = 0;
     const descriptionProblems: string = command.descriptionProblems;
-
+    const name: string = command.vehicleName;
+    const year: string = command.year;
+    const intengrity: string = command.vehicleIntegrity;
     const ownerId: number = command.ownerId;
     const owner = await this.userRepository
       .createQueryBuilder()
@@ -72,6 +74,9 @@ export class CreateServiceRequestHandler
       workshopId: WorkshopIdFK.of(workshopId),
       owner: OwnerId.of(ownerId),
       vehicle: VehicleId.of(vehicleId),
+      vehicleName: name,
+      year: year,
+      vehicleIntegrity: intengrity,
     };
 
     const serviceRequestAux = await this.serviceRequestRepository.create(aux);

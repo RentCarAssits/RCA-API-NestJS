@@ -5,11 +5,14 @@ import { ServiceItem } from './service-item.entity';
 import { Period } from '../value-objects/period.value';
 import { AggregateRoot } from '@nestjs/cqrs';
 import { CreateProposalEvent } from '../events/create-proposal.event';
+import { ServiceOrderId } from '../value-objects/service-order-id.value';
+import { ServiceItemOrder } from './service-item-order-entity';
+import { CreateServiceOrderEvent } from '../events/create-service-order.event';
 
-@Entity('proposal')
-export class Proposal extends AggregateRoot {
+@Entity('service_order')
+export class ServiceOrder extends AggregateRoot {
   @PrimaryGeneratedColumn()
-  private id: ProposalId;
+  private id: ServiceOrderId;
 
   @Column('int', { name: 'human_resources' })
   private humanResources: number;
@@ -18,31 +21,41 @@ export class Proposal extends AggregateRoot {
   private price: Price;
 
   @Column(() => Period, { prefix: false })
-  private period: Period;
+  private currentPeriod: Period;
 
-  @OneToMany(() => ServiceItem, (ServiceItem) => ServiceItem.getProposal)
-  private serviceItems: ServiceItem[];
+  @OneToMany(
+    () => ServiceItemOrder,
+    (ServiceItemOrder) => ServiceItemOrder.getServiceOrder,
+  )
+  private serviceItemOrders: ServiceItemOrder[];
 
-  public constructor(humanResources: number, price: Price, period: Period) {
+  public constructor(
+    humanResources: number,
+    price: Price,
+
+    currentPeriod: Period,
+  ) {
     super();
     this.humanResources = humanResources;
     this.price = price;
-    this.period = period;
+
+    this.currentPeriod = currentPeriod;
   }
 
   public create() {
-    const event = new CreateProposalEvent(
+    const event = new CreateServiceOrderEvent(
       this.id.getValue(),
       this.humanResources,
       this.price.getAmount(),
       this.price.getCurrency(),
-      this.period.getStart(),
-      this.period.getEnd(),
+
+      this.currentPeriod.getStart(),
+      this.currentPeriod.getEnd(),
     );
     this.apply(event);
   }
 
-  public getId(): ProposalId {
+  public getId(): ServiceOrderId {
     return this.id;
   }
 
@@ -54,15 +67,14 @@ export class Proposal extends AggregateRoot {
     return this.price;
   }
 
-  public getServiceItems(): ServiceItem[] {
-    return this.serviceItems;
+  public getPlannedPeriod(): Period {
+    return this.currentPeriod;
   }
 
-  public getPeriod(): Period {
-    return this.period;
-  }
-
-  public changeId(id: ProposalId) {
+  public changeId(id: ServiceOrderId) {
     this.id = id;
+  }
+  public getServiceItemOrders(): ServiceItemOrder[] {
+    return this.serviceItemOrders;
   }
 }

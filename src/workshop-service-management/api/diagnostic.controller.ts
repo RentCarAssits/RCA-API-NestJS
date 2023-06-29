@@ -7,7 +7,7 @@ import { ApiController } from 'src/shared/api/api.controller';
 import { GetInventoryByIdQuery } from '../application/queries/get-inventory-by-id.query';
 import { DiagnosticService } from '../application/services/diagnostic.service';
 import { CreateDiagnosticDTO } from '../application/dto/request/create-diagnostic.dto';
-import { DiagnosticDTO } from '../application/dto/diagnostic.dto';
+import { DiagnosticDto } from '../application/dto/diagnostic.dto';
 
 @ApiTags('Diagnostic')
 @Controller('diagnostic')
@@ -38,8 +38,24 @@ export class DiagnosticController {
   @Get()
   async getAll(@Res({ passthrough: true }) response: any) {
     try {
-      const result: Result<AppNotification, DiagnosticDTO[]> =
+      const result: Result<AppNotification, DiagnosticDto[]> =
         await this.diagnosticService.findAll();
+      if (result.isSuccess()) {
+        return ApiController.ok(response, result.value);
+      }
+    } catch (error) {
+      return ApiController.serverError(response, error);
+    }
+  }
+
+  @Get('/:id')
+  async getById(
+    @Param('id') diagnosticId: number,
+    @Res({ passthrough: true }) response: any,
+  ) {
+    try {
+      const result: Result<AppNotification, DiagnosticDto> =
+        await this.diagnosticService.findbyId(diagnosticId);
       if (result.isSuccess()) {
         return ApiController.ok(response, result.value);
       }

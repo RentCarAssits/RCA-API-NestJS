@@ -72,6 +72,8 @@ import { CreateServiceItemOrderCommand } from './application/commands/create-ser
 import { CreateServiceOrderCommand } from './application/commands/create-service-order.command';
 import { CreateServiceOrderHandler } from './application/handlers/commands/create-service-order.handlet';
 import { CreateServiceItemOrderHandler } from './application/handlers/commands/create-service-item-order.handler';
+import { ServiceOrderController } from './api/service-order.controller';
+import { ServiceOrderService } from './application/services/service-order.service';
 
 export const CommandHandlers = [
   CreateProposalHandler,
@@ -130,6 +132,7 @@ export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
     ProductController,
     RequestItemController,
     ServiceItemController,
+    ServiceOrderController,
     ChatController,
   ],
   providers: [
@@ -151,6 +154,7 @@ export const QueryHandlers = [GetAllInventoryHandler, GetInventoryByIdHandler];
     CreateRequestItemValidator,
     ServiceItemService,
     CreateServicetItemValidator,
+    ServiceOrderService,
     MessageFacade,
     OpenAIService,
     ...CommandHandlers,

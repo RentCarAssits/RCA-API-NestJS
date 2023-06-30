@@ -95,7 +95,7 @@ export class ProductService {
   ): Promise<Result<AppNotification, ProductDTO[]>> {
     const inventory = await this.inventoryRepository.findOne({
       where: {
-        id: InventoryId.create(inventoryId),
+        id: inventoryId,
       } as FindOptionsWhere<Inventory>,
     });
     const products = await this.productRepository.find({

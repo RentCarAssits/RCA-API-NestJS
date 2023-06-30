@@ -1,14 +1,16 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 
 
 @Injectable()
 export class TwilioMessageService {
-  constructor(private configService: ConfigService) {}
-  accountSid = this.configService.get<string>('ACCOUNTSID');
-  authToken = this.configService.get<string>('AUTHTOKEN')
-  
-  client = require('twilio')(this.accountSid, this.authToken);
+  constructor(private configService: ConfigService) {
+  }
+
+  accountSid = this.configService.get<string>("ACCOUNTSID");
+  authToken = this.configService.get<string>("AUTHTOKEN");
+
+  client = require("twilio")(this.accountSid, this.authToken);
 
   async sendWsp(req: any): Promise<string> {
     const { request, phone } = req;
@@ -20,7 +22,9 @@ export class TwilioMessageService {
     - Fecha de fin: ${request.endDate}
     - Precio del alquiler: ${request.rentingPrice} ${request.currency}
     - Unidad de alquiler: ${
-      request.rentingUnit === 'D' ? 'Diario' : request.rentingUnit
+      request.rentingUnit === "D" ? "Diario" :
+        request.rentingUnit === "W" ? "Semanal" :
+          request.rentingUnit === "M" ? "Mensual" : request.rentingUnit
     }
     
     Por favor, asegúrate de revisar todos los detalles.
@@ -29,12 +33,12 @@ export class TwilioMessageService {
     this.client.messages
       .create({
         body: message,
-        from: 'whatsapp:+14155238886',
-        to: `whatsapp:${phone}`,
+        from: "whatsapp:+14155238886",
+        to: `whatsapp:${phone}`
       })
-      .then((message:any) => console.log(message.sid));
+      .then((message: any) => console.log(message.sid));
 
-    return 'OK'
+    return "OK";
   }
 }
 

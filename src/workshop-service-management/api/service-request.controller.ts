@@ -35,13 +35,26 @@ export class ServiceRequestController {
     }
   }
   @Get('/owner/:id')
-  async getAll(
+  async getAllByOwner(
     @Param('id') ownerId: number,
     @Res({ passthrough: true }) response: any,
   ) {
     try {
       const result: Result<AppNotification, ServiceRequestDto[]> =
-        await this.serviceRequestService.findAll(ownerId);
+        await this.serviceRequestService.findAllByOwner(ownerId);
+      if (result.isSuccess()) {
+        return ApiController.ok(response, result.value);
+      }
+    } catch (error) {
+      return ApiController.serverError(response, error);
+    }
+  }
+
+  @Get('')
+  async getAll(@Res({ passthrough: true }) response: any) {
+    try {
+      const result: Result<AppNotification, ServiceRequestDto[]> =
+        await this.serviceRequestService.findAll();
       if (result.isSuccess()) {
         return ApiController.ok(response, result.value);
       }

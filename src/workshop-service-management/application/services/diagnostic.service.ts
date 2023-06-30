@@ -10,6 +10,8 @@ import { CreateDiagnosticCommand } from '../commands/create-diagnostic.command';
 import { CreateDiagnosticResponseDTO } from '../dto/response/create-diagnostic-response.dto';
 import { Diagnostic } from 'src/workshop-service-management/domain/entities/diagnostic.entity';
 import { DiagnosticDTO } from '../dto/diagnostic.dto';
+import { MechanicId } from '../../domain/value-objects/mechanic-id.value';
+import { OwnerId } from '../../domain/value-objects/owner-id.value';
 
 @Injectable()
 export class DiagnosticService {
@@ -31,9 +33,9 @@ export class DiagnosticService {
     const createDiagnosticCommand: CreateDiagnosticCommand =
       new CreateDiagnosticCommand(
         createDiagnosticDto.diagnosticDescription,
-        createDiagnosticDto.mechanicId,
         createDiagnosticDto.ownerId,
         createDiagnosticDto.vehicleId,
+        createDiagnosticDto.mechanicId,
       );
     const diagnosticId = await this.commandBus.execute(createDiagnosticCommand);
     const createDiagnosticResponseDto: CreateDiagnosticResponseDTO =
@@ -78,5 +80,48 @@ export class DiagnosticService {
     diagnosticDto.vehicleId = Number(diagnostic.getVehicle().getValue());
     diagnosticDto.mechanicId = Number(diagnostic.getMechanic().getValue());
     return Result.ok(diagnosticDto);
+  }
+
+  async findAllbyOwnerId(
+    ownerId,
+  ): Promise<Result<AppNotification, DiagnosticDTO[]>> {
+    const diagnostic = await this.diagnosticRepository.find({
+      where: {
+        owner: OwnerId.of(ownerId),
+      } as FindOptionsWhere<Diagnostic>,
+    });
+    const diagnosticDtos: DiagnosticDTO[] = diagnostic.map((diagnostic) => {
+      const diagnosticDto = new DiagnosticDTO();
+      diagnosticDto.id = Number(diagnostic.getId());
+      diagnosticDto.diagnosticDescription =
+        diagnostic.getDiagnosticDescription();
+      diagnosticDto.ownerId = Number(diagnostic.getOwner().getValue());
+      diagnosticDto.vehicleId = Number(diagnostic.getVehicle().getValue());
+      diagnosticDto.mechanicId = Number(diagnostic.getMechanic().getValue());
+      return diagnosticDto;
+    });
+    return Result.ok(diagnosticDtos);
+  }
+
+  async findAllbyMechanicId(
+    mechanicId,
+  ): Promise<Result<AppNotification, DiagnosticDTO[]>> {
+    const diagnostic = await this.diagnosticRepository.find({
+      where: {
+        mechanic: MechanicId.of(mechanicId),
+      } as FindOptionsWhere<Diagnostic>,
+    });
+    console.log(diagnostic);
+    const diagnosticDtos: DiagnosticDTO[] = diagnostic.map((diagnostic) => {
+      const diagnosticDto = new DiagnosticDTO();
+      diagnosticDto.id = Number(diagnostic.getId());
+      diagnosticDto.diagnosticDescription =
+        diagnostic.getDiagnosticDescription();
+      diagnosticDto.ownerId = Number(diagnostic.getOwner().getValue());
+      diagnosticDto.vehicleId = Number(diagnostic.getVehicle().getValue());
+      diagnosticDto.mechanicId = Number(diagnostic.getMechanic().getValue());
+      return diagnosticDto;
+    });
+    return Result.ok(diagnosticDtos);
   }
 }

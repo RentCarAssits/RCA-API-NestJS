@@ -61,7 +61,7 @@ export class ServiceRequestService {
 
     return Result.ok(serviceRequestResponseDto);
   }
-  async findAll(
+  async findAllByOwner(
     ownerId: number,
   ): Promise<Result<AppNotification, ServiceRequestDto[]>> {
     const serviceRequests = await this.serviceRequestRepository.find({
@@ -69,6 +69,33 @@ export class ServiceRequestService {
         owner: OwnerId.of(ownerId),
       } as FindOptionsWhere<ServiceRequest>,
     });
+
+    const serviceRequestDtos: ServiceRequestDto[] = serviceRequests.map(
+      (serviceRequest) => {
+        const serviceRequestDto = new ServiceRequestDto();
+        serviceRequestDto.id = Number(serviceRequest.getId());
+        serviceRequestDto.descriptionProblems =
+          serviceRequest.getDescriptionProblem();
+        serviceRequestDto.ownerId = Number(
+          serviceRequest.getOwner().getValue(),
+        );
+        serviceRequestDto.vehicleId = Number(
+          serviceRequest.getVehicle().getValue(),
+        );
+        serviceRequestDto.workshopId = Number(
+          serviceRequest.getWorkshop().getValue(),
+        );
+        serviceRequestDto.vehicleName = serviceRequest.geteVehicleName();
+        serviceRequestDto.year = serviceRequest.getYear();
+        serviceRequestDto.vehicleIntegrity =
+          serviceRequest.getVehicleIntegrity();
+        return serviceRequestDto;
+      },
+    );
+    return Result.ok(serviceRequestDtos);
+  }
+  async findAll(): Promise<Result<AppNotification, ServiceRequestDto[]>> {
+    const serviceRequests = await this.serviceRequestRepository.find();
 
     const serviceRequestDtos: ServiceRequestDto[] = serviceRequests.map(
       (serviceRequest) => {

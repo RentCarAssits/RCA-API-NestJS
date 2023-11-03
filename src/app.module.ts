@@ -17,10 +17,10 @@ import { IamManagementModule } from "./iam-management/iam-management.module";
     }),
     TypeOrmModule.forRoot({
       type: "mysql",
-      host: "rca-parsimonia-server.mysql.database.azure.com",
+      host: "iot-rca-server.mysql.database.azure.com",
       port: 3306,
-      username: "rca123parsimonia",
-      password: "edco-password1",
+      username: "apolos",
+      password: "Holasoyminerx1234",
       database: "rca-db",
       autoLoadEntities: true,
       synchronize: true,

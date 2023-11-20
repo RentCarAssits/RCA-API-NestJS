@@ -19,6 +19,7 @@ import { GetAllVehiclesByStarsQuery } from '../../application/queries/get-all-ve
 import { GetVehiclesByOwnerIdQuery } from '../../application/queries/get-vehicles-by-ownerId.query';
 import { Get20VehiclesMixedQuery } from '../../application/queries/get-20-vehicles-mixed.query';
 import { GetVehiclesInMaintenanceStateQuery } from 'src/renting-management/application/queries/get-vehicles-in-maintenance-state.query';
+import { RegisterHumidityTemperatureRequest } from '../../application/requests/register-humidity-temperature.request';
 
 @ApiTags('Vehicles')
 @Controller('vehicles')
@@ -215,5 +216,37 @@ export class VehiclesController {
     }
   }
 
-  ///by/owner
+  @Put('/humidity/temperature')
+  @ApiResponse({
+    status: 200,
+    description: 'OK',
+  })
+  async registerHumidityAndTemperature(
+    @Body() request: any,
+    @Res({ passthrough: true }) response: any,
+  ) {
+    try {
+      console.log('request: ', request);
+      const vehicleInfo =
+        await this.vehiclesApplicationService.updateVehicleInfo(request);
+      return ApiController.ok(response, vehicleInfo);
+    } catch (error) {
+      return ApiController.serverError(response, error);
+    }
+  }
+
+  @Get('humidity/temperature')
+  async getVehicleInfo(@Res({ passthrough: true }) response: any) {
+    console.log('0fsaf');
+    try {
+      const vehicles = await this.vehiclesApplicationService.getVehicleInfo();
+      return ApiController.ok(response, vehicles);
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: vehicles.controller.ts:58 ~ VehiclesController ~ getAll ~ error:',
+        error,
+      );
+      return ApiController.serverError(response, error);
+    }
+  }
 }

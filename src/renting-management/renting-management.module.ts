@@ -45,7 +45,11 @@ import { RentOrderRegistered } from './domain/events/rent-order-registered.event
 import { RentOrderRegisteredHandler } from './application/handlers/events/rent-order-registered.handler';
 import { RegisterRentOrderValidator } from './application/validators/register-rent-order.validator';
 import { RentOrderService } from './application/services/rent-order.service';
-import { GetRentOrderFullInfoHandler, GetRentOrderFullInfoRenterHandler } from './application/handlers/queries/rent-order-queries.handler';
+import {
+  GetRentOrderFullInfoHandler,
+  GetRentOrderFullInfoRenterHandler,
+} from './application/handlers/queries/rent-order-queries.handler';
+import { VehicleInfo } from './domain/entities/vehicle-info';
 
 export const CommandHandlers = [
   RegisterVehicleHandler,
@@ -75,12 +79,18 @@ export const QueryHandlers = [
   Get20VehiclesMixedHandler,
   GetRentOrderFullInfoHandler,
   GetRentOrderFullInfoRenterHandler,
-  GetVehiclesInMaintenanceHandler
+  GetVehiclesInMaintenanceHandler,
 ];
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Category, Vehicle, RentingOrderItem, RentOrder]),
+    TypeOrmModule.forFeature([
+      Category,
+      Vehicle,
+      RentingOrderItem,
+      RentOrder,
+      VehicleInfo,
+    ]),
     CqrsModule,
     IamManagementModule,
   ],

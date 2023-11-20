@@ -18,7 +18,8 @@ import { RentingOrderItem } from 'src/renting-management/domain/entities/renting
 import { VehicleFactory } from 'src/renting-management/domain/factories/vehicle.factory';
 import { VehicleState } from 'src/renting-management/domain/enums/vehicle-state.enum';
 import { RentingOrderItemId } from 'src/renting-management/domain/values/renting-order-id.value';
-
+import { getConnection } from 'typeorm';
+import { VehicleInfo } from 'src/renting-management/domain/entities/vehicle-info';
 @Injectable()
 export class VehiclesApplicationService {
   constructor(
@@ -30,6 +31,9 @@ export class VehiclesApplicationService {
     private commandBus: CommandBus,
     private registerVehicleValidator: RegisterVehicleValidator,
     private updateVehicleValidator: UpdateVehicleValidator,
+
+    @InjectRepository(VehicleInfo)
+    private vehicleInfoRepository: Repository<VehicleInfo>,
   ) {
     console.log('this.connection.isConnected: ', this.connection.isConnected);
   }
@@ -151,5 +155,27 @@ export class VehiclesApplicationService {
         }
       }
     }
+  }
+
+  async updateVehicleInfo(request: any): Promise<Result<AppNotification, any>> {
+    const vehicleInfo: any = {
+      temperatura: request.temperatura,
+      humedad: request.humedad,
+    };
+
+    const result = await this.vehicleInfoRepository.save(vehicleInfo);
+
+    return Result.ok(result);
+  }
+
+  async getVehicleInfo(): Promise<Result<AppNotification, any>> {
+    // Recuperar toda la información del vehículo del repositorio
+    console.log('0fsaf');
+    const vehicleInfo = await this.vehicleInfoRepository.find();
+
+    console.log('🚀 vehicleInfo:', vehicleInfo);
+
+    // Devolver la información del vehículo envuelta en un Result.ok()
+    return Result.ok(vehicleInfo);
   }
 }

@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import { CreateProfileDto } from '../profile/create-profile.dto';
 
+
 export class CreateUserDto {
   @IsNotEmpty()
   @IsString()

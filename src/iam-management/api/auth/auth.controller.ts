@@ -20,6 +20,8 @@ import { UserRoleGuard } from 'src/iam-management/infrastructure/guards/user-rol
 import { User } from '../../domain/entities/user.entity';
 import { ApiTags } from '@nestjs/swagger';
 
+
+
 @UsePipes(
   new ValidationPipe({
     whitelist: true,
@@ -36,16 +38,19 @@ export class AuthController {
     return this.authService.create(createUserDto);
   }
 
+
   @Post('login')
   loginUser(@Body() LoginAccountDto: LoginDto) {
     return this.authService.login(LoginAccountDto);
   }
+
 
   @Get('check-status')
   @Auth()
   checkAuthStatus(@GetUser() user: User) {
     return this.authService.checkAuthStatus(user);
   }
+
 
   @Get('private')
   @UseGuards(AuthGuard())
@@ -57,7 +62,9 @@ export class AuthController {
     };
   }
 
+  //
   // @SetMetadata('roles', ['admin','super-user'])
+  //
 
   @Get('private2')
   @RoleProtected(ValidRoles.admin, ValidRoles.owner)
@@ -68,6 +75,8 @@ export class AuthController {
       user,
     };
   }
+
+
 
   @Get('private3')
   @Auth(ValidRoles.admin)

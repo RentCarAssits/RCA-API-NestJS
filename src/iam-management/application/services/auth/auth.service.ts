@@ -13,6 +13,7 @@ import { JwtPayload } from 'src/iam-management/domain/interfaces/jwt-payload.int
 import { User } from '../../../domain/entities/user.entity';
 import { CreateUserDto } from '../../dtos/user/create-user.dto';
 
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -45,11 +46,13 @@ export class AuthService {
         where: { userName: userName },
       });
 
+
       if (existUserByEmail) {
         throw new BadRequestException(
           'There is already a user with that email and username',
         );
       }
+
 
       if (existUserByUserName) {
         throw new BadRequestException(
@@ -62,6 +65,8 @@ export class AuthService {
       delete user.profile;
       delete user.account;
 
+
+
       console.log(user);
       return {
         ...user,
@@ -71,6 +76,7 @@ export class AuthService {
       this.handleDBErrors(error);
     }
   }
+
 
   async login(loginDto: LoginDto) {
     const { email, userName, password } = loginDto;
@@ -97,6 +103,7 @@ export class AuthService {
           },
         }));
 
+
     if (!user) throw new UnauthorizedException('invalid username or email');
 
     if (!bcrypt.compareSync(password, user.password))
@@ -106,6 +113,7 @@ export class AuthService {
       token: this.getJwtToken({ id: user.id }),
     };
   }
+
 
   async checkAuthStatus(user) {
     const { id, userName, email } = user;
@@ -117,6 +125,7 @@ export class AuthService {
     };
   }
 
+  
   private getJwtToken(payload: JwtPayload) {
     const token = this.jwtService.sign(payload);
     return token;

@@ -28,6 +28,7 @@ export class RentingOrderItemsController {
     private readonly queryBus: QueryBus,
   ) {}
 
+
   @Post()
   @Auth(ValidRoles.renter)
   @ApiResponse({ status: 200, description: 'OK' })
@@ -54,6 +55,7 @@ export class RentingOrderItemsController {
     }
   }
 
+
   @Get()
   @ApiResponse({ status: 200, description: 'OK' })
   @ApiResponse({ status: 400, description: 'Bad request' })
@@ -69,6 +71,7 @@ export class RentingOrderItemsController {
       return ApiController.serverError(response, error);
     }
   }
+
 
   @Get('/:id')
   @ApiResponse({ status: 200, description: 'OK' })
@@ -91,6 +94,7 @@ export class RentingOrderItemsController {
       );
       return ApiController.serverError(response, error);
     }
+
   }
   @Get('get-by-renter-id/:id')
   @ApiResponse({ status: 200, description: 'OK' })
@@ -112,6 +116,7 @@ export class RentingOrderItemsController {
         error,
       );
       return ApiController.serverError(response, error);
+
     }
   }
   @Get('get-all-accepted-by-renter-id/:id')
@@ -134,6 +139,7 @@ export class RentingOrderItemsController {
         error,
       );
       return ApiController.serverError(response, error);
+
     }
   }
   @Post('/get-by-vehicles')
@@ -150,14 +156,18 @@ export class RentingOrderItemsController {
         new GetAllRentingItemsByVehicleQuery(vehiclesIdRequest.vehiclesId),
       );
       return ApiController.ok(response, vehicle);
+
     } catch (error) {
       console.log(
         '🚀 ~ file: rentingOrderItems.controller.ts:77 ~ rentingOrderItems ~ error:',
         error,
       );
       return ApiController.serverError(response, error);
+
     }
   }
+
+
 
   @Put('/:id')
   @ApiResponse({ status: 200, description: 'OK' })
@@ -175,10 +185,13 @@ export class RentingOrderItemsController {
         );
       if (result.isSuccess()) {
         return ApiController.created(response, result.value);
+
       }
       return ApiController.error(response, result.error.getErrors());
+
     } catch (error) {
       return ApiController.serverError(response, error);
+
     }
   }
 }

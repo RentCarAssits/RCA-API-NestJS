@@ -21,6 +21,7 @@ export class RentOrderController {
     private readonly queryBus: QueryBus,
   ) {}
 
+
   @Post()
   @Auth(ValidRoles.renter)
   async register(
@@ -36,16 +37,20 @@ export class RentOrderController {
           result,
         );
         return ApiController.created(response, result.value);
+
       }
       return ApiController.error(response, result.error.getErrors());
+
     } catch (error) {
       console.log(
         '🚀 ~ file: vehicles.controller.ts:44 ~ VehiclesController ~ error:',
         error,
       );
       return ApiController.serverError(response, error);
+
     }
   }
+
 
   @Get('/by/owner')
   @Auth(ValidRoles.owner)
@@ -67,6 +72,7 @@ export class RentOrderController {
     }
   }
 
+
   @Get('/by/renter')
   @Auth(ValidRoles.renter)
   async getRentOrderByRenter(
@@ -84,6 +90,10 @@ export class RentOrderController {
         error,
       );
       return ApiController.serverError(response, error);
+
     }
+
   }
+
+
 }

@@ -4,6 +4,8 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 
+
+
 export const GetFullUser = createParamDecorator(
   (data: string, ctx: ExecutionContext) => {
     const req = ctx.switchToHttp().getRequest();
@@ -11,6 +13,8 @@ export const GetFullUser = createParamDecorator(
 
     if (!user)
       throw new InternalServerErrorException('User not found (request)');
+
+
 
     return !data ? user : user[data];
   },

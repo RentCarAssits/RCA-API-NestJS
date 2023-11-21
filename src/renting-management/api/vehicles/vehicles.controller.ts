@@ -20,6 +20,8 @@ import { GetVehiclesByOwnerIdQuery } from '../../application/queries/get-vehicle
 import { Get20VehiclesMixedQuery } from '../../application/queries/get-20-vehicles-mixed.query';
 import { GetVehiclesInMaintenanceStateQuery } from 'src/renting-management/application/queries/get-vehicles-in-maintenance-state.query';
 
+
+
 @ApiTags('Vehicles')
 @Controller('vehicles')
 export class VehiclesController {
@@ -27,6 +29,7 @@ export class VehiclesController {
     private readonly vehiclesApplicationService: VehiclesApplicationService,
     private readonly queryBus: QueryBus,
   ) {}
+
 
   @Post()
   @Auth()
@@ -48,8 +51,10 @@ export class VehiclesController {
         );
       if (result.isSuccess()) {
         return ApiController.created(response, result.value);
+
       }
       return ApiController.error(response, result.error.getErrors());
+
     } catch (error) {
       console.log(
         '🚀 ~ file: vehicles.controller.ts:44 ~ VehiclesController ~ error:',
@@ -58,6 +63,7 @@ export class VehiclesController {
       return ApiController.serverError(response, error);
     }
   }
+
 
   @Put(':id')
   @Auth()
@@ -89,6 +95,7 @@ export class VehiclesController {
         error,
       );
       return ApiController.serverError(response, error);
+
     }
   }
 

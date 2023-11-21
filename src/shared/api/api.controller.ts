@@ -9,6 +9,9 @@ export class ApiController {
     return Envelope.ok(result);
   }
 
+
+
+
   static created(response: Response, result: object): Envelope {
     response.status(HttpStatus.CREATED);
     return Envelope.ok(result);

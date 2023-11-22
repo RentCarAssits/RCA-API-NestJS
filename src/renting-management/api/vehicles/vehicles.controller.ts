@@ -221,6 +221,5 @@ export class VehiclesController {
       return ApiController.serverError(response, error);
     }
   }
-  @GetUser 
   ///by/owner
 }

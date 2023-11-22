@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, Put, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Res,
+} from '@nestjs/common';
 import { Result } from 'typescript-result';
 import { QueryBus } from '@nestjs/cqrs';
 import { RegisterVehicleRequest } from 'src/renting-management/application/requests/register-vehicle.request';
@@ -241,6 +250,19 @@ export class VehiclesController {
     try {
       const vehicles = await this.vehiclesApplicationService.getVehicleInfo();
       return ApiController.ok(response, vehicles);
+    } catch (error) {
+      console.log(
+        '🚀 ~ file: vehicles.controller.ts:58 ~ VehiclesController ~ getAll ~ error:',
+        error,
+      );
+      return ApiController.serverError(response, error);
+    }
+  }
+  @Delete('humidity/temperature')
+  async deleteVehicleInfo(@Res({ passthrough: true }) response: any) {
+    try {
+      await this.vehiclesApplicationService.deleteVehicleInfo();
+      return ApiController.ok(response, {});
     } catch (error) {
       console.log(
         '🚀 ~ file: vehicles.controller.ts:58 ~ VehiclesController ~ getAll ~ error:',

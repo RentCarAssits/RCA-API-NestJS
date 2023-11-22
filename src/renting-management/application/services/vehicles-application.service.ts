@@ -161,9 +161,18 @@ export class VehiclesApplicationService {
     const vehicleInfo: any = {
       temperatura: request.temperatura,
       humedad: request.humedad,
+      date: new Date(),
     };
 
     const result = await this.vehicleInfoRepository.save(vehicleInfo);
+
+    return Result.ok(result);
+  }
+
+  async deleteVehicleInfo(): Promise<Result<AppNotification, any>> {
+    // i want to delete all vehicle info
+
+    const result = await this.vehicleInfoRepository.clear();
 
     return Result.ok(result);
   }
@@ -172,9 +181,6 @@ export class VehiclesApplicationService {
     // Recuperar toda la información del vehículo del repositorio
     console.log('0fsaf');
     const vehicleInfo = await this.vehicleInfoRepository.find();
-
-    console.log('🚀 vehicleInfo:', vehicleInfo);
-
     // Devolver la información del vehículo envuelta en un Result.ok()
     return Result.ok(vehicleInfo);
   }
